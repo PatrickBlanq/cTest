@@ -37,10 +37,6 @@ const group = reactive([
 
     <Collapse :group="group"></Collapse>
 
-
-
-
-
 </template>
 
 <style scoped></style>

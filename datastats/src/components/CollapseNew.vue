@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="moduleStyle">
         <div v-for="group1 in groupedMenu" :key="group1.group1" class="collapse" @click.stop="toggleCollapse(group1)">
             <span :class="['arrow', { 'rotate': !group1.expanded }]">&gt;</span> group1: {{ group1.group1 }}
             <div v-show="group1.expanded">
@@ -14,7 +14,9 @@
                             <div v-show="group3.expanded">
                                 <div v-for="item in group3.children" :key="item.name" class="collapse"
                                     @click.stop="toggleFontColor(item)">
-                                    <span :class="{ 'green': item.selected }">{{ item.name }}</span>
+                                    <span class ="mark"></span>
+                                    <span :class="{ 'green': item.selected }" @click="logItemId(item.id)">{{ item.name }}</span>
+                                    <span class ="capsule"></span>
                                 </div>
                             </div>
                         </div>
@@ -23,17 +25,21 @@
             </div>
         </div>
     </div>
+    <div class="half-circle">.half-circle</div>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
+ 
+
 
 const menu = reactive([
-    { group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g1n1", selected: false },
-    { group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g2n2", selected: false },
-    { group1: "g2", group2: "g1", group3: "g312", name: "g2g1n1", selected: false },
-    { group1: "g2", group2: "g2", group3: "g322", name: "g2g2n2", selected: false }
+    { id: 1, group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g1n1", selected: false },
+    { id: 2, group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g2n2", selected: false },
+    { id: 3, group1: "g2", group2: "g1", group3: "g312", name: "g2g1n1", selected: false },
+    { id: 4, group1: "g2", group2: "g2", group3: "g322", name: "g2g2n2", selected: false }
 ]);
+
 
 const groupedMenu = ref([]);
 
@@ -90,6 +96,10 @@ const toggleFontColor = (clickedItem) => {
     }
 };
 
+const logItemId = (itemId) => {
+    console.log("item id:", itemId);
+};
+
 initializeGroupedMenu();
 </script>
 
@@ -112,4 +122,47 @@ initializeGroupedMenu();
 .green {
     color: green;
 }
+.capsule {
+    display: inline-block;
+    width: 27px;
+    height: 8px;
+    background-color: green; 
+    border-radius: 4px; 
+    margin-left: 5px; 
+}
+.mark {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #0186C5; 
+    border-radius: 4px; 
+    margin-right: 5px; 
+    
+}
+/* 每个模块颜色 */
+.moduleStyle{
+    width: 800px;
+    height: 50px;
+    overflow-y: auto;
+    overflow-x: hidden; 
+
+}
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 9px; 
+
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #0186C5, #8f94fb);
+}
+
+.half-circle {
+  width: 100px; /* 设置半圆形的宽度 */
+  height: 40px; /* 设置半圆形的高度 */
+  border: 10px solid #000; /* 设置边框宽度和颜色 */
+   border-radius: 15px 15px 0 0; /* 根据半圆形的大小设置 border-radius */
+  border-bottom: none; /* 移除底部边框，只显示半圆形 */
+}
+
+
 </style>
