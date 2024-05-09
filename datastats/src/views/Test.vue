@@ -1,19 +1,21 @@
 <template>
     <div class="container">
         <div class="select-box" @click="toggleYearDropdown">
-            Year: {{ selectedYear }}
+            {{ selectedYear }}年
             <div v-if="showYearDropdown" class="dropdown">
                 <div @click="selectYear(year)" v-for="year in years" :key="year">{{ year }}</div>
             </div>
         </div>
+        <div class="separator"></div> <!-- 添加分隔符 -->
         <div class="select-box" @click="toggleMonthDropdown">
-            Month: {{ selectedMonth }}
+            {{ selectedMonth }}月
             <div v-if="showMonthDropdown" class="dropdown">
                 <div @click="selectMonth(month)" v-for="month in months" :key="month">{{ month }}</div>
             </div>
         </div>
+        <div class="separator"></div> <!-- 添加分隔符 -->
         <div class="select-box" @click="toggleDayDropdown">
-            Day: {{ selectedDay }}
+            {{ selectedDay }}日
             <div v-if="showDayDropdown" class="dropdown day-dropdown">
                 <!-- 显示日语星期缩写的行 -->
                 <div class="day-row">
@@ -101,14 +103,20 @@ const selectDay = (day) => {
 <style scoped>
 .container {
     display: flex;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .select-box {
     position: relative;
-    padding: 10px;
-    margin-right: 20px;
-    border: 1px solid #ccc;
+    padding: 0px 10px 0px 10px;
     cursor: pointer;
+}
+
+.separator {
+    width: 1px;
+    background-color: #2FB6FF;
+
 }
 
 .dropdown {
