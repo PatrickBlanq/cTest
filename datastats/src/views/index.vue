@@ -2,12 +2,33 @@
     <div class="fullscreen-div ">
         <div class="left">
             <div class="top">
-                <div class="left1 flex-column ">
-                    <div class="tlcolumn1">
+                <div class="left1 flex-column">
+                    <div class="t-l-column1 flex-row">
                         <Title strTitle="纳期状况"></Title>
+                        <DateSelect></DateSelect>
                     </div>
-                    <div class="tlcolumn2"></div>
-                    <div class="tlcolumn3"></div>
+                    <div class="t-l-column2 flex-row">
+                        <Arc :data="dataArc1"></Arc>
+                        <Arc :data="dataArc2"></Arc>
+                        <Arc :data="dataArc3"></Arc>
+                        <Arc :data="dataArc4"></Arc>
+                    </div>
+                    <div class="t-l-column3">
+                        <div class="column-flex-row">
+                            <NumCard :data="dataCard1" />
+                            <NumCard :data="dataCard2" />
+                            <NumCard :data="dataCard3" />
+                            <NumCard :data="dataCard4" />
+                            <NumCard :data="dataCard5" />
+                            <NumCard :data="dataCard5" />
+                            <NumCard :data="dataCard5" />
+                            <NumCard :data="dataCard6" />
+                        </div>
+
+                    </div>
+                    <div class="t-l-column4">
+                        <Collapse :menu="menu" />
+                    </div>
                 </div>
             </div>
             <div class="bottom">
@@ -20,9 +41,9 @@
             <div class="top flex-column">
                 <div class="center1">EPCOデータ掲示板</div>
                 <div class="center2 flex-row">
-                    <div class="c2"></div>
-                    <div class="c2"></div>
-                    <div class="c2"></div>
+                    <div class="t-c-2"></div>
+                    <div class="t-c-2"></div>
+                    <div class="t-c-2"></div>
                 </div>
                 <div class="center3"></div>
             </div>
@@ -31,7 +52,9 @@
         </div>
         <div class="right">
             <div class="top flex-column">
-                <div class="right1">{{ strDate }}</div>
+                <div class="right1">
+                    <DateTimeDisplay />
+                </div>
                 <div class="right2">
                     <Title strTitle="出勤人数"></Title>
                 </div>
@@ -49,29 +72,74 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { reactive } from 'vue';
 import Title from '@/components/Title.vue';
-//const weekdaysJP = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
-const weekdaysJP = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+import DateSelect from '@/components/DateSelect.vue';
+import Arc from '@/components/Arc.vue';
+import DateTimeDisplay from '@/components/DateTimeDisplay.vue';
+import NumCard from '@/components/NumCard.vue';
+import Collapse from '@/components/Collapse.vue';
 
-const strDate = ref("");
-function updateDateTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hour = String(now.getHours()).padStart(2, '0');
-    const minute = String(now.getMinutes()).padStart(2, '0');
-    const second = String(now.getSeconds()).padStart(2, '0');
-    const weekdayJP = weekdaysJP[now.getDay()];
-    const formattedDateTime = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
-    strDate.value = `${formattedDateTime} ${weekdayJP}`;
-}
+const menu = reactive([
+    { id: 1, group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g1n1", selected: false },
+    { id: 2, group1: "g1", group2: "g1-g1", group3: "g321", name: "g1g2n2", selected: false },
+    { id: 3, group1: "g2", group2: "g1", group3: "g312", name: "g2g1n1", selected: false },
+    { id: 4, group1: "g2", group2: "g2", group3: "g322", name: "g2g2n2", selected: false }
+]);
+const dataArc1 = {
+    num: 2654,
+    title: '预算栋数',
+    endAngle: 340,
+    color: "#488EF7",
+};
+const dataArc2 = {
+    num: 2510,
+    title: '依赖栋数',
+    endAngle: 290,
+    color: "#F2B564",
+};
+const dataArc3 = {
+    num: 1200,
+    title: '纳品栋数',
+    endAngle: 250,
+    color: "#F2B564",
+};
+const dataArc4 = {
+    num: "45%",
+    title: '予算比率',
+    endAngle: 270,
+    color: "#F2B564",
+};
 
-onMounted(() => {
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-});
+const dataCard1 = {
+    num: 680,
+    title: '依赖前'
+};
+
+const dataCard2 = {
+    num: 460,
+    title: '今日的受信'
+};
+const dataCard3 = {
+    num: 120,
+    title: '保留'
+};
+const dataCard4 = {
+    num: 67,
+    title: '依赖中'
+};
+const dataCard5 = {
+    num: 87,
+    title: '戻り残'
+};
+const dataCard6 = {
+    num: 24,
+    title: '返却'
+};
+const dataCard7 = {
+    num: 456,
+    title: '依赖中'
+};
 </script>
 
 <style scoped>
@@ -92,7 +160,16 @@ onMounted(() => {
 }
 
 .left {
-    flex: 383;
+    flex: 43;
+}
+
+.center {
+    flex: 59;
+}
+
+.right {
+    flex: 40;
+    margin-right: 20px;
 }
 
 .left1 {
@@ -105,31 +182,50 @@ onMounted(() => {
     background-image: url('../accsets/img/left1.png');
 }
 
-.tlcolumn1,
-.tlcolumn2,
-.tlcolumn3 {
+.t-l-column1,
+.t-l-column2,
+.t-l-column3,
+.t-l-column4 {
     width: 100%;
     height: 100%;
-    border-width: 1px;
+    border-width: 0px;
     border-color: #fff;
     border-style: solid;
 }
 
-.tlcolumn1 {
+.t-l-column1 {
     flex: 34
 }
 
-.tlcolumn2 {
-    flex: 100
+.t-l-column2 {
+    flex: 80;
+    justify-content: space-between;
 }
 
-.tlcolumn3 {
+.t-l-column3 {
+    flex: 50;
+
+}
+
+.column-flex-row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
+
+.flex-row .custom-info {
+
+    padding: 10px;
+}
+
+.t-l-column4 {
     flex: 380
 }
 
-.center {
-    flex: 529;
-}
+
+
+
+
 
 .flex-column {
     display: flex;
@@ -167,6 +263,7 @@ onMounted(() => {
 .flex-row {
     display: flex;
     flex-direction: row;
+
 }
 
 .center2 {
@@ -175,7 +272,7 @@ onMounted(() => {
     justify-content: space-between;
 }
 
-.c2 {
+.t-c-2 {
     flex: 1;
     margin: 6px;
     display: flex;
@@ -193,10 +290,6 @@ onMounted(() => {
     background-image: url('../accsets/img/map.png');
 }
 
-.right {
-    flex: 352;
-    margin-right: 20px;
-}
 
 .right1 {
     flex: 55;

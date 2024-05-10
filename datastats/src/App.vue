@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, provide, inject } from "vue";
-import Collapse from "./components/Collapse.vue"
+import Collapse from "./components/Collapse1.vue"
 
 const group = reactive([{
     first: "group1",
@@ -20,9 +20,9 @@ const group = reactive([{
 
 }]
 )
-const testOjb={
-    name:"",
-    obj:{}
+const testOjb = {
+    name: "",
+    obj: {}
 }
 /* const obj = reactive({
     group1: "group1",

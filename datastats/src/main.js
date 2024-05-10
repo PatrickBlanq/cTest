@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import './style.css'
-/* import App from './CollapseNew.vue' */
-import App from './views/Test.vue'
+/* import App from './components/Arc.vue' */
+import App from './views/index.vue'
+
 
 createApp(App).mount('#app')

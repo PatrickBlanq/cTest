@@ -1,21 +1,25 @@
 <template>
-    <div class="container">
-        <div class="select-box" @click="toggleYearDropdown">
-            {{ selectedYear }}年
+    <div class="container" ref="container">
+        <div class="select-box" :class="{ 'selected': selectedValue === 'year' }" @click="toggleYearDropdown"
+            tabindex="0" @blur="closeDropdown">
+            {{ selectedYear }} 年
             <div v-if="showYearDropdown" class="dropdown">
-                <div @click="selectYear(year)" v-for="year in years" :key="year">{{ year }}</div>
+                <div @click="selectYear(year)" v-for="year in years" :key="year" class="day-cell">{{ year }}</div>
             </div>
         </div>
-        <div class="separator"></div> <!-- 添加分隔符 -->
-        <div class="select-box" @click="toggleMonthDropdown">
-            {{ selectedMonth }}月
+        <div class="separator"></div>
+        <div class="select-box month-select" :class="{ 'selected': selectedValue === 'month' }"
+            @click="toggleMonthDropdown" tabindex="0" @blur="closeDropdown">
+            {{ selectedMonth }} 月
             <div v-if="showMonthDropdown" class="dropdown">
-                <div @click="selectMonth(month)" v-for="month in months" :key="month">{{ month }}</div>
+                <div @click="selectMonth(month)" v-for="month in months" :key="month" class="day-cell">{{
+                    month }}</div>
             </div>
         </div>
-        <div class="separator"></div> <!-- 添加分隔符 -->
-        <div class="select-box" @click="toggleDayDropdown">
-            {{ selectedDay }}日
+        <div class="separator"></div>
+        <div class="select-box" :class="{ 'selected': selectedValue === 'day' }" @click="toggleDayDropdown" tabindex="0"
+            @blur="closeDropdown">
+            {{ selectedDay }} 日
             <div v-if="showDayDropdown" class="dropdown day-dropdown">
                 <!-- 显示日语星期缩写的行 -->
                 <div class="day-row">
@@ -24,8 +28,8 @@
                 <!-- 日历日期 -->
                 <div v-for="row in dayRows" :key="row" class="day-row">
                     <div v-for="col in 7" :key="col" class="day-cell">
-                        <div
-                            v-if="(row - 1) * 7 + col - firstDayOfWeek + 1 <= daysInMonth && (row - 1) * 7 + col - firstDayOfWeek + 1 > 0">
+                        <div v-if="(row - 1) * 7 + col - firstDayOfWeek + 1 <= daysInMonth && (row - 1) * 7 + col - firstDayOfWeek + 1 > 0"
+                            @click="selectDay((row - 1) * 7 + col - firstDayOfWeek + 1)">
                             {{ (row - 1) * 7 + col - firstDayOfWeek + 1 }}
                         </div>
                     </div>
@@ -36,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const years = [2022, 2023, 2024];
 const months = Array.from({ length: 12 }, (_, index) => index + 1);
@@ -48,7 +52,8 @@ const selectedDay = ref(1);
 const showYearDropdown = ref(false);
 const showMonthDropdown = ref(false);
 const showDayDropdown = ref(false);
-
+const selectedValue = ref(null);
+const container = ref(null);
 const currentYear = ref(new Date().getFullYear());
 const currentMonth = ref(new Date().getMonth() + 1);
 const daysInMonth = computed(() => {
@@ -61,7 +66,6 @@ const firstDayOfWeek = computed(() => {
 
 const dayRows = computed(() => {
     const totalDays = daysInMonth.value;
-    console.log(firstDayOfWeek);
     const numRows = Math.ceil((totalDays + firstDayOfWeek.value) / 7);
     return numRows;
 });
@@ -69,34 +73,68 @@ const dayRows = computed(() => {
 const toggleYearDropdown = () => {
     showYearDropdown.value = !showYearDropdown.value;
     showMonthDropdown.value = false;
-    showDayDropdown.value = false;
+    selectedValue.value = 'year';
 };
 
 const toggleMonthDropdown = () => {
     showMonthDropdown.value = !showMonthDropdown.value;
     showYearDropdown.value = false;
-    showDayDropdown.value = false;
+    selectedValue.value = 'month';
 };
 
 const toggleDayDropdown = () => {
     showDayDropdown.value = !showDayDropdown.value;
     showYearDropdown.value = false;
-    showMonthDropdown.value = false;
+    selectedValue.value = 'day';
 };
 
 const selectYear = (year) => {
     selectedYear.value = year;
     showYearDropdown.value = false;
+    selectedValue.value = 'year';
+    const formattedDay = `${selectedYear.value}`;
+    console.log(formattedDay);
 };
 
 const selectMonth = (month) => {
     selectedMonth.value = month;
     showMonthDropdown.value = false;
+    selectedValue.value = 'month';
+    const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}`;
+    console.log(formattedDay);
 };
 
 const selectDay = (day) => {
     selectedDay.value = day;
     showDayDropdown.value = false;
+    selectedValue.value = 'day';
+    const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    console.log(formattedDay);
+};
+onMounted(() => {
+    container.value = document.querySelector('.container');
+    document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
+
+const handleClickOutside = (event) => {
+    if (container.value && !container.value.contains(event.target)) {
+        if (!document.querySelector('.selected')) {
+            selectedValue.value = null;
+        }
+        showYearDropdown.value = false;
+        showMonthDropdown.value = false;
+        showDayDropdown.value = false;
+    }
+};
+
+const closeDropdown = () => {
+    if (!document.querySelector('.selected')) {
+        selectedValue.value = null;
+    }
 };
 </script>
 
@@ -105,29 +143,40 @@ const selectDay = (day) => {
     display: flex;
     font-size: 1rem;
     font-weight: bold;
+    margin-top: 10px;
+    margin-left: 20px;
 }
 
 .select-box {
+    margin: 0px 5px 0px 5px;
     position: relative;
-    padding: 0px 10px 0px 10px;
     cursor: pointer;
 }
 
 .separator {
-    width: 1px;
+    width: 2px;
+    margin-top: 0.4rem;
+
+    height: 0.6rem;
     background-color: #2FB6FF;
 
 }
 
 .dropdown {
     position: absolute;
+    width: 100%;
     top: calc(100% + 5px);
     left: 0;
-    background-color: #fff;
+    background-color: #0C1530;
     border: 1px solid #ccc;
     border-top: none;
     border-radius: 0 0 5px 5px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+.select-box.month-select {
+    width: 37px;
 }
 
 .dropdown.day-dropdown {
@@ -145,6 +194,10 @@ const selectDay = (day) => {
 }
 
 .day-cell:hover {
-    background-color: #f1f1f1;
+    background-color: #2FB6FF;
+}
+
+.selected {
+    color: green;
 }
 </style>

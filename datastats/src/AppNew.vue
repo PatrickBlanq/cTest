@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, provide, inject } from "vue";
-import Collapse from "./components/CollapseNew.vue"
+import Collapse from "./components/Collapse.vue"
 
 const group = reactive([
     {
