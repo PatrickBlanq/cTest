@@ -4,7 +4,7 @@
             <div class="collapse-wrapper">
                 <div class="collapse-group1">
                     <div :class="['group-text', { 'selected': Group1.expanded }]">
-                        {{ Group1.group1 }} {{ Group1.totalDelivery }}
+                        {{ Group1.group1 }}
                         <span :class="['arrow', { 'rotate': !Group1.expanded }]">&gt;</span>
                     </div>
                 </div>
@@ -48,9 +48,7 @@
                                             <div :class="['group-text', { 'selected': item.selected }]"
                                                 @click="logItemId(item.id)">
 
-                                                <div class="marquee"><span>&bull;&nbsp;&nbsp;{{ item.Name }}+{{
-                                                    item.納品予定
-                                                        }}</span>
+                                                <div class="marquee"><span>&bull;&nbsp;&nbsp;{{ item.Name }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -80,65 +78,96 @@ const dataCapsule = {
     color: "#F2B564",
 };
 const groupedMenu = ref([]);
-
 const initializeGroupedMenu = () => {
+    // 创建一个新的 Map 对象，按 Group1 分组
     const groupedByGroup1 = new Map();
 
+    // 遍历 JSON 数据
     for (const item of jsonData) {
+        // 如果 Map 中不包含当前 item 的 Group1
         if (!groupedByGroup1.has(item.Group1)) {
+            // 在 Map 中为该 Group1 创建一个空数组，并输出 Group1
             groupedByGroup1.set(item.Group1, []);
+            console.log(item.Group1);
         }
+        // 将当前 item 添加到对应的 Group1 数组中
         groupedByGroup1.get(item.Group1).push(item);
     }
+    console.log(groupedByGroup1);
 
+    // 遍历按 Group1 分组的 Map
     for (const [Group1, items] of groupedByGroup1) {
-        const Group1Item = { group1: Group1, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+        // 创建 Group1 对象
+        const Group1Item = { group1: Group1, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 }; // 添加 totalDelivery 用于存储納品予定的和
 
+        // 创建一个新的 Map 对象，按 Group2 分组
         const groupedByGroup2 = new Map();
 
+        // 遍历当前 Group1 下的 items
         for (const item of items) {
+            // 如果 Map 中不包含当前 item 的 Group2
             if (!groupedByGroup2.has(item.Group2)) {
+                // 在 Map 中为该 Group2 创建一个空数组
                 groupedByGroup2.set(item.Group2, []);
             }
+            // 将当前 item 添加到对应的 Group2 数组中
             groupedByGroup2.get(item.Group2).push(item);
         }
 
+        // 遍历按 Group2 分组的 Map
         for (const [Group2, Group2Items] of groupedByGroup2) {
-            const Group2Item = { group2: Group2, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+            // 创建 Group2 对象
+            const Group2Item = { group2: Group2, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 }; // 添加 totalDelivery 用于存储納品予定的和
 
+            // 创建一个新的 Map 对象，按 Group3 分组
             const groupedByGroup3 = new Map();
 
+            // 遍历当前 Group2 下的 Group2Items
             for (const item of Group2Items) {
+                // 如果 Map 中不包含当前 item 的 Group3
                 if (!groupedByGroup3.has(item.Group3)) {
+                    // 在 Map 中为该 Group3 创建一个空数组
                     groupedByGroup3.set(item.Group3, []);
                 }
+                // 将当前 item 添加到对应的 Group3 数组中
                 groupedByGroup3.get(item.Group3).push(item);
             }
 
+            // 遍历按 Group3 分组的 Map
             for (const [Group3, Group3Items] of groupedByGroup3) {
-                const Group3Item = { group3: Group3, expanded: false, children: Group3Items, totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+                // 创建 Group3 对象
+                const Group3Item = { group3: Group3, expanded: false, children: Group3Items, totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 }; // 添加 totalDelivery 用于存储納品予定的和
 
+                // 计算 Group3Item 的納品予定、中間見込和依頼棟数的和
                 for (const item of Group3Items) {
                     Group3Item.totalDelivery += item["納品予定"];
                     Group3Item.totalMiddleEstimate += item["中間見込"];
                     Group3Item.totalRequests += item["依頼棟数"];
                 }
 
+                // 将 Group3Item 添加到 Group2Item 的 children 数组中
                 Group2Item.children.push(Group3Item);
+
+                // 累加 Group2Item 的 totalDelivery、totalMiddleEstimate 和 totalRequests
                 Group2Item.totalDelivery += Group3Item.totalDelivery;
                 Group2Item.totalMiddleEstimate += Group3Item.totalMiddleEstimate;
                 Group2Item.totalRequests += Group3Item.totalRequests;
             }
 
+            // 将 Group2Item 添加到 Group1Item 的 children 数组中
             Group1Item.children.push(Group2Item);
+
+            // 累加 Group1Item 的 totalDelivery、totalMiddleEstimate 和 totalRequests
             Group1Item.totalDelivery += Group2Item.totalDelivery;
             Group1Item.totalMiddleEstimate += Group2Item.totalMiddleEstimate;
             Group1Item.totalRequests += Group2Item.totalRequests;
         }
 
+        // 将 Group1Item 添加到 groupedMenu 的 value 数组中
         groupedMenu.value.push(Group1Item);
     }
 };
+
 
 const toggleCollapse = (item) => {
     item.expanded = !item.expanded;
@@ -169,10 +198,9 @@ console.log(groupedMenu);
 
 <style scoped>
 .moduleStyle {
-    color: #fff;
+    color: #e01717;
     padding: 0rem 1rem 0rem 1.3rem;
-    height: 500px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -275,7 +303,7 @@ console.log(groupedMenu);
     align-items: baseline;
 
     >span {
-        animation: marquee 3s linear infinite both alternate;
+        animation: marquee 5s linear infinite both alternate;
     }
 }
 
