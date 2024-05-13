@@ -1,47 +1,47 @@
 <template>
     <div class="moduleStyle">
-        <div v-for="group1 in groupedMenu" :key="group1.group1" class="collapse" @click.stop="toggleCollapse(group1)">
+        <div v-for="Group1 in groupedMenu" :key="Group1.group1" class="collapse" @click.stop="toggleCollapse(Group1)">
             <div class="collapse-wrapper">
                 <div class="collapse-group1">
-                    <div :class="['group-text', { 'selected': group1.expanded }]">
-                        {{ group1.group1 }}
-                        <span :class="['arrow', { 'rotate': !group1.expanded }]">&gt;</span>
+                    <div :class="['group-text', { 'selected': Group1.expanded }]">
+                        {{ Group1.group1 }}
+                        <span :class="['arrow', { 'rotate': !Group1.expanded }]">&gt;</span>
                     </div>
                 </div>
                 <div>
                     <Capsule :data="dataCapsule"></Capsule>
                 </div>
             </div>
-            <div v-show="group1.expanded">
-                <div v-for="group2 in group1.children" :key="group2.group2" class="collapse"
-                    @click.stop="toggleCollapse(group2)">
+            <div v-show="Group1.expanded">
+                <div v-for="Group2 in Group1.children" :key="Group2.group2" class="collapse"
+                    @click.stop="toggleCollapse(Group2)">
                     <div class="collapse-wrapper ">
                         <div class="collapse-group2">
-                            <div :class="['group-text', { 'selected': group2.expanded }]">
-                                {{ group2.group2 }}
-                                <span :class="['arrow', { 'rotate': !group2.expanded }]">&gt;</span>
+                            <div :class="['group-text', { 'selected': Group2.expanded }]">
+                                {{ Group2.group2 }}
+                                <span :class="['arrow', { 'rotate': !Group2.expanded }]">&gt;</span>
                             </div>
                         </div>
                         <div>
                             <Capsule :data="dataCapsule"></Capsule>
                         </div>
                     </div>
-                    <div v-show="group2.expanded">
-                        <div v-for="group3 in group2.children" :key="group3.group3" class="collapse"
-                            @click.stop="toggleCollapse(group3)">
+                    <div v-show="Group2.expanded">
+                        <div v-for="Group3 in Group2.children" :key="Group3.group3" class="collapse"
+                            @click.stop="toggleCollapse(Group3)">
                             <div class="collapse-wrapper ">
                                 <div class="collapse-group3">
-                                    <div :class="['group-text', { 'selected': group3.expanded }]">
-                                        {{ group3.group3 }}
-                                        <span :class="['arrow', { 'rotate': !group3.expanded }]">&gt;</span>
+                                    <div :class="['group-text', { 'selected': Group3.expanded }]">
+                                        {{ Group3.group3 }}
+                                        <span :class="['arrow', { 'rotate': !Group3.expanded }]">&gt;</span>
                                     </div>
                                 </div>
                                 <div>
                                     <Capsule :data="dataCapsule"></Capsule>
                                 </div>
                             </div>
-                            <div v-show="group3.expanded">
-                                <div v-for="item in group3.children" :key="item.name" class="collapse"
+                            <div v-show="Group3.expanded">
+                                <div v-for="item in Group3.children" :key="item.name" class="collapse"
                                     @click.stop="toggleFontColor(item)">
                                     <div class="collapse-wrapper ">
                                         <div class="collapse-item">
@@ -93,8 +93,8 @@ const initializeGroupedMenu = () => {
         groupedByGroup1.get(item.group1).push(item);
     }
 
-    for (const [group1, items] of groupedByGroup1) {
-        const group1Item = { group1, expanded: false, children: [] };
+    for (const [Group1, items] of groupedByGroup1) {
+        const Group1Item = { group1: Group1, expanded: false, children: [] };
         const groupedByGroup2 = new Map();
         for (const item of items) {
             if (!groupedByGroup2.has(item.group2)) {
@@ -102,22 +102,22 @@ const initializeGroupedMenu = () => {
             }
             groupedByGroup2.get(item.group2).push(item);
         }
-        for (const [group2, group2Items] of groupedByGroup2) {
-            const group2Item = { group2, expanded: false, children: [] };
+        for (const [Group2, Group2Items] of groupedByGroup2) {
+            const Group2Item = { group2: Group2, expanded: false, children: [] };
             const groupedByGroup3 = new Map();
-            for (const item of group2Items) {
+            for (const item of Group2Items) {
                 if (!groupedByGroup3.has(item.group3)) {
                     groupedByGroup3.set(item.group3, []);
                 }
                 groupedByGroup3.get(item.group3).push(item);
             }
-            for (const [group3, group3Items] of groupedByGroup3) {
-                const group3Item = { group3, expanded: false, children: group3Items };
-                group2Item.children.push(group3Item);
+            for (const [Group3, Group3Items] of groupedByGroup3) {
+                const Group3Item = { group3: Group3, expanded: false, children: Group3Items };
+                Group2Item.children.push(Group3Item);
             }
-            group1Item.children.push(group2Item);
+            Group1Item.children.push(Group2Item);
         }
-        groupedMenu.value.push(group1Item);
+        groupedMenu.value.push(Group1Item);
     }
 };
 
@@ -126,11 +126,10 @@ const toggleCollapse = (item) => {
 };
 
 const toggleFontColor = (clickedItem) => {
-    scrollToBottom();
-    for (const group1 of groupedMenu.value) {
-        for (const group2 of group1.children) {
-            for (const group3 of group2.children) {
-                for (const item of group3.children) {
+    for (const Group1 of groupedMenu.value) {
+        for (const Group2 of Group1.children) {
+            for (const Group3 of Group2.children) {
+                for (const item of Group3.children) {
                     item.selected = (item === clickedItem);
                 }
             }
@@ -139,20 +138,12 @@ const toggleFontColor = (clickedItem) => {
 };
 
 const logItemId = (itemId) => {
-    scrollToBottom();
+
     console.log("item id:", itemId);
 };
 
 initializeGroupedMenu();
 console.log(groupedMenu);
-
-
-
-const scrollToBottom = () => {
-    const container = document.querySelector('.moduleStyle');
-    container.scrollTop = container.scrollHeight;
-}
-
 
 
 </script>

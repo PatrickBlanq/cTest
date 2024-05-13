@@ -1,58 +1,78 @@
-<script setup>
-import { reactive, ref, provide, inject } from "vue";
-/* const obj = inject("provideObj") */
-/* const obj = reactive({
-    group1: "group1",
-    list: [
-        { name: "1", Show: true, },
-        { name: "2", Show: true, }
-    ],
-    group3: "group3",
-    Show: true,
-
-}) */
-
-const obj = defineProps({
-    first: String,
-    list: {
-        type: Array, // 指定类型为数组
-
-    },
-    show: Boolean,
-    default: true
-});
-console.log(obj);
-const collapseClick = (obj) => {
-
-    for (let i = 0; i < obj.list.length; i++) {
-        const item = obj.list[i];
-        item.show = !item.show
-    }
-
-}
-let group1Set = new Set()
-const getGrou1 = () => {
-    for (let i = 0; i < obj.group.length; i++) {
-        const element = obj.group[i];
-        if (!group1Set.has(element.group1))
-            group1Set.add(element.group1)
-    }
-}
-/* getGrou1() */
-//console.log(group1Set);
-</script>
-
 <template>
-
-    <div class="collapse" @click="collapseClick(obj)">
-        {{ obj.first }}
-        <div v-for="(item, index) in obj.list" :key="index">
-            <div class="collapse-item" v-show="item.show">
-                {{ item.name }}
+    <div>
+        <div v-for="(group1, group1Name) in groupedData" :key="group1Name">
+            <div class="collapsible" @click="toggleContent(group1Name)">{{ group1Name }}</div>
+            <div class="content" :id="group1Name">
+                <div v-for="(group2, group2Name) in group1" :key="group2Name">
+                    <div class="collapsible" @click="toggleContent(group2Name)">{{ group2Name }}</div>
+                    <div class="content" :id="group2Name">
+                        <div v-for="(group3, group3Name) in group2" :key="group3Name">
+                            <div class="collapsible" @click="toggleContent(group3Name)">{{ group3Name }}</div>
+                            <div class="content" :id="group3Name">
+                                <div v-for="item in group3" :key="item.ID">
+                                    <div @click="logId(item)">{{ item.Name }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </template>
 
-<style scoped></style>
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+
+import jsonData from '../accsets/json/datastats.json';
+
+const groupedData = ref({});
+const groups = {};
+const groupData = () => {
+
+    jsonData.forEach(item => {
+        groups[item.Group1] = groups[item.Group1] || {};
+        groups[item.Group1][item.Group2] = groups[item.Group1][item.Group2] || {};
+        groups[item.Group1][item.Group2][item.Group3] = groups[item.Group1][item.Group2][item.Group3] || [];
+        groups[item.Group1][item.Group2][item.Group3].push(item);
+    });
+    return groups;
+};
+
+const toggleContent = id => {
+    const content = document.getElementById(id);
+    content.style.display = (content.style.display === "block") ? "none" : "block";
+};
+
+onMounted(() => {
+    groupedData.value = groupData();
+});
+const logId = (itemId) => {
+
+    console.log("item id:", itemId);
+};
+console.log(groups);
+</script>
+
+<style>
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+</style>
