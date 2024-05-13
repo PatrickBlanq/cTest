@@ -1,44 +1,61 @@
-<template>
-    <div :style="{ width: `${width}px`, height: `${height}px` }" class="child">
-        <!-- 这里是子组件的内容 --></div>
-</template>
-<script setup>
-  import { ref, computed } from 'vue';
-  
-  const width = ref(0);
-  const height = ref(0);
-  
-  const updateSize = () => {
-    // 这里可以根据父组件的宽高计算子组件的宽高，比如按比例缩放
-    width.value = Math.floor(parentWidth.value * 0.8); // 这里假设子组件宽度是父组件宽度的 80%
-    height.value = Math.floor(parentHeight.value * 0.5); // 这里假设子组件高度是父组件高度的 50%
-  };
-  
-  // 计算属性，监听父组件宽高变化并重新计算子组件宽高
-  const parentWidth = ref(0);
-  const parentHeight = ref(0);
-  const updateParentSize = () => {
-    parentWidth.value = props.width;
-    parentHeight.value = props.height;
-  };
-  updateParentSize();
-  
-  const parentSize = computed(() => `${parentWidth.value}px ${parentHeight.value}px`);
-  watchEffect(() => {
-    updateSize();
-  });
-  
-  onMounted(() => {
-    updateSize();
-  });
-  
-  // 监听父组件宽高变化并重新计算子组件宽高
-  watch(() => [parentWidth.value, parentHeight.value], () => {
-    updateSize();
-  });
-</script>
-<style scoped>
-  .child {
-    background-color: #ddd;
-  }
-</style>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>
+            演示代码
+        </title>
+        <style>
+            .content{
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                width:200px;
+            }
+        </style>
+        <script>
+         function overShow(obj,e) {
+          var showDiv = document.getElementById('showDiv');
+          var theEvent = window.event|| e;
+          showDiv.style.left = theEvent.clientX+"px";
+          showDiv.style.top = theEvent.clientY+"px";
+          showDiv.style.display = 'block';
+          //alert(obj.innerHTML);
+          showDiv.innerHTML = obj.innerHTML;
+         }
+         
+         function outHide() {
+          var showDiv = document.getElementById('showDiv');
+          showDiv.style.display = 'none';
+          showDiv.innerHTML = '';
+         }
+        </script>
+    </head>
+    <body>
+        <div class="content" onmouseover="overShow(this,event)" onmouseout="outHide()">
+            js0 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js0 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js0 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js0 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+        </div>
+        <div class="content" onmouseover="overShow(this,event)" onmouseout="outHide()">
+            js1 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js1 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js1 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js1 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+        </div>
+        <div class="content" onmouseover="overShow(this,event)" onmouseout="outHide()">
+            js2 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js2 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js2 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js2 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+        </div>
+        <div class="content" onmouseover="overShow(this,event)" onmouseout="outHide()">
+            js3 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js3 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js3 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+            js3 文字超出长度用省略号代替,鼠标悬停并以悬浮框显示
+        </div>
+        <div id="showDiv" style="position: absolute; background-color: white; border: 1px solid black;"></div>
+    </body>
+</html>
