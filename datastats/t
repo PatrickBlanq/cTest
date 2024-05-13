@@ -41,50 +41,5 @@ http://127.0.0.1:777/article/get/all
 回调函数是把一个函数作为参数传递给另一个函数的用法，因为传入的函数，需要在主函数内部调用才会执行。
 回调可以理解为回头再调用。只要搞懂传入和调用的关系。
 
-const obj2 = {
-    group: "group1",
-    list: [
-        {
-            group: "group2",
-            list: [
-                {
-                    group: "group3",
-                    list: [
-                        {
-                            group: "name",
-                            list: [
-                                { name: "21", show: true, },
-                                { name: "22", show: true, }
-                            ],
-                        }
-                    ],
-                }
-            ],
-        },
-
-    ],
-}
-
-const obj3 = {
-    group: "group1",
-    list: [
-        {
-            group: "group2",
-            list: [
-                {
-                    group: "group3",
-                    list: [
-                        {
-                            group: "name",
-                            list: [
-                                { name: "21", show: true, },
-                                { name: "22", show: true, }
-                            ],
-                        }
-                    ],
-                }
-            ],
-        },
-
-    ],
-}
+你好啊。我想写一个vue3，的程序<script setup>是collapse折叠菜单。按照Group1，2，3分组，name在Group3下。
+数据：
