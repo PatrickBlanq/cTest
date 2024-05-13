@@ -10,7 +10,8 @@
                             <div class="collapsible" @click="toggleContent(group3Name)">{{ group3Name }}</div>
                             <div class="content" :id="group3Name">
                                 <div v-for="item in group3" :key="item.ID">
-                                    <div @click="logId(item)">{{ item.Name }}</div>
+                                    <div @click="logId(item)">{{ item.Name }}{{ item.中間見込
+                                        }}</div>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +41,7 @@ const groupData = () => {
     });
     return groups;
 };
-
+const calculate = () => { }
 const toggleContent = id => {
     const content = document.getElementById(id);
     content.style.display = (content.style.display === "block") ? "none" : "block";
