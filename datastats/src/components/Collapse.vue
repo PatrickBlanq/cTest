@@ -4,12 +4,12 @@
             <div class="collapse-wrapper">
                 <div class="collapse-group1">
                     <div :class="['group-text', { 'selected': Group1.expanded }]">
-                        {{ Group1.group1 }} {{ Group1.totalDelivery }}
+                        {{ Group1.group1 }}
                         <span :class="['arrow', { 'rotate': !Group1.expanded }]">&gt;</span>
                     </div>
                 </div>
                 <div>
-                    <Capsule :data="dataCapsule"></Capsule>
+                    <Capsule :totalExpected="Group1.totalExpected" :totalFinished="Group1.totalFinished"></Capsule>
                 </div>
             </div>
             <div v-show="Group1.expanded">
@@ -23,7 +23,8 @@
                             </div>
                         </div>
                         <div>
-                            <Capsule :data="dataCapsule"></Capsule>
+                            <Capsule :totalExpected="Group2.totalExpected" :totalFinished="Group2.totalFinished">
+                            </Capsule>
                         </div>
                     </div>
                     <div v-show="Group2.expanded">
@@ -37,7 +38,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <Capsule :data="dataCapsule"></Capsule>
+                                    <Capsule :totalExpected="Group3.totalExpected"
+                                        :totalFinished="Group3.totalFinished"></Capsule>
                                 </div>
                             </div>
                             <div v-show="Group3.expanded">
@@ -46,16 +48,15 @@
                                     <div class="collapse-wrapper ">
                                         <div class="collapse-item">
                                             <div :class="['group-text', { 'selected': item.selected }]"
-                                                @click="logItemId(item.id)">
+                                                @click="logItem(item)">
 
-                                                <div class="marquee"><span>&bull;&nbsp;&nbsp;{{ item.Name }}+{{
-                                                    item.納品予定
-                                                        }}</span>
+                                                <div class="marquee">
+                                                    <span>&bull;&nbsp;&nbsp;{{ item.Name }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <Capsule :data="dataCapsule"></Capsule>
+                                            <Capsule :totalExpected="item.納品予定" :totalFinished="item.依頼棟数"></Capsule>
                                         </div>
                                     </div>
                                 </div>
@@ -73,12 +74,12 @@ import { ref } from 'vue';
 import Capsule from './Capsule.vue';
 import jsonData from '../accsets/json/datastats.json';
 
-const dataCapsule = {
+/* const dataCapsule = {
     middleNum: "45%",
     rightNum: 9999,
     width2: 130,
     color: "#F2B564",
-};
+}; */
 const groupedMenu = ref([]);
 
 const initializeGroupedMenu = () => {
@@ -92,7 +93,7 @@ const initializeGroupedMenu = () => {
     }
 
     for (const [Group1, items] of groupedByGroup1) {
-        const Group1Item = { group1: Group1, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+        const Group1Item = { group1: Group1, expanded: false, children: [], totalExpected: 0, totalMiddleEstimate: 0, totalFinished: 0 };
 
         const groupedByGroup2 = new Map();
 
@@ -104,7 +105,7 @@ const initializeGroupedMenu = () => {
         }
 
         for (const [Group2, Group2Items] of groupedByGroup2) {
-            const Group2Item = { group2: Group2, expanded: false, children: [], totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+            const Group2Item = { group2: Group2, expanded: false, children: [], totalExpected: 0, totalMiddleEstimate: 0, totalFinished: 0 };
 
             const groupedByGroup3 = new Map();
 
@@ -116,34 +117,124 @@ const initializeGroupedMenu = () => {
             }
 
             for (const [Group3, Group3Items] of groupedByGroup3) {
-                const Group3Item = { group3: Group3, expanded: false, children: Group3Items, totalDelivery: 0, totalMiddleEstimate: 0, totalRequests: 0 };
+                const Group3Item = { group3: Group3, expanded: false, children: Group3Items, totalExpected: 0, totalMiddleEstimate: 0, totalFinished: 0 };
 
                 for (const item of Group3Items) {
-                    Group3Item.totalDelivery += item["納品予定"];
+                    Group3Item.totalExpected += item["納品予定"];
                     Group3Item.totalMiddleEstimate += item["中間見込"];
-                    Group3Item.totalRequests += item["依頼棟数"];
+                    Group3Item.totalFinished += item["依頼棟数"];
                 }
 
                 Group2Item.children.push(Group3Item);
-                Group2Item.totalDelivery += Group3Item.totalDelivery;
+                Group2Item.totalExpected += Group3Item.totalExpected;
                 Group2Item.totalMiddleEstimate += Group3Item.totalMiddleEstimate;
-                Group2Item.totalRequests += Group3Item.totalRequests;
+                Group2Item.totalFinished += Group3Item.totalFinished;
             }
 
             Group1Item.children.push(Group2Item);
-            Group1Item.totalDelivery += Group2Item.totalDelivery;
+            Group1Item.totalExpected += Group2Item.totalExpected;
             Group1Item.totalMiddleEstimate += Group2Item.totalMiddleEstimate;
-            Group1Item.totalRequests += Group2Item.totalRequests;
+            Group1Item.totalFinished += Group2Item.totalFinished;
         }
 
         groupedMenu.value.push(Group1Item);
     }
 };
 
-const toggleCollapse = (item) => {
-    item.expanded = !item.expanded;
-};
+//折叠显示
+const toggleCollapse = (clickedItem) => {
+    if (clickedItem.group1 !== null && clickedItem.group1 !== undefined) {
+        for (const Group1 of groupedMenu.value) {
+            if (Group1.group1 === clickedItem.group1) {
+                Group1.expanded = !Group1.expanded;
+                if (Group1.expanded) {
+                    console.log(Group1);
+                } else {
+                    for (const Group2 of Group1.children) {
+                        Group2.expanded = false;
+                        for (const Group3 of Group2.children) {
+                            Group3.expanded = false;
+                            for (const item of Group3.children) {
+                                item.selected = false;
+                            }
+                        }
+                    }
+                }
+            } else {
+                Group1.expanded = false;
+                for (const Group2 of Group1.children) {
+                    Group2.expanded = false;
+                    for (const Group3 of Group2.children) {
+                        Group3.expanded = false;
+                        for (const item of Group3.children) {
+                            item.selected = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    if (clickedItem.group2 !== null && clickedItem.group2 !== undefined) {
+        for (const Group1 of groupedMenu.value) {
+            //判断选中的gourp1。
+            if (Group1.expanded) {
+                for (const Group2 of Group1.children) {
+                    if (Group2.group2 === clickedItem.group2) {
+                        Group2.expanded = !Group2.expanded;
+                        if (Group2.expanded) {
+                            console.log(Group2);
+                        } else {
+                            for (const Group3 of Group2.children) {
+                                Group3.expanded = false;
+                                for (const item of Group3.children) {
+                                    item.selected = false;
+                                }
+                            }
+                        }
+                    } else {
+                        Group2.expanded = false;
+                        for (const Group3 of Group2.children) {
+                            Group3.expanded = false;
+                            for (const item of Group3.children) {
+                                item.selected = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (clickedItem.group3 !== null && clickedItem.group3 !== undefined) {
+        for (const Group1 of groupedMenu.value) {
+            if (Group1.expanded) {
+                for (const Group2 of Group1.children) {
+                    if (Group2.expanded) {
+                        for (const Group3 of Group2.children) {
+                            if (Group3.group3 === clickedItem.group3) {
+                                Group3.expanded = !Group3.expanded;
+                                if (Group3.expanded) {
+                                    console.log(Group3);
+                                } else {
+                                    for (const item of Group3.children) {
+                                        item.selected = false;
+                                    }
+                                }
+                            } else {
+                                Group3.expanded = false;
+                                for (const item of Group3.children) {
+                                    item.selected = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+};
+//name变色
 const toggleFontColor = (clickedItem) => {
     for (const Group1 of groupedMenu.value) {
         for (const Group2 of Group1.children) {
@@ -156,13 +247,16 @@ const toggleFontColor = (clickedItem) => {
     }
 };
 
-const logItemId = (itemId) => {
+const logItem = (item) => {
+    if (item.selected == false || item.selected == undefined) {
+        console.log("item 是:", item);
+    }
 
-    console.log("item id:", itemId);
+
 };
 
 initializeGroupedMenu();
-console.log(groupedMenu);
+//console.log(groupedMenu);
 
 
 </script>
@@ -171,7 +265,7 @@ console.log(groupedMenu);
 .moduleStyle {
     color: #fff;
     padding: 0rem 1rem 0rem 1.3rem;
-    height: 500px;
+    height: 470px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -290,6 +384,6 @@ console.log(groupedMenu);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #0186C5, #8f94fb);
+    background: linear-gradient(to bottom, #0186C5, #0C1530);
 }
 </style>

@@ -27,7 +27,7 @@
 
                     </div>
                     <div class="t-l-column4">
-                        <Collapse :menu="menu" />
+                        <Collapse />
                     </div>
                 </div>
             </div>
