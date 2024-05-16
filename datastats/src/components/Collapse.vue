@@ -72,7 +72,7 @@
 <script setup>
 import { ref } from 'vue';
 import Capsule from './Capsule.vue';
-import jsonData from '../accsets/json/datastats.json';
+import jsonData from '../assets/json/datastats.json';
 
 /* const dataCapsule = {
     middleNum: "45%",
@@ -264,15 +264,17 @@ initializeGroupedMenu();
 <style scoped>
 .moduleStyle {
     color: #fff;
-    padding: 0rem 1rem 0rem 1.3rem;
-    height: 470px;
+    padding: 1rem 1rem 1.3rem 1.3rem;
+    height: 360px;
     overflow-y: scroll;
     overflow-x: hidden;
+    font-size: 15px;
+    font-weight: 400;
 }
 
 .collapse {
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .group-text-wrapper {

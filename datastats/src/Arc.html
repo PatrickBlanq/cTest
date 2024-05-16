@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Draw 30 Degree Arc</title>
-<style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Draw 30 Degree Arc</title>
+        <style>
   canvas {
     border: 1px solid #000; /* 设置 canvas 的边框 */
     margin-bottom: 20px; /* 设置底部间距 */
   }
-</style>
-</head>
-<body>
-  <canvas id="myCanvas" width="250" height="250"></canvas> <!-- 设置 canvas 的宽度和高度 -->
-
-  <script>
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="250" height="250"></canvas>
+        <!-- 设置 canvas 的宽度和高度 -->
+        <div style="width: 100px;height: 100px; background-image: url('./assets/img/title.png');"></div>
+        <script>
     // 获取 canvas 元素
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
@@ -36,8 +37,6 @@
     ctx.lineWidth = 20; // 设置线宽
     ctx.strokeStyle = '#000'; // 设置线条颜色
     ctx.stroke(); // 绘制弧线
-
-
-  </script>
-</body>
+        </script>
+    </body>
 </html>

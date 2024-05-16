@@ -167,11 +167,11 @@ const closeDropdown = () => {
     width: 100%;
     top: calc(100% + 5px);
     left: 0;
-    background-color: #0C1530;
+    background-color: rgba(0, 0, 0, 0.75);
     border: 1px solid #ccc;
     border-top: none;
     border-radius: 0 0 5px 5px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
 
@@ -180,7 +180,7 @@ const closeDropdown = () => {
 }
 
 .dropdown.day-dropdown {
-    width: 355px;
+    width: 315px;
 }
 
 .day-row {

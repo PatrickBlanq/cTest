@@ -1,17 +1,28 @@
 <template>
-    <div id="chart-container" style="width: 700px; height: 700px;"></div>
+    <div ref="target" style="width: 100%; height: 100%; margin: 7px; margin-left: 20px;"></div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 import * as echarts from 'echarts';
-import data from '../accets/json/datastats.json';
+import data from '../assets/json/stacked.json';
+
+const target = ref(null);
+let myChart = null;
+let seriesData = null;
 
 onMounted(() => {
-    const categories = data.categories;
-    const seriesData = data.series;
+    myChart = echarts.init(target.value);
+    seriesData = data.series;
+    renderChart();
+});
 
+const renderChart = () => {
+    const colors = ['#488EF8', '#F88582', '#71FCF8', '#F2B564'];//bar的颜色
+    const yAxisColor = '#098192'; // 指定 Y 轴的绿色
+    const FontColor = '#fff'; // 文字白色
     const option = {
+        color: colors,
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -20,36 +31,95 @@ onMounted(() => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: 0
+            bottom: 6,
+            itemWidth: 12,
+            itemHeight: 12,
+            itemGap: 20,
+            data: seriesData.map((item, index) => ({
+                name: item.name,
+                textStyle: {
+                    color: colors[index]
+                },
+                icon: 'rect',
+
+
+            }))
         },
         grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '5%',
-            containLabel: true
+            left: -130,
+            right: '3%',
+            bottom: 35,
+            top: 10,
+            containLabel: true,
+
         },
-        yAxis: {
-            type: 'value'
-        },
+
         xAxis: {
-            type: 'category',
-            data: categories
+            type: 'value',
+            show: true,
+            axisTick: {
+                show: false
+            },
+            axisLine: {
+
+                show: false,
+                lineStyle: {
+                    color: FontColor
+                }
+            },
+            axisLabel: {
+                show: true,
+            },
+            splitLine: {
+                show: false
+            }
         },
-        series: seriesData.map(item => ({
+
+        yAxis: {
+            type: 'category',
+            axisLine: {
+                lineStyle: {
+                    color: yAxisColor,
+                    width: 2.5
+
+                }
+            },
+            axisLabel: {
+                fontSize: 13,
+                margin: 145,
+                left: 200,
+                color: FontColor,
+                align: 'left',
+                formatter: function (value) {
+                    //  Y 轴标签的处理，超过阈值时进行截断并添加省略号
+                    const maxLength = 10;
+                    return value.length > maxLength ? value.slice(0, maxLength) + '...' : value;
+                }
+            },
+            axisTick: {
+                show: false,
+                inside: false,
+            },
+            data: seriesData[0].data.map(item => item.Name)
+        },
+        series: seriesData.map((item, index) => ({
             name: item.name,
             type: 'bar',
             stack: 'total',
             label: {
-                show: true
+                show: true,
+                color: FontColor
             },
+
             emphasis: {
                 focus: 'series'
             },
-            data: item.data
+            itemStyle: {
+                color: colors[index]
+            },
+            data: item.data.map(dataItem => dataItem.value)
         }))
     };
-
-    const myChart = echarts.init(document.getElementById('chart-container'));
     myChart.setOption(option);
-});
+};
 </script>

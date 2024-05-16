@@ -3,7 +3,7 @@
         <div class="left">
             <div class="top">
                 <div class="left1 flex-column">
-                    <div class="t-l-column1 flex-row">
+                    <div class="t-l-column1 flex-row" style="align-items: baseline;">
                         <Title strTitle="纳期状况"></Title>
                         <DateSelect></DateSelect>
                     </div>
@@ -27,13 +27,21 @@
 
                     </div>
                     <div class="t-l-column4">
-                        <Collapse />
+
+                        <Collapse style="border: 1px solid #ccc;"></Collapse>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <div class="left2">
-                    <Title strTitle="在库种类状况"></Title>
+                <div class="left2" style="display: flex; flex-direction: column;">
+
+                    <Title style="flex-grow: 1;  border: 1px solid #ccc;" strTitle="在库种类状况"></Title>
+
+
+
+                    <StackedHB style="flex-grow: 2;min-height: 100%;  border: 1px solid #ccc; "></StackedHB>
+
+
                 </div>
             </div>
         </div>
@@ -41,9 +49,15 @@
             <div class="top flex-column">
                 <div class="center1">EPCOデータ掲示板</div>
                 <div class="center2 flex-row">
-                    <div class="t-c-2"></div>
-                    <div class="t-c-2"></div>
-                    <div class="t-c-2"></div>
+                    <div class="t-c-2">
+                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上"></IndicateCard>
+                    </div>
+                    <div class="t-c-2">
+                        <IndicateCard :num1="actual1" :num2="actual2" title="实际壳上"></IndicateCard>
+                    </div>
+                    <div class="t-c-2">
+                        <Members></Members>
+                    </div>
                 </div>
                 <div class="center3"></div>
             </div>
@@ -79,7 +93,16 @@ import Arc from '@/components/Arc.vue';
 import DateTimeDisplay from '@/components/DateTimeDisplay.vue';
 import NumCard from '@/components/NumCard.vue';
 import Collapse from '@/components/Collapse.vue';
+import StackedHB from '@/components/StackedHB.vue';
+import IndicateCard from '@/components/IndicateCard.vue';
+import data from '../assets/json/indicateCard.json';
+import Members from '@/components/Members.vue';
+// 在子组件之外计算 budget1 和 budget2 的值
 
+const budget1 = data[0].budget;
+const budget2 = data[1].budget;
+const actual1 = data[0].actual;
+const actual2 = data[1].actual;
 /* const menu = reactive([
     { id: 1, group1: "沖縄第2設計センター", group2: "沖縄第1G", group3: "第1・2T", name: "橋本総業（アイフル・一般）、東京セキスイ、渡辺パイプ", selected: false, color: "#488EF7", width: "60%" },
     { id: 2, group1: "g1", group2: "g1-g1", group3: "g321", name: "大和ハウス総合窓口　変更（住宅・給排水）", selected: false, color: "#F2B564", width: "40%" },
@@ -157,6 +180,7 @@ const dataCard7 = {
 .center,
 .right {
     display: flex;
+    flex-shrink: 0;
     flex-direction: column;
     margin: 17px 0px 17px 17px;
     /* border: 1px solid #ccc; */
@@ -167,11 +191,11 @@ const dataCard7 = {
 }
 
 .center {
-    flex: 59;
+    flex: 50;
 }
 
 .right {
-    flex: 40;
+    flex: 43;
     margin-right: 20px;
 }
 
@@ -182,8 +206,10 @@ const dataCard7 = {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('../accsets/img/left1.png');
+    background-image: url('../assets/img/left1.png');
 }
+
+
 
 .t-l-column1,
 .t-l-column2,
@@ -251,7 +277,7 @@ const dataCard7 = {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('../accsets/img/title.png');
+    background-image: url('../assets/img/title.png');
 
 }
 
@@ -263,7 +289,6 @@ const dataCard7 = {
 
 .center2 {
     flex: 78;
-
     justify-content: space-between;
 }
 
@@ -276,13 +301,13 @@ const dataCard7 = {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('../accsets/img/number.png');
+    background-image: url('../assets/img/number.png');
 }
 
 .center3 {
     flex: 360;
     margin-top: 7px;
-    background-image: url('../accsets/img/map.png');
+    background-image: url('../assets/img/map.png');
 }
 
 
@@ -294,19 +319,19 @@ const dataCard7 = {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('../accsets/img/time.png');
+    background-image: url('../assets/img/time.png');
 }
 
 .right2 {
     flex: 160;
     margin-top: 7px;
-    background-image: url('../accsets/img/module.png');
+    background-image: url('../assets/img/module.png');
 }
 
 .right3 {
     flex: 290;
     margin-top: 7px;
-    background-image: url('../accsets/img/module.png');
+    background-image: url('../assets/img/module.png');
 }
 
 .top,
@@ -323,6 +348,6 @@ const dataCard7 = {
 .bottom {
     flex: 23;
     margin-top: 13px;
-    background-image: url('../accsets/img/module.png');
+    background-image: url('../assets/img/module.png');
 }
 </style>

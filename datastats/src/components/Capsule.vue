@@ -1,5 +1,6 @@
 <template>
-    <canvas ref="canvasRef" width="300" height="13"></canvas>
+    <div style="margin-left: 10px;"> <canvas ref="canvasRef" width="300" height="13"></canvas></div>
+
 </template>
 
 <script setup>
