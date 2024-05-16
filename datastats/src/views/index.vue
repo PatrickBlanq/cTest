@@ -7,7 +7,8 @@
                         <Title strTitle="纳期状况"></Title>
                         <DateSelect></DateSelect>
                     </div>
-                    <div class="t-l-column2 flex-row">
+                    <div class="t-l-column2"
+                        style="box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; border: 1px solid #ccc;">
                         <Arc :data="dataArc1"></Arc>
                         <Arc :data="dataArc2"></Arc>
                         <Arc :data="dataArc3"></Arc>
