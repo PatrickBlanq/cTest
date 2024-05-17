@@ -7,8 +7,7 @@
                         <Title strTitle="纳期状况"></Title>
                         <DateSelect></DateSelect>
                     </div>
-                    <div class="t-l-column2"
-                        style="box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; border: 1px solid #ccc;">
+                    <div class="t-l-column2" style="box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
                         <Arc :data="dataArc1"></Arc>
                         <Arc :data="dataArc2"></Arc>
                         <Arc :data="dataArc3"></Arc>
@@ -29,21 +28,21 @@
                     </div>
                     <div class="t-l-column4">
 
-                        <Collapse style="border: 1px solid #ccc;"></Collapse>
+                        <Collapse style="min-height: 80%; "></Collapse>
                     </div>
                 </div>
             </div>
-            <div class="bottom">
-                <div class="left2" style="display: flex; flex-direction: column;">
-
-                    <Title style="flex-grow: 1;  border: 1px solid #ccc;" strTitle="在库种类状况"></Title>
+            <div class="bottom" style="box-sizing: border-box; border: 0px solid #ccc;">
 
 
+                <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
 
-                    <StackedHB style="flex-grow: 2;min-height: 100%;  border: 1px solid #ccc; "></StackedHB>
 
 
-                </div>
+                <StackedHB style="height: 80%; "></StackedHB>
+
+
+
             </div>
         </div>
         <div class="center">
@@ -51,7 +50,9 @@
                 <div class="center1">EPCOデータ掲示板</div>
                 <div class="center2 flex-row">
                     <div class="t-c-2">
-                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上"></IndicateCard>
+                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上">
+
+                        </IndicateCard>
                     </div>
                     <div class="t-c-2">
                         <IndicateCard :num1="actual1" :num2="actual2" title="实际壳上"></IndicateCard>
@@ -60,9 +61,22 @@
                         <Members></Members>
                     </div>
                 </div>
-                <div class="center3"></div>
+                <div class="center3">
+
+                </div>
             </div>
             <div class="bottom">
+                <TabControl>
+
+                    <Tab label="栋数" :index="0">
+
+                        <Annual></Annual>
+
+                    </Tab>
+                    <Tab label="壳上" :index="1">
+                        <Annual></Annual>
+                    </Tab>
+                </TabControl>
             </div>
         </div>
         <div class="right">
@@ -98,6 +112,9 @@ import StackedHB from '@/components/StackedHB.vue';
 import IndicateCard from '@/components/IndicateCard.vue';
 import data from '../assets/json/indicateCard.json';
 import Members from '@/components/Members.vue';
+import TabControl from '@/components/TabControl.vue';
+import Tab from '@/components/Tab.vue';
+import Annual from '@/components/Annual.vue';
 // 在子组件之外计算 budget1 和 budget2 的值
 
 const budget1 = data[0].budget;

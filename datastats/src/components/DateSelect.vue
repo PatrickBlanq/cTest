@@ -156,7 +156,6 @@ const closeDropdown = () => {
 .separator {
     width: 2px;
     margin-top: 0.4rem;
-
     height: 0.6rem;
     background-color: #2FB6FF;
 

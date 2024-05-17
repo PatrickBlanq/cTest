@@ -1,5 +1,5 @@
 <template>
-    <div ref="target" style="width: 100%; height: 100%; margin: 7px; margin-left: 20px;"></div>
+    <div ref="target" style="width: 100%; height: 80%; margin-left: 20px;"></div>
 </template>
 
 <script setup>
