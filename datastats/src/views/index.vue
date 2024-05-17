@@ -70,11 +70,11 @@
 
                     <Tab label="栋数" :index="0">
 
-                        <Annual></Annual>
+                        <Annual :jsonData="jsonData1"></Annual>
 
                     </Tab>
                     <Tab label="壳上" :index="1">
-                        <Annual></Annual>
+                        <Annual :jsonData="jsonData2"></Annual>
                     </Tab>
                 </TabControl>
             </div>
@@ -116,6 +116,8 @@ import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
 // 在子组件之外计算 budget1 和 budget2 的值
+import jsonData1 from '../assets/json/annualMoney.json';
+import jsonData2 from '../assets/json/annualBuilding.json';
 
 const budget1 = data[0].budget;
 const budget2 = data[1].budget;
@@ -209,7 +211,7 @@ const dataCard7 = {
 }
 
 .center {
-    flex: 50;
+    flex: 63;
 }
 
 .right {

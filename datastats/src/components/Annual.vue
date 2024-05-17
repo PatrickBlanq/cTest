@@ -3,9 +3,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, defineProps } from "vue";
 import * as echarts from 'echarts';
-import jsonData from '../assets/json/annualBuilding.json';
+
+const props = defineProps({
+    jsonData: {
+        type: Object,
+        required: true
+    }
+});
 
 const target = ref(null);
 let myChart = null;
@@ -28,11 +34,11 @@ const renderChart = (width, height) => {
     const FontColor = '#848896'; // 文字白色
     const gradientColors = [['#03E2D5', '#478EF8'], ['#F2B564', '#EA6832']]; // 每组柱状图的颜色
 
-    const years = Object.keys(jsonData);
+    const years = Object.keys(props.jsonData);
     const series = years.map((year, index) => ({
         name: year,
         type: 'bar',
-        data: jsonData[year].map(item => item.值),
+        data: props.jsonData[year].map(item => item.值),
         itemStyle: {
             color: {
                 type: 'linear',
@@ -49,10 +55,10 @@ const renderChart = (width, height) => {
                 }]
             }
         },
-        barWidth: 20
+        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 根据条件设置不同的 barWidth
     }));
 
-    const quarters = jsonData[years[0]].map(item => item.季度);
+    const quarters = props.jsonData[years[0]].map(item => item.季度);
 
     const option = {
         legend: {
