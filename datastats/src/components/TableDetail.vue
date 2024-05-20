@@ -84,6 +84,7 @@ const handleResize = () => {
 <style scoped>
 .table-container {
     width: 100%;
+    margin-top: 7px;
     overflow: hidden;
     border: 1px solid #ccc;
 }
@@ -106,6 +107,10 @@ th {
     border-top: 3px solid #242C44;
     border-bottom: 3px solid #242C44;
 
+}
+
+tr:hover {
+    background-color: #242C44;
 }
 
 .status-completed {

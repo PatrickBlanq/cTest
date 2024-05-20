@@ -61,9 +61,9 @@
                 </div>
             </div>
             <div class="bottom">
-                <TabControl>
+                <TabControl style="height: 100%;">
                     <Tab label="栋数" :index="0">
-                        <Annual :jsonData="jsonData1" style="height: 90%;"></Annual>
+                        <Annual :jsonData="jsonData1"></Annual>
                     </Tab>
                     <Tab label="壳上" :index="1">
                         <Annual :jsonData="jsonData2"></Annual>

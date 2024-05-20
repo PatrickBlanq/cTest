@@ -49,7 +49,7 @@ const renderChart = () => {
             left: -130,
             right: '4%',
             bottom: 35,
-            top: 10,
+            top: -7,
             containLabel: true,
 
         },
