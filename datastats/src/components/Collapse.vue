@@ -74,12 +74,6 @@ import { ref } from 'vue';
 import Capsule from './Capsule.vue';
 import jsonData from '../assets/json/datastats.json';
 
-/* const dataCapsule = {
-    middleNum: "45%",
-    rightNum: 9999,
-    width2: 130,
-    color: "#F2B564",
-}; */
 const groupedMenu = ref([]);
 
 const initializeGroupedMenu = () => {
@@ -265,7 +259,7 @@ initializeGroupedMenu();
 .moduleStyle {
     color: #fff;
     padding: 1rem 1rem 1.3rem 1.3rem;
-    height: 360px;
+    height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
     font-size: 15px;

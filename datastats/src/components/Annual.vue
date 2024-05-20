@@ -31,8 +31,8 @@ onMounted(async () => {
 });
 
 const renderChart = (width, height) => {
-    const FontColor = '#848896'; // 文字白色
-    const gradientColors = [['#03E2D5', '#478EF8'], ['#F2B564', '#EA6832']]; // 每组柱状图的颜色
+    const FontColor = '#848896'; // 文字颜色
+    const gradientColors = [['#03E2D5', '#478EF8'], ['#F2B564', '#EA6832']]; // 每组柱状图的渐变色
 
     const years = Object.keys(props.jsonData);
     const series = years.map((year, index) => ({
@@ -55,7 +55,7 @@ const renderChart = (width, height) => {
                 }]
             }
         },
-        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 根据条件设置不同的 barWidth
+        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 根据柱多少设置不同的 barWidth
     }));
 
     const quarters = props.jsonData[years[0]].map(item => item.季度);
@@ -68,7 +68,7 @@ const renderChart = (width, height) => {
             itemWidth: 12,
             itemHeight: 12,
             icon: 'rect',
-
+            itemGap: 10,
             data: years.map((year, index) => ({
                 name: year,
                 textStyle: {

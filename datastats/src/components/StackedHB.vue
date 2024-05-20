@@ -47,7 +47,7 @@ const renderChart = () => {
         },
         grid: {
             left: -130,
-            right: '3%',
+            right: '4%',
             bottom: 35,
             top: 10,
             containLabel: true,

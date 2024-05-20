@@ -7,13 +7,15 @@
                         <Title strTitle="纳期状况"></Title>
                         <DateSelect></DateSelect>
                     </div>
-                    <div class="t-l-column2" style="box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
+                    <div class="t-l-column2"
+                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
                         <Arc :data="dataArc1"></Arc>
                         <Arc :data="dataArc2"></Arc>
                         <Arc :data="dataArc3"></Arc>
                         <Arc :data="dataArc4"></Arc>
                     </div>
-                    <div class="t-l-column3">
+                    <div class="t-l-column3"
+                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
                         <div class="column-flex-row">
                             <NumCard :data="dataCard1" />
                             <NumCard :data="dataCard2" />
@@ -28,22 +30,15 @@
                     </div>
                     <div class="t-l-column4">
 
-                        <Collapse style="min-height: 80%; "></Collapse>
+                        <Collapse style="max-height: 370px;; "></Collapse>
                     </div>
                 </div>
             </div>
-            <div class="bottom" style="box-sizing: border-box; border: 0px solid #ccc;">
-
-
+            <div class="bottom" style="display: flex; box-sizing: border-box; border: 0px solid #ccc;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
-
-
-
                 <StackedHB style="height: 80%; "></StackedHB>
-
-
-
             </div>
+
         </div>
         <div class="center">
             <div class="top flex-column">
@@ -67,11 +62,8 @@
             </div>
             <div class="bottom">
                 <TabControl>
-
                     <Tab label="栋数" :index="0">
-
-                        <Annual :jsonData="jsonData1"></Annual>
-
+                        <Annual :jsonData="jsonData1" style="height: 90%;"></Annual>
                     </Tab>
                     <Tab label="壳上" :index="1">
                         <Annual :jsonData="jsonData2"></Annual>
@@ -86,22 +78,32 @@
                 </div>
                 <div class="right2">
                     <Title strTitle="出勤人数"></Title>
+                    <div style=" height: 80%; border: 0px solid #ccc;">
+                        <Attendance></Attendance>
+                    </div>
+
                 </div>
                 <div class="right3">
-                    <Title strTitle="是正情况"></Title>
+                    <Title strTitle="是正状况"></Title>
+                    <div style="display: flex;flex-direction: column; height: 88%;border: 0px solid #ccc;">
+                        <div style="flex: 2;display: flex; flex-direction: row; border: 0px solid #ccc;">
+                            <IndicateCard3 :num1="building1" :num2="building2" title="栋数前年比率"></IndicateCard3>
+                            <IndicateCard2 :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCard2>
+                        </div>
+                        <div style="flex: 3;border: 1px solid #ccc;"></div>
+                    </div>
                 </div>
             </div>
             <div class="bottom">
-                <div class="">
-                    <Title strTitle="纳期动态"></Title>
-                </div>
+                <Title strTitle="纳期动态"></Title>
+                <TableDetail style=" height: 88%; width: 100%;border: 0px solid #ccc;"></TableDetail>
+
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
 import Title from '@/components/Title.vue';
 import DateSelect from '@/components/DateSelect.vue';
 import Arc from '@/components/Arc.vue';
@@ -110,7 +112,9 @@ import NumCard from '@/components/NumCard.vue';
 import Collapse from '@/components/Collapse.vue';
 import StackedHB from '@/components/StackedHB.vue';
 import IndicateCard from '@/components/IndicateCard.vue';
-import data from '../assets/json/indicateCard.json';
+
+import dataIndicate from '../assets/json/indicateCard.json';
+import dataIndicate2 from '../assets/json/indicateCard2.json';
 import Members from '@/components/Members.vue';
 import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
@@ -119,17 +123,19 @@ import Annual from '@/components/Annual.vue';
 import jsonData1 from '../assets/json/annualMoney.json';
 import jsonData2 from '../assets/json/annualBuilding.json';
 
-const budget1 = data[0].budget;
-const budget2 = data[1].budget;
-const actual1 = data[0].actual;
-const actual2 = data[1].actual;
-/* const menu = reactive([
-    { id: 1, group1: "沖縄第2設計センター", group2: "沖縄第1G", group3: "第1・2T", name: "橋本総業（アイフル・一般）、東京セキスイ、渡辺パイプ", selected: false, color: "#488EF7", width: "60%" },
-    { id: 2, group1: "g1", group2: "g1-g1", group3: "g321", name: "大和ハウス総合窓口　変更（住宅・給排水）", selected: false, color: "#F2B564", width: "40%" },
-    { id: 3, group1: "g2", group2: "g1", group3: "g312", name: "g2g1n1", selected: false, color: "#F2B564", width: "40%" },
-    { id: 4, group1: "g2", group2: "g2", group3: "g322", name: "g2g2n2", selected: false, color: "#F2B564", width: "40%" },
-    { id: 5, group1: "g2", group2: "g2", group3: "g322", name: "gh2g2n2", selected: false, color: "#F2B564", width: "40%" }
-]); */
+import Attendance from '@/components/Attendance.vue'
+import IndicateCard2 from '@/components/IndicateCard3.vue';
+import IndicateCard3 from '@/components/IndicateCard2.vue';
+import TableDetail from '@/components/TableDetail.vue';
+const budget1 = dataIndicate[0].budget;
+const budget2 = dataIndicate[1].budget;
+const actual1 = dataIndicate[0].actual;
+const actual2 = dataIndicate[1].actual;
+
+const building1 = dataIndicate2[0].building;
+const building2 = dataIndicate2[1].building;
+const money1 = dataIndicate2[0].money;
+const money2 = dataIndicate2[1].money;
 
 const dataArc1 = {
     num: 2654,
@@ -203,7 +209,7 @@ const dataCard7 = {
     flex-shrink: 0;
     flex-direction: column;
     margin: 17px 0px 17px 17px;
-    /* border: 1px solid #ccc; */
+    border: 0px solid #ccc;
 }
 
 .left {
@@ -220,7 +226,6 @@ const dataCard7 = {
 }
 
 .left1 {
-
     width: 100%;
     height: 100%;
     background-size: 100% 100%;
@@ -228,8 +233,6 @@ const dataCard7 = {
     background-repeat: no-repeat;
     background-image: url('../assets/img/left1.png');
 }
-
-
 
 .t-l-column1,
 .t-l-column2,
@@ -285,6 +288,8 @@ const dataCard7 = {
 .right1,
 .right2,
 .right3 {
+    display: flex;
+    flex-direction: column;
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -332,7 +337,7 @@ const dataCard7 = {
 
 
 .right1 {
-    flex: 55;
+    flex: 50;
     font-size: 1.5rem;
     font-weight: bold;
     color: #71FDF8;
@@ -359,6 +364,8 @@ const dataCard7 = {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
 }
 
 .top {
