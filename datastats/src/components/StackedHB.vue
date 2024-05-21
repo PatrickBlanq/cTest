@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
 import data from '../assets/json/stacked.json';
 
@@ -12,11 +12,19 @@ let myChart = null;
 let seriesData = null;
 
 onMounted(() => {
+    window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
     seriesData = data.series;
     renderChart();
 });
-
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+function handleResize() {
+    if (myChart) {
+        myChart.resize();
+    }
+}
 const renderChart = () => {
     const colors = ['#488EF8', '#F88582', '#71FCF8', '#F2B564'];//bar的颜色
     const yAxisColor = '#098192'; // 指定 Y 轴的绿色
@@ -31,7 +39,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: 6,
+            bottom: 17,
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 20,
@@ -41,15 +49,13 @@ const renderChart = () => {
                     color: colors[index]
                 },
                 icon: 'rect',
-
-
             }))
         },
         grid: {
             left: -130,
-            right: '4%',
-            bottom: 35,
-            top: -7,
+            right: 50,
+            bottom: 45,
+            top: 0,
             containLabel: true,
 
         },

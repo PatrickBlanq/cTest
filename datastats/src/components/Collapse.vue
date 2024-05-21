@@ -258,7 +258,7 @@ initializeGroupedMenu();
 <style scoped>
 .moduleStyle {
     color: #fff;
-    padding: 1rem 1rem 1.3rem 1.3rem;
+    padding: 0.8rem 1rem 1.3rem 1rem;
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -380,6 +380,6 @@ initializeGroupedMenu();
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #0186C5, #0C1530);
+    background: linear-gradient(to bottom, #0C1530, #0C1530, rgba(1, 134, 197, 1), rgba(1, 134, 197, 0.5), #0C1530, #0C1530);
 }
 </style>

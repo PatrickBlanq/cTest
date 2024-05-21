@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import jsonData from '../assets/json/checkBack.json';
 
 
@@ -31,6 +30,7 @@ import jsonData from '../assets/json/checkBack.json';
 <style scoped>
 .table-container {
     width: 100%;
+    max-height: 230px;
     margin-top: 7px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -63,5 +63,13 @@ tr:hover {
 
 .status-completed {
     color: #74A8FF;
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0C1530, #0C1530, rgba(1, 134, 197, 1), rgba(1, 134, 197, 0.5), #0C1530, #0C1530);
 }
 </style>

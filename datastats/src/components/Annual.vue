@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, defineProps } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import * as echarts from 'echarts';
 
 const props = defineProps({
@@ -16,19 +16,20 @@ const props = defineProps({
 const target = ref(null);
 let myChart = null;
 
-onMounted(async () => {
-    await nextTick();
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    myChart = echarts.init(target.value);
 
-    const domWidth = target.value.clientWidth;
-    const domHeight = target.value.clientHeight;
-
-    if (domWidth > 0 && domHeight > 0) {
-        myChart = echarts.init(target.value);
-        renderChart(domWidth, domHeight);
-    } else {
-        console.error("Container dimensions are 0, cannot initialize ECharts.");
-    }
+    renderChart();
 });
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+function handleResize() {
+    if (myChart) {
+        myChart.resize();
+    }
+}
 
 const renderChart = (width, height) => {
     const FontColor = '#848896'; // 文字颜色
@@ -55,7 +56,7 @@ const renderChart = (width, height) => {
                 }]
             }
         },
-        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 根据柱多少设置不同的 barWidth
+        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 柱宽
     }));
 
     const quarters = props.jsonData[years[0]].map(item => item.季度);
@@ -84,7 +85,7 @@ const renderChart = (width, height) => {
         },
         grid: {
             top: 25,
-            bottom: 40,
+            bottom: 35,
             left: 80,
             right: 50
         },
@@ -120,15 +121,13 @@ const renderChart = (width, height) => {
         series
     };
 
-    myChart.setOption(option, { width, height });
+    myChart.setOption(option);
 };
 </script>
 
 <style scoped>
 .chart-container {
     border: 0px solid #ccc;
-    min-width: 550px;
-    min-height: 230px;
     height: 100%;
     width: 100%;
 }

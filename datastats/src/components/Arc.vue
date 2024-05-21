@@ -56,5 +56,6 @@ onMounted(() => {
 <style scoped>
 canvas {
     border: 0px solid #000;
+    margin-left: 1rem;
 }
 </style>

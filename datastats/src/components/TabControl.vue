@@ -6,7 +6,7 @@
                 <div :class="['tab', { active: selectedTab === index }]" @click="selectedTab = index">
                     {{ tab.label }}
                 </div>
-                <div v-if="index < tabs.length - 1" class="separator"></div>
+                <div v-if="index < tabs.length - 1" class="separator" style="margin-left: 10px;"></div>
             </div>
         </div>
         <div class="tab-panels">
@@ -64,13 +64,5 @@ provide('addTab', addTab);
 
 .tab-panels {
     padding: 0rem;
-}
-
-
-.separator {
-    width: 2px;
-    margin-left: 8px;
-    height: 0.6rem;
-    background-color: #2FB6FF;
 }
 </style>

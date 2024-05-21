@@ -32,7 +32,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 const members = [155, 16, 8, 10];
 const sum = members.reduce((total, current) => total + current, 0);

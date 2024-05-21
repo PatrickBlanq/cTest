@@ -5,27 +5,26 @@
                 <div class="left1 flex-column">
                     <div class="t-l-column1 flex-row" style="align-items: baseline;">
                         <Title strTitle="纳期状况"></Title>
-                        <DateSelect></DateSelect>
+                        <DateSelect style="margin-left: 2rem;"></DateSelect>
                     </div>
                     <div class="t-l-column2"
-                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
+                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; border: 0px solid #ccc;">
                         <Arc :data="dataArc1"></Arc>
                         <Arc :data="dataArc2"></Arc>
                         <Arc :data="dataArc3"></Arc>
                         <Arc :data="dataArc4"></Arc>
                     </div>
-                    <div class="t-l-column3"
-                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; ">
-                        <div class="column-flex-row">
-                            <NumCard :data="dataCard1" />
-                            <NumCard :data="dataCard2" />
-                            <NumCard :data="dataCard3" />
-                            <NumCard :data="dataCard4" />
-                            <NumCard :data="dataCard5" />
-                            <NumCard :data="dataCard5" />
-                            <NumCard :data="dataCard5" />
-                            <NumCard :data="dataCard6" />
-                        </div>
+                    <div class="t-l-column3 flex-row" style=" flex: 2; box-sizing: border-box;border: 0px solid #ccc;">
+
+                        <NumCard :data="dataCard1" />
+                        <NumCard :data="dataCard2" />
+                        <NumCard :data="dataCard3" />
+                        <NumCard :data="dataCard4" />
+                        <NumCard :data="dataCard5" />
+                        <NumCard :data="dataCard5" />
+                        <NumCard :data="dataCard5" />
+                        <NumCard :data="dataCard6" />
+
 
                     </div>
                     <div class="t-l-column4">
@@ -216,7 +215,7 @@ const dataCard7 = {
 }
 
 .left {
-    flex: 43;
+    flex: 42;
 }
 
 .center {
@@ -224,7 +223,7 @@ const dataCard7 = {
 }
 
 .right {
-    flex: 43;
+    flex: 42;
     margin-right: 20px;
 }
 
@@ -241,7 +240,7 @@ const dataCard7 = {
 .t-l-column2,
 .t-l-column3,
 .t-l-column4 {
-    width: 99%;
+    width: 100%;
     height: 100%;
     border-width: 0px;
     border-color: #fff;
@@ -254,11 +253,16 @@ const dataCard7 = {
 
 .t-l-column2 {
     flex: 80;
-    justify-content: space-between;
+    justify-content: space-around;
 }
+
+
 
 .t-l-column3 {
     flex: 50;
+    justify-content: space-around;
+    padding-right: 1rem;
+
 
 }
 
@@ -317,7 +321,7 @@ const dataCard7 = {
 
 .center2 {
     flex: 78;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .t-c-2 {

@@ -3,27 +3,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
 import jsonData from '../assets/json/attendance.json';
 
 const target = ref(null);
 let myChart = null;
 
-onMounted(async () => {
-    await nextTick();
-
-    const domWidth = target.value.clientWidth;
-    const domHeight = target.value.clientHeight;
-
-    if (domWidth > 0 && domHeight > 0) {
-        myChart = echarts.init(target.value);
-        renderChart();
-    } else {
-        console.error("Container dimensions are 0, cannot initialize ECharts.");
-    }
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    myChart = echarts.init(target.value);
+    renderChart();
 });
-
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+function handleResize() {
+    if (myChart) {
+        myChart.resize();
+    }
+}
 const renderChart = () => {
 
     const seriesData = jsonData.map(item => ({
@@ -40,7 +39,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: '1%',
+            bottom: '2%',
             left: 'center',
             itemWidth: 12,
             itemHeight: 12,
@@ -86,10 +85,8 @@ const renderChart = () => {
 
             }
         ],
-        color: colors // 设置颜色顺序
+        color: colors
     };
-
-
 
 
     myChart.setOption(option);
@@ -99,8 +96,6 @@ const renderChart = () => {
 <style scoped>
 .chart-container {
     border: 0px solid #ccc;
-    min-width: 470px;
-    min-height: 150px;
     height: 100%;
     width: 100%;
 }
