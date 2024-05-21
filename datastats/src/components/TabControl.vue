@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-control" style="height: 100%; ">
+    <div class="tab-control">
         <div class="tab-list">
             <div class="mark" style="margin-left: 17px; margin-right: 10px;"></div>
             <div v-for="(tab, index) in tabs" :key="index" class="tab-container">
@@ -33,7 +33,8 @@ provide('addTab', addTab);
 .tab-control {
     padding-top: 10px;
     border: 0px solid #ccc;
-
+    width: 100%;
+    height: 100%;
 }
 
 .tab-list {
@@ -46,13 +47,12 @@ provide('addTab', addTab);
     display: flex;
     align-items: center;
     margin-right: 10px;
-    /* 添加右侧间隔 */
 }
 
 
 
 .tab {
-
+    border: 0px solid #ccc;
     cursor: pointer;
 }
 
@@ -63,6 +63,10 @@ provide('addTab', addTab);
 }
 
 .tab-panels {
+    border: 0px solid #ccc;
+    width: 100%;
+    height: 90%;
+    flex-grow: 1;
     padding: 0rem;
 }
 </style>

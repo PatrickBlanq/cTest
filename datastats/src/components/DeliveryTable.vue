@@ -32,7 +32,7 @@ let interval = null;
 const calculateVisibleCount = () => {
     const containerHeight = container.value.clientHeight;
     const rowHeight = 40;
-    return Math.floor(containerHeight / rowHeight);
+    return 6;
 };
 
 const scrollData = () => {
@@ -47,13 +47,13 @@ onMounted(async () => {
     displayedData.value = jsonData.slice(0, calculateVisibleCount());
     interval = setInterval(scrollData, 1000);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('fullscreenchange', handleResize);
+
 });
 
 onUnmounted(() => {
     clearInterval(interval);
     window.removeEventListener('resize', handleResize);
-    window.removeEventListener('fullscreenchange', handleResize);
+
 });
 
 const handleResize = () => {
@@ -63,15 +63,16 @@ const handleResize = () => {
 
 <style scoped>
 .table-container {
-    width: 100%;
     margin-top: 7px;
     overflow: hidden;
-    border: 1px solid #ccc;
+
 }
 
 table {
     width: 100%;
+    height: 100%;
     border-collapse: collapse;
+    border: 0px solid #ccc;
     color: #fff;
 }
 

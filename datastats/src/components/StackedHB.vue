@@ -1,5 +1,5 @@
 <template>
-    <div ref="target" style="width: 100%; height: 80%; margin-left: 20px;"></div>
+    <div ref="target" class="chart-container" style="box-sizing: border-box; margin-left: 20px;"></div>
 </template>
 
 <script setup>
@@ -39,7 +39,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: 17,
+            bottom: 10,
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 20,
@@ -54,8 +54,8 @@ const renderChart = () => {
         grid: {
             left: -130,
             right: 50,
-            bottom: 45,
-            top: 0,
+            bottom: 37,
+            top: 10,
             containLabel: true,
 
         },

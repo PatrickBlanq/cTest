@@ -15,7 +15,6 @@
                         <Arc :data="dataArc4"></Arc>
                     </div>
                     <div class="t-l-column3 flex-row" style=" flex: 2; box-sizing: border-box;border: 0px solid #ccc;">
-
                         <NumCard :data="dataCard1" />
                         <NumCard :data="dataCard2" />
                         <NumCard :data="dataCard3" />
@@ -24,29 +23,23 @@
                         <NumCard :data="dataCard5" />
                         <NumCard :data="dataCard5" />
                         <NumCard :data="dataCard6" />
-
-
                     </div>
                     <div class="t-l-column4">
-
                         <Collapse style="max-height: 370px;; "></Collapse>
                     </div>
                 </div>
             </div>
             <div class="bottom" style="display: flex; box-sizing: border-box; border: 0px solid #ccc;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
-                <StackedHB style="height: 80%; "></StackedHB>
+                <StackedHB></StackedHB>
             </div>
-
         </div>
         <div class="center">
             <div class="top flex-column">
                 <div class="center1">EPCOデータ掲示板</div>
                 <div class="center2 flex-row">
                     <div class="t-c-2">
-                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上">
-
-                        </IndicateCard>
+                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上"> </IndicateCard>
                     </div>
                     <div class="t-c-2">
                         <IndicateCard :num1="actual1" :num2="actual2" title="实际壳上"></IndicateCard>
@@ -60,7 +53,7 @@
                 </div>
             </div>
             <div class="bottom">
-                <TabControl style="height: 100%;">
+                <TabControl>
                     <Tab label="栋数" :index="0">
                         <Annual :jsonData="jsonData1"></Annual>
                     </Tab>
@@ -77,17 +70,15 @@
                 </div>
                 <div class="right2">
                     <Title strTitle="出勤人数"></Title>
-                    <div style=" height: 80%; border: 0px solid #ccc;">
-                        <Attendance></Attendance>
-                    </div>
-
+                    <Attendance></Attendance>
                 </div>
                 <div class="right3">
                     <Title strTitle="是正状况"></Title>
                     <div style="display: flex;flex-direction: column; height: 88%;border: 0px solid #ccc;">
                         <div style="flex: 2;display: flex; flex-direction: row; border: 0px solid #ccc;">
-                            <IndicateCard3 :num1="building1" :num2="building2" title="栋数前年比率"></IndicateCard3>
-                            <IndicateCard2 :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCard2>
+                            <IndicateCardBuilding :num1="building1" :num2="building2" title="栋数前年比率">
+                            </IndicateCardBuilding>
+                            <IndicateCardMoney :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCardMoney>
                         </div>
                         <div style="flex: 3;border: 0px solid #ccc;">
                             <CheckBackTable></CheckBackTable>
@@ -97,7 +88,7 @@
             </div>
             <div class="bottom">
                 <Title strTitle="纳期动态"></Title>
-                <DeliveryTable style=" height: 88%; width: 100%;border: 0px solid #ccc;"></DeliveryTable>
+                <DeliveryTable></DeliveryTable>
 
             </div>
         </div>
@@ -120,13 +111,12 @@ import Members from '@/components/Members.vue';
 import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
-// 在子组件之外计算 budget1 和 budget2 的值
 import jsonData1 from '../assets/json/annualMoney.json';
 import jsonData2 from '../assets/json/annualBuilding.json';
 
 import Attendance from '@/components/Attendance.vue'
-import IndicateCard2 from '@/components/IndicateCard3.vue';
-import IndicateCard3 from '@/components/IndicateCard2.vue';
+import IndicateCardMoney from '@/components/IndicateCardMoney.vue';
+import IndicateCardBuilding from '@/components/IndicateCardBuilding.vue';
 import DeliveryTable from '@/components/DeliveryTable.vue';
 import CheckBackTable from '@/components/CheckBackTable.vue';
 const budget1 = dataIndicate[0].budget;
@@ -304,7 +294,7 @@ const dataCard7 = {
 
 .center1 {
     flex: 55;
-    font-size: 2.7rem;
+    font-size: 2rem;
     font-weight: bold;
     display: flex;
     justify-content: center;

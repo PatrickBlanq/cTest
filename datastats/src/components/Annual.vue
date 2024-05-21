@@ -125,10 +125,4 @@ const renderChart = (width, height) => {
 };
 </script>
 
-<style scoped>
-.chart-container {
-    border: 0px solid #ccc;
-    height: 100%;
-    width: 100%;
-}
-</style>
+<style scoped></style>

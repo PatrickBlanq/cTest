@@ -23,13 +23,12 @@
 
 <script setup>
 import jsonData from '../assets/json/checkBack.json';
-
-
 </script>
 
 <style scoped>
 .table-container {
     width: 100%;
+    height: 100%;
     max-height: 230px;
     margin-top: 7px;
     overflow-x: hidden;
@@ -40,6 +39,7 @@ import jsonData from '../assets/json/checkBack.json';
 table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #0C1530;
     color: #fff;
 }
 
@@ -54,10 +54,13 @@ th {
     color: #74A8FF;
     border-top: 3px solid #242C44;
     border-bottom: 3px solid #242C44;
-
+    background-color: #0C1530;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
-tr:hover {
+tbody tr:hover {
     background-color: #242C44;
 }
 

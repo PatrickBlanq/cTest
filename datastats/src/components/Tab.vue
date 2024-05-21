@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isSelected" style="height: 100%;">
+    <div v-if="isSelected" class="tab-content">
         <slot></slot>
     </div>
 </template>
@@ -27,3 +27,10 @@ onMounted(() => {
     addTab({ label: props.label, index: props.index });
 });
 </script>
+
+<style scoped>
+.tab-content {
+    height: 100%;
+    width: 100%;
+}
+</style>

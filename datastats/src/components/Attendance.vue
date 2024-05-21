@@ -39,7 +39,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: '2%',
+            bottom: 10,
             left: 'center',
             itemWidth: 12,
             itemHeight: 12,
@@ -61,8 +61,8 @@ const renderChart = () => {
                 itemStyle: {
                     borderRadius: 3
                 },
-                radius: ['35%', '50%'],
-                center: ['50%', '40%'],
+                radius: ['30%', '50%'],
+                center: ['50%', '35%'],
                 position: "outside",
                 avoidLabelOverlap: false,
                 label: {
@@ -93,10 +93,4 @@ const renderChart = () => {
 };
 </script>
 
-<style scoped>
-.chart-container {
-    border: 0px solid #ccc;
-    height: 100%;
-    width: 100%;
-}
-</style>
+<style scoped></style>
