@@ -90,13 +90,15 @@
                             <IndicateCard3 :num1="building1" :num2="building2" title="栋数前年比率"></IndicateCard3>
                             <IndicateCard2 :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCard2>
                         </div>
-                        <div style="flex: 3;border: 1px solid #ccc;"></div>
+                        <div style="flex: 3;border: 0px solid #ccc;">
+                            <CheckBackTable></CheckBackTable>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
                 <Title strTitle="纳期动态"></Title>
-                <TableDetail style=" height: 88%; width: 100%;border: 0px solid #ccc;"></TableDetail>
+                <DeliveryTable style=" height: 88%; width: 100%;border: 0px solid #ccc;"></DeliveryTable>
 
             </div>
         </div>
@@ -126,7 +128,8 @@ import jsonData2 from '../assets/json/annualBuilding.json';
 import Attendance from '@/components/Attendance.vue'
 import IndicateCard2 from '@/components/IndicateCard3.vue';
 import IndicateCard3 from '@/components/IndicateCard2.vue';
-import TableDetail from '@/components/TableDetail.vue';
+import DeliveryTable from '@/components/DeliveryTable.vue';
+import CheckBackTable from '@/components/CheckBackTable.vue';
 const budget1 = dataIndicate[0].budget;
 const budget2 = dataIndicate[1].budget;
 const actual1 = dataIndicate[0].actual;
