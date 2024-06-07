@@ -1,36 +1,40 @@
 <template>
-    <div class="container" ref="container">
-        <div class="select-box" :class="{ 'selected': selectedValue === 'year' }" @click="toggleYearDropdown"
-            tabindex="0" @blur="closeDropdown">
+    <div class="container" ref="container" @click="handleContainerClick">
+        <div class="select-box" :class="{ 'selected': selectedValue === 'year' }" data-type="year">
             {{ selectedYear }} 年
-            <div v-if="showYearDropdown" class="dropdown">
-                <div @click="selectYear(year)" v-for="year in years" :key="year" class="day-cell">{{ year }}</div>
-            </div>
-        </div>
-        <div class="separator"></div>
-        <div class="select-box month-select" :class="{ 'selected': selectedValue === 'month' }"
-            @click="toggleMonthDropdown" tabindex="0" @blur="closeDropdown">
-            {{ selectedMonth }} 月
-            <div v-if="showMonthDropdown" class="dropdown">
-                <div @click="selectMonth(month)" v-for="month in months" :key="month" class="day-cell">{{
-                    month }}</div>
-            </div>
-        </div>
-        <div class="separator"></div>
-        <div class="select-box" :class="{ 'selected': selectedValue === 'day' }" @click="toggleDayDropdown" tabindex="0"
-            @blur="closeDropdown">
-            {{ selectedDay }} 日
-            <div v-if="showDayDropdown" class="dropdown day-dropdown">
-                <!-- 显示日语星期缩写的行 -->
-                <div class="day-row">
-                    <div v-for="day in weekDays" :key="day" class="day-cell">{{ day }}</div>
+            <div v-show="showDropdown === 'year'" class="dropdown">
+                <div v-for="year in years" :key="year" class="cell-flex hover" :data-value="year" data-type="year"
+                    :class="selectedValue === 'year' ? 'hover-selected' : 'hover-not-selected'">
+                    {{ year }}
                 </div>
-                <!-- 日历日期 -->
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="select-box month-container" :class="{ 'selected': selectedValue === 'month' }" data-type="month">
+            {{ selectedMonth }} 月
+            <div v-show="showDropdown === 'month'" class="dropdown">
+                <div v-for="month in months" :key="month" class="cell-flex hover" :data-value="month" data-type="month"
+                :class="selectedValue === 'month' ? 'hover-selected' : 'hover-not-selected'">
+                    {{ month }}</div>
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="select-box day-container" :class="{ 'selected': selectedValue === 'day' }" data-type="day">
+            {{ selectedDay }} 日
+            <div v-show="showDropdown === 'day'" class="dropdown day-dropdown">
+                <div class="day-row" style="margin-bottom: 15px;">
+                    <div v-for="day in weekDays" :key="day" class="cell-flex">{{ day }}</div>
+                </div>
                 <div v-for="row in dayRows" :key="row" class="day-row">
-                    <div v-for="col in 7" :key="col" class="day-cell">
-                        <div v-if="(row - 1) * 7 + col - firstDayOfWeek + 1 <= daysInMonth && (row - 1) * 7 + col - firstDayOfWeek + 1 > 0"
-                            @click="selectDay((row - 1) * 7 + col - firstDayOfWeek + 1)">
-                            {{ (row - 1) * 7 + col - firstDayOfWeek + 1 }}
+                    <div v-for="col in 7" :key="col" class="cell-flex">
+                        <div class="cell-flex hover" v-if="getday(row, col) <= daysInMonth && getday(row, col) > 0"
+                            :data-value="getday(row, col)" data-type="day"
+                            :class="selectedValue === 'day' ? 'hover-selected' : 'hover-not-selected'">
+                            {{ getday(row, col) }}
                         </div>
                     </div>
                 </div>
@@ -40,103 +44,68 @@
 </template>
 
 <script setup>
+
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const years = [2022, 2023, 2024];
 const months = Array.from({ length: 12 }, (_, index) => index + 1);
 const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
-
-const selectedYear = ref(years[0]);
-const selectedMonth = ref(months[0]);
-const selectedDay = ref(1);
-const showYearDropdown = ref(false);
-const showMonthDropdown = ref(false);
-const showDayDropdown = ref(false);
-const selectedValue = ref(null);
+const selectedYear = ref(new Date().getFullYear());
+const selectedMonth = ref(new Date().getMonth() + 1);
+const selectedDay = ref(new Date().getDate());
+const selectedValue = ref("day");
+const showDropdown = ref(null); // 用于跟踪当前显示的下拉框类型
 const container = ref(null);
-const currentYear = ref(new Date().getFullYear());
-const currentMonth = ref(new Date().getMonth() + 1);
-const daysInMonth = computed(() => {
-    return new Date(selectedYear.value, selectedMonth.value, 0).getDate();
-});
+const daysInMonth = computed(() => new Date(selectedYear.value, selectedMonth.value, 0).getDate());
+const firstDayOfWeek = computed(() => new Date(selectedYear.value, selectedMonth.value - 1, 1).getDay() + 1);
+const dayRows = computed(() => Math.ceil((daysInMonth.value + firstDayOfWeek.value) / 7));
+const getday = (row, col) => {
+    return (row - 1) * 7 + col - firstDayOfWeek.value + 1
+}
+const handleContainerClick = (event) => {
+    const type = event.target.dataset.type;
+    const value = event.target.dataset.value;
 
-const firstDayOfWeek = computed(() => {
-    return new Date(selectedYear.value, selectedMonth.value - 1, 1).getDay() + 1;
-});
-
-const dayRows = computed(() => {
-    const totalDays = daysInMonth.value;
-    const numRows = Math.ceil((totalDays + firstDayOfWeek.value) / 7);
-    return numRows;
-});
-
-const toggleYearDropdown = () => {
-    showYearDropdown.value = !showYearDropdown.value;
-    showMonthDropdown.value = false;
-    selectedValue.value = 'year';
+    if (value !== undefined) {
+        if (type === 'year') {
+            selectedYear.value = parseInt(value, 10);
+        } else if (type === 'month') {
+            selectedMonth.value = parseInt(value, 10);
+        } else if (type === 'day') {
+            selectedDay.value = parseInt(value, 10);
+        }
+        selectedValue.value = type;
+        showDropdown.value = null; // 关闭下拉框
+        const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
+        console.log(formattedDay);
+        console.log(type);
+    } else if (type) {
+        showDropdown.value = showDropdown.value === type ? null : type;
+        //selectedValue.value = type;
+    } else {
+        closeDropdown();
+    }
 };
 
-const toggleMonthDropdown = () => {
-    showMonthDropdown.value = !showMonthDropdown.value;
-    showYearDropdown.value = false;
-    selectedValue.value = 'month';
+const handleClickOutside = (event) => {
+    if (!container.value.contains(event.target)) {
+        closeDropdown();
+    }
 };
 
-const toggleDayDropdown = () => {
-    showDayDropdown.value = !showDayDropdown.value;
-    showYearDropdown.value = false;
-    selectedValue.value = 'day';
+const closeDropdown = () => {
+    showDropdown.value = null;
 };
 
-const selectYear = (year) => {
-    selectedYear.value = year;
-    showYearDropdown.value = false;
-    selectedValue.value = 'year';
-    const formattedDay = `${selectedYear.value}`;
-    console.log(formattedDay);
-};
-
-const selectMonth = (month) => {
-    selectedMonth.value = month;
-    showMonthDropdown.value = false;
-    selectedValue.value = 'month';
-    const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}`;
-    console.log(formattedDay);
-};
-
-const selectDay = (day) => {
-    selectedDay.value = day;
-    showDayDropdown.value = false;
-    selectedValue.value = 'day';
-    const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    console.log(formattedDay);
-};
 onMounted(() => {
-    container.value = document.querySelector('.container');
     document.addEventListener('click', handleClickOutside);
 });
 
 onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
 });
-
-const handleClickOutside = (event) => {
-    if (container.value && !container.value.contains(event.target)) {
-        if (!document.querySelector('.selected')) {
-            selectedValue.value = null;
-        }
-        showYearDropdown.value = false;
-        showMonthDropdown.value = false;
-        showDayDropdown.value = false;
-    }
-};
-
-const closeDropdown = () => {
-    if (!document.querySelector('.selected')) {
-        selectedValue.value = null;
-    }
-};
 </script>
+
 
 <style scoped>
 .container {
@@ -148,9 +117,11 @@ const closeDropdown = () => {
 }
 
 .select-box {
+    width: 62px;
     margin: 0px 5px 0px 5px;
     position: relative;
     cursor: pointer;
+    text-align: center;
 }
 
 
@@ -160,37 +131,56 @@ const closeDropdown = () => {
     width: 100%;
     top: calc(100% + 5px);
     left: 0;
+    padding: 1px;
     background-color: rgba(0, 0, 0, 0.75);
     border: 1px solid #ccc;
     border-top: none;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 3px 3px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
 
-.select-box.month-select {
-    width: 37px;
+.month-container {
+    width: 47px;
+
 }
 
-.dropdown.day-dropdown {
+.day-container {
+    margin-left: -0px;
+}
+
+.day-dropdown {
+
     width: 315px;
 }
 
 .day-row {
     display: flex;
+
 }
 
-.day-cell {
+.cell-flex {
     flex: 1;
-    padding: 8px 12px;
     cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.day-cell:hover {
-    background-color: #2FB6FF;
+.hover {
+
+    padding: 7px 0px 7px 0px;
+
+}
+
+.hover-selected:hover {
+    border: 1px solid white;
+}
+
+.hover-not-selected:hover {
+    border: 1px solid #6FF8F4;
 }
 
 .selected {
-    color: green;
+    color: #6FF8F4;
 }
 </style>
