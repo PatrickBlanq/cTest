@@ -10,6 +10,7 @@ import jsonData from '../assets/json/attendance.json';
 const target = ref(null);
 let myChart = null;
 
+
 onMounted(() => {
     window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
@@ -23,8 +24,8 @@ function handleResize() {
         myChart.resize();
     }
 }
-const renderChart = () => {
 
+const renderChart = () => {
     const seriesData = jsonData.map(item => ({
         name: item.状态,
         value: item.人数,
@@ -40,7 +41,6 @@ const renderChart = () => {
         legend: {
             orient: 'horizontal',
             bottom: 10,
-            left: 'center',
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 20,
@@ -93,4 +93,11 @@ const renderChart = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.chart-container {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+</style>

@@ -1,9 +1,10 @@
 <template>
-    <div class="moduleStyle">
-        <div v-for="Group1 in groupedMenu" :key="Group1.group1" class="collapse" @click.stop="toggleCollapse(Group1)">
+    <div class="moduleStyle" :style="{ height: height + 'px' }">
+        <div v-for="Group1, index in groupedMenu" :key="index" :class="{ 'first-item': index === 0 }" class="collapse"
+            style="border: 0px solid #ccc;">
             <div class="collapse-wrapper">
                 <div class="collapse-group1">
-                    <div :class="['group-text', { 'selected': Group1.expanded }]">
+                    <div :class="['group-text', { 'selected': Group1.expanded }]" @click.stop="toggleCollapse(Group1)">
                         {{ Group1.group1 }}
                         <span :class="['arrow', { 'rotate': !Group1.expanded }]">&gt;</span>
                     </div>
@@ -13,11 +14,11 @@
                 </div>
             </div>
             <div v-show="Group1.expanded">
-                <div v-for="Group2 in Group1.children" :key="Group2.group2" class="collapse"
-                    @click.stop="toggleCollapse(Group2)">
+                <div v-for="Group2 in Group1.children" :key="Group2.group2" class="collapse">
                     <div class="collapse-wrapper ">
                         <div class="collapse-group2">
-                            <div :class="['group-text', { 'selected': Group2.expanded }]">
+                            <div :class="['group-text', { 'selected': Group2.expanded }]"
+                                @click.stop="toggleCollapse(Group2)">
                                 {{ Group2.group2 }}
                                 <span :class="['arrow', { 'rotate': !Group2.expanded }]">&gt;</span>
                             </div>
@@ -28,11 +29,11 @@
                         </div>
                     </div>
                     <div v-show="Group2.expanded">
-                        <div v-for="Group3 in Group2.children" :key="Group3.group3" class="collapse"
-                            @click.stop="toggleCollapse(Group3)">
+                        <div v-for="Group3 in Group2.children" :key="Group3.group3" class="collapse">
                             <div class="collapse-wrapper ">
                                 <div class="collapse-group3">
-                                    <div :class="['group-text', { 'selected': Group3.expanded }]">
+                                    <div :class="['group-text', { 'selected': Group3.expanded }]"
+                                        @click.stop="toggleCollapse(Group3)">
                                         {{ Group3.group3 }}
                                         <span :class="['arrow', { 'rotate': !Group3.expanded }]">&gt;</span>
                                     </div>
@@ -47,11 +48,12 @@
                                     @click.stop="toggleFontColor(item)">
                                     <div class="collapse-wrapper ">
                                         <div class="collapse-item">
-                                            <div :class="['group-text', { 'selected': item.selected }]"
+                                            <div style="border: 0px solid #ccc;"
+                                                :class="['group-text', { 'selected': item.selected }]"
                                                 @click="logItem(item)">
 
-                                                <div class="marquee">
-                                                    <span>&bull;&nbsp;&nbsp;{{ item.Name }}</span>
+                                                <div class="marquee" :title="item.Name">
+                                                    &bull;&nbsp;&nbsp;{{ item.Name }}
                                                 </div>
                                             </div>
                                         </div>
@@ -251,31 +253,36 @@ const logItem = (item) => {
 
 initializeGroupedMenu();
 //console.log(groupedMenu);
-
+const props = defineProps({
+    height: Number
+});
 
 </script>
 
 <style scoped>
 .moduleStyle {
+    display: flex;
+    flex-direction: column;
     color: #fff;
-    padding: 0.8rem 1rem 1.3rem 1rem;
-    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 20px 0.2rem 1rem 1.5rem;
     overflow-y: scroll;
     overflow-x: hidden;
     font-size: 15px;
     font-weight: 400;
+    border: 0px solid red;
 }
 
 .collapse {
-    cursor: pointer;
+    
     margin-top: 20px;
 }
 
-.group-text-wrapper {
-    flex: 2;
-    border: 1px solid #ccc;
-
+.first-item {
+    margin-top: 0;
 }
+
 
 .arrow {
     display: inline-block;
@@ -288,8 +295,11 @@ initializeGroupedMenu();
 
 .selected {
     color: #6FF8F4;
-}
 
+}
+.group-text{
+    cursor: pointer;
+}
 .mark1 {
     margin-bottom: 0.25rem;
     display: inline-block;
@@ -357,23 +367,7 @@ initializeGroupedMenu();
 
 }
 
-.marquee:hover {
-    display: flex;
-    width: 190px;
-    resize: horizontal;
-    container-type: inline-size;
-    align-items: baseline;
 
-    >span {
-        animation: marquee 3s linear infinite both alternate;
-    }
-}
-
-@keyframes marquee {
-    to {
-        transform: translateX(min(100cqw - 100%, 0px));
-    }
-}
 
 ::-webkit-scrollbar {
     width: 9px;

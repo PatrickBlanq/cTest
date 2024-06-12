@@ -1,20 +1,20 @@
 <template>
-    <div class="table-container" ref="container">
+    <div class="table-container" ref="container" :style="{ height: (height) + 'px' }">
         <table>
             <thead>
                 <tr>
-                    <th>发生年月</th>
-                    <th>取印先</th>
-                    <th>管理番号</th>
-                    <th>所属</th>
+                    <th style="width: 20%;">发生年月</th>
+                    <th style="width: 20%;">取印先</th>
+                    <th style="width: 20%;">管理番号</th>
+                    <th style="width: 30%; padding-right: 30px;">所属</th>
                 </tr>
             </thead>
-            <tbody ref="tableBody">
+            <tbody ref="tableBody" :style="{ height: (height - 17) + 'px' }">
                 <tr v-for="item in jsonData" :key="item.id">
-                    <td>{{ item.发生年月 }}</td>
-                    <td>{{ item.取印先 }}</td>
-                    <td>{{ item.管理番号 }}</td>
-                    <td>{{ item.所属 }}</td>
+                    <td style="width: 20%;">{{ item.发生年月 }}</td>
+                    <td style="width: 20%;">{{ item.取印先 }}</td>
+                    <td style="width: 20%;">{{ item.管理番号 }}</td>
+                    <td style="width: 30%;"> {{ item.所属 }} </td>
                 </tr>
             </tbody>
         </table>
@@ -23,17 +23,36 @@
 
 <script setup>
 import jsonData from '../assets/json/checkBack.json';
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const props = defineProps({
+    height: Number
+});
+
+
+const handleResize = () => {
+
+    console.log("Resized, new height:", props.height);
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial call to set the height
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+
 </script>
 
 <style scoped>
 .table-container {
     width: 100%;
     height: 100%;
-    max-height: 230px;
-    margin-top: 7px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 0px solid #ccc;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 0px 3px 7px 5px;
 }
 
 table {
@@ -48,6 +67,7 @@ td {
     padding: 7px;
     text-align: center;
     font-size: 0.85rem;
+
 }
 
 th {
@@ -56,8 +76,23 @@ th {
     border-bottom: 3px solid #242C44;
     background-color: #0C1530;
     position: sticky;
+    height: auto;
     top: 0;
     z-index: 1;
+}
+
+thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+
+tbody {
+    display: block;
+    width: 100%;
+
+    overflow-y: auto;
 }
 
 tbody tr:hover {

@@ -30,7 +30,7 @@ onMounted(() => {
 
 <style scoped>
 .datetime-display {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: #71FDF8;
 }
 </style>

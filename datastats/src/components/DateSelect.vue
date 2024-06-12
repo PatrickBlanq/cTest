@@ -177,7 +177,7 @@ onUnmounted(() => {
 }
 
 .hover-not-selected:hover {
-    border: 1px solid #6FF8F4;
+    border: 1px solid hsl(177,100%,70%);
 }
 
 .selected {

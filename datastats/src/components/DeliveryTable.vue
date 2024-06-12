@@ -1,5 +1,5 @@
 <template>
-    <div class="table-container" ref="container">
+    <div class="table-container" ref="container" :style="{ height: height + 'px' }">
         <table>
             <thead>
                 <tr>
@@ -25,18 +25,24 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import jsonData from '../assets/json/deliveryDate.json';
 
+const props = defineProps({
+  height: Number
+});
+
 const container = ref(null);
 const displayedData = ref([]);
 let interval = null;
 
 const calculateVisibleCount = () => {
     const containerHeight = container.value.clientHeight;
+    //console.log(container.value.clientHeight);
     const rowHeight = 40;
-    return 6;
+    return Math.floor(containerHeight / rowHeight);
 };
 
 const scrollData = () => {
     const visibleCount = calculateVisibleCount();
+    
     const firstItem = jsonData.shift();
     jsonData.push(firstItem);
     displayedData.value = jsonData.slice(0, visibleCount);
@@ -65,7 +71,10 @@ const handleResize = () => {
 .table-container {
     margin-top: 7px;
     overflow: hidden;
-
+    border: 0px solid red;
+    padding: 0px 7px 7px 5px;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 table {
@@ -90,7 +99,7 @@ th {
 
 }
 
-tr:hover {
+tbody tr:hover {
     background-color: #242C44;
 }
 

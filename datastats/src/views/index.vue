@@ -7,14 +7,13 @@
                         <Title strTitle="纳期状况"></Title>
                         <DateSelect style="margin-left: 2rem;"></DateSelect>
                     </div>
-                    <div class="t-l-column2"
-                        style="flex: 2; box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; border: 0px solid #ccc;">
+                    <div class="t-l-column2" style="flex: 2; ">
                         <Arc :data="dataArc1"></Arc>
                         <Arc :data="dataArc2"></Arc>
                         <Arc :data="dataArc3"></Arc>
                         <Arc :data="dataArc4"></Arc>
                     </div>
-                    <div class="t-l-column3 flex-row" style=" flex: 2; box-sizing: border-box;border: 0px solid #ccc;">
+                    <div class="t-l-column3 flex-row" style="  ">
                         <NumCard :data="dataCard1" />
                         <NumCard :data="dataCard2" />
                         <NumCard :data="dataCard3" />
@@ -24,8 +23,8 @@
                         <NumCard :data="dataCard5" />
                         <NumCard :data="dataCard6" />
                     </div>
-                    <div class="t-l-column4">
-                        <Collapse style="max-height: 370px;; "></Collapse>
+                    <div class="t-l-column4" style="height: 100%; box-sizing: border-box;" ref="collapseDiv">
+                        <Collapse :height="collapseHeight"></Collapse>
                     </div>
                 </div>
             </div>
@@ -70,32 +69,34 @@
                 </div>
                 <div class="right2">
                     <Title strTitle="出勤人数"></Title>
-                    <Attendance></Attendance>
+                    <Attendance @refreshPage="refreshPage"></Attendance>
                 </div>
                 <div class="right3">
                     <Title strTitle="是正状况"></Title>
-                    <div style="display: flex;flex-direction: column; height: 88%;border: 0px solid #ccc;">
+                    <div style="display: flex;flex-direction: column; height: 100%;border: 0px solid #ccc;">
                         <div style="flex: 2;display: flex; flex-direction: row; border: 0px solid #ccc;">
                             <IndicateCardBuilding :num1="building1" :num2="building2" title="栋数前年比率">
                             </IndicateCardBuilding>
                             <IndicateCardMoney :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCardMoney>
                         </div>
-                        <div style="flex: 3;border: 0px solid #ccc;">
-                            <CheckBackTable></CheckBackTable>
+                        <div style="flex: 3;padding:0px; height: 100%; border: 0px solid #ccc;" ref="checkBackTableDiv">
+                            <CheckBackTable :height="checkBackTableHeight"></CheckBackTable>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
                 <Title strTitle="纳期动态"></Title>
-                <DeliveryTable></DeliveryTable>
-
+                <div style=" height: 100%; box-sizing: border-box; border: 0px solid #ccc;" ref="deliveryTableDiv">
+                    <DeliveryTable :height="deliveryTableHeight"></DeliveryTable>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import Title from '@/components/Title.vue';
 import DateSelect from '@/components/DateSelect.vue';
 import Arc from '@/components/Arc.vue';
@@ -183,6 +184,33 @@ const dataCard7 = {
     num: 456,
     title: '依赖中'
 };
+
+const refreshPage = () => {
+    //location.reload();
+    console.log("reload");
+};
+
+const collapseDiv = ref(null);
+const deliveryTableDiv = ref(null);
+const checkBackTableDiv = ref(null);
+let collapseHeight = ref(0);
+let deliveryTableHeight = ref(0);
+let checkBackTableHeight = ref(0);
+
+const updateHeight = () => {
+    deliveryTableHeight.value = deliveryTableDiv.value.clientHeight - 35;
+    checkBackTableHeight.value = checkBackTableDiv.value.clientHeight-35;
+};
+
+onMounted(() => {
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateHeight);
+});
+
 </script>
 
 <style scoped>
@@ -230,11 +258,13 @@ const dataCard7 = {
 .t-l-column2,
 .t-l-column3,
 .t-l-column4 {
+    display: flex;
     width: 100%;
     height: 100%;
     border-width: 0px;
     border-color: #fff;
     border-style: solid;
+    border: 0px solid #ccc;
 }
 
 .t-l-column1 {
@@ -246,14 +276,23 @@ const dataCard7 = {
     justify-content: space-around;
 }
 
-
-
 .t-l-column3 {
     flex: 50;
-    justify-content: space-around;
-    padding-right: 1rem;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0.5rem 1.5rem 0rem 1.5rem;
 
+}
 
+.t-l-column4 {
+    display: flex;
+    flex-direction: column;
+}
+
+.collapse-component {
+    flex-grow: 1;
+    overflow: auto;
+    /* 当内容超过容器高度时，显示滚动条 */
 }
 
 .column-flex-row {
@@ -261,7 +300,6 @@ const dataCard7 = {
     flex: 1;
     flex-direction: row;
 }
-
 
 
 .t-l-column4 {

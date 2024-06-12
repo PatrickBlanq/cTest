@@ -1,5 +1,5 @@
 <template>
-    <canvas ref="myCanvas" width="120" height="120"></canvas>
+    <canvas ref="canvasRef" width="120" height="120"></canvas>
 </template>
 
 <script setup>
@@ -12,10 +12,10 @@ const props = defineProps({
     }
 });
 
-const myCanvas = ref(null);
+const canvasRef = ref(null);
 
 onMounted(() => {
-    const canvas = myCanvas.value;
+    const canvas = canvasRef.value;
     const ctx = canvas.getContext('2d');
     const x = canvas.width / 2;
     const y = canvas.height / 2;
@@ -56,6 +56,6 @@ onMounted(() => {
 <style scoped>
 canvas {
     border: 0px solid #000;
-    margin-left: 1rem;
+    margin-left: 0rem;
 }
 </style>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>
+            RunJS 演示代码
+        </title>
+        <!-- 如果是id属性,将.改为#即可 -->
+        <style>
+.text-container {
+  width: 100px; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  position: relative;
+}
+
+.text-container:hover .text {
+  white-space: normal; 
+  position: absolute;
+  background: #fff;
+  z-index: 1;
+}
+        </style>
+  </head>
+    <body>
+      <div class="text-container">
+        <p class="text">这是一段非常长非常长非常长的文本</p>
+      </div>
+  </body>
+</html>

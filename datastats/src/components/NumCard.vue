@@ -17,7 +17,7 @@ const props = defineProps({
 
 <style scoped>
 .info-container {
-    margin-left: 1rem;
+    margin-left: 0rem;
     text-align: center;
     border: 2px solid #242C44;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
