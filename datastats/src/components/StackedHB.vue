@@ -39,7 +39,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: 10,
+            bottom: '4%', 
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 20,

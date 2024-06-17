@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="center3">
-
+                    <Map></Map>
                 </div>
             </div>
             <div class="bottom">
@@ -76,14 +76,13 @@
                         <Title strTitle="是正状况"></Title>
                     </div>
                     <div style="flex: 8; display: flex; flex-direction: column; height: 100%; border: 0px solid #ccc;">
-                        <div style="flex: 2;display: flex; height: 100%;  flex-direction: row;  border: 0px solid #ccc;">
+                        <div
+                            style="flex: 2;display: flex; height: 100%;  flex-direction: row;  border: 0px solid #ccc;">
                             <IndicateCardBuilding :num1="building1" :num2="building2" title="栋数前年比率">
                             </IndicateCardBuilding>
                             <IndicateCardMoney :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCardMoney>
                         </div>
-                        <div style="flex: 3; height: 100%;   border: 0px solid #ccc;"
-                            ref="checkBackTableDiv">
-                            <!-- <CheckBackTable :height="checkBackTableHeight"></CheckBackTable> -->
+                        <div style="flex: 3; height: 90%;   border: 0px solid #ccc;" ref="checkBackTableDiv">
                             <CheckBackTable v-if="checkBackTableHeight" :height="checkBackTableHeight"></CheckBackTable>
                         </div>
                     </div>
@@ -93,10 +92,9 @@
                 <div style="flex: 1;">
                     <Title strTitle="纳期动态"></Title>
                 </div>
-                <div style="height: 90%;flex: 1;"></div>
-                <div style="flex: 8; box-sizing: border-box;  height: 100%; border: 0px solid #ccc;"
+                <div style="flex: 1;"></div>
+                <div style="flex: 19; box-sizing: border-box;  height: 100%; border: 0px solid #ccc;"
                     ref="deliveryTableDiv">
-                    <!-- <DeliveryTable :height="deliveryTableHeight"></DeliveryTable> -->
                     <DeliveryTable v-if="deliveryTableHeight" :height="deliveryTableHeight"></DeliveryTable>
                 </div>
             </div>
@@ -118,6 +116,7 @@ import IndicateCard from '@/components/IndicateCard.vue';
 import dataIndicate from '../assets/json/indicateCard.json';
 import dataIndicate2 from '../assets/json/indicateCard2.json';
 import Members from '@/components/Members.vue';
+import Map from '@/components/Map.vue'
 import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
@@ -209,8 +208,6 @@ let oldWidth = ref(0);
 let oldHeight = ref(0);
 
 const updateSize = () => {
-    //deliveryTableHeight.value = deliveryTableDiv.value.clientHeight - 45;
-    //checkBackTableHeight.value = checkBackTableDiv.value.clientHeight -25 ;
     const newWidth = window.innerWidth;
     const newHeight = window.innerHeight;
     const ratioWidth = newWidth >= oldWidth.value ? newWidth / oldWidth.value : -oldWidth.value / newWidth;
@@ -228,7 +225,7 @@ const updateSize = () => {
 
     checkBackTableHeight.value = localStorage.getItem('checkBackHeight') * ratioHeight;
     localStorage.setItem('checkBackHeight', checkBackTableHeight.value);
-    
+
 };
 
 
@@ -244,7 +241,7 @@ onMounted(() => {
     localStorage.setItem('checkBackHeight', checkBackTableDiv.value.clientHeight);
     checkBackTableHeight.value = checkBackTableDiv.value.clientHeight
 
-    
+
 
     window.addEventListener('resize', updateSize);
 
@@ -369,6 +366,7 @@ onUnmounted(() => {
     background-position: center;
     background-repeat: no-repeat;
 }
+
 .center1 {
     flex: 55;
     font-size: 2rem;
@@ -379,14 +377,18 @@ onUnmounted(() => {
     background-image: url('../assets/img/title.png');
 
 }
+
 .center2 {
     flex: 78;
     justify-content: space-around;
 }
+
 .center3 {
     flex: 360;
     margin-top: 7px;
-    background-image: url('../assets/img/map.png');
+    width: 100%;
+    height: 100%;
+
 }
 
 .right1,
@@ -399,6 +401,7 @@ onUnmounted(() => {
     background-repeat: no-repeat;
     border: 0px solid #ccc;
 }
+
 .right1 {
     flex: 5;
     font-size: 1.5rem;
@@ -409,11 +412,13 @@ onUnmounted(() => {
     align-items: center;
     background-image: url('../assets/img/time.png');
 }
+
 .right2 {
     flex: 16;
     margin-top: 7px;
     background-image: url('../assets/img/module.png');
 }
+
 .right3 {
     flex: 29;
     margin-top: 7px;
@@ -431,11 +436,6 @@ onUnmounted(() => {
     background-repeat: no-repeat;
     background-image: url('../assets/img/number.png');
 }
-
-
-
-
-
 
 .top,
 .bottom {

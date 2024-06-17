@@ -1,5 +1,5 @@
 <template>
-    <div class="table-container" ref="container" :style="{ height: (height) + 'px' }">
+    <div class="table-container" ref="container" :style="{ height: (height-5) + 'px' }">
         <table>
             <thead>
                 <tr>
@@ -9,7 +9,7 @@
                     <th style="width: 30%; padding-right: 30px;">所属</th>
                 </tr>
             </thead>
-            <tbody ref="tableBody" :style="{ height: (height - 47) + 'px' }">
+            <tbody ref="tableBody" :style="{ height: (height - 50) + 'px' }">
                 <tr v-for="item in jsonData" :key="item.id">
                     <td style="width: 20%;">{{ item.发生年月 }}</td>
                     <td style="width: 20%;">{{ item.取印先 }}</td>
@@ -69,7 +69,7 @@ td {
     padding: 7px;
     text-align: center;
     font-size: 0.85rem;
-    height: 22px; /* 统一设置行高 */
+    height: 22px; 
 }
 
 th {
@@ -91,8 +91,7 @@ thead {
 
 
 tbody {
-    display: block;
-    
+    display: block;    
     overflow-y: auto;
     border: 0px solid #ccc;
 }

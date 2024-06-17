@@ -260,7 +260,10 @@ initializeGroupedMenu();
 groupedMenu.value[0].expanded=true;
 groupedMenu.value[0].children[0].expanded=true;
 groupedMenu.value[0].children[0].children[0].expanded=true;
-console.log(groupedMenu);
+localStorage.setItem('Group1',  JSON.stringify(groupedMenu.value[0]));
+localStorage.setItem('Group2',  JSON.stringify(groupedMenu.value[0].children[0]));
+localStorage.setItem('Group3',  JSON.stringify(groupedMenu.value[0].children[0].children[0]));
+//console.log(groupedMenu);
 const props = defineProps({
     height: Number
 });
