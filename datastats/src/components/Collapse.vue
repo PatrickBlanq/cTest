@@ -145,6 +145,8 @@ const toggleCollapse = (clickedItem) => {
                 Group1.expanded = !Group1.expanded;
                 if (Group1.expanded) {
                     console.log(Group1);
+                    localStorage.setItem('Group1',  JSON.stringify(Group1));
+                    /* localStorage.setItem('Group1',  Group1.group1); */
                 } else {
                     for (const Group2 of Group1.children) {
                         Group2.expanded = false;
@@ -180,6 +182,7 @@ const toggleCollapse = (clickedItem) => {
                         Group2.expanded = !Group2.expanded;
                         if (Group2.expanded) {
                             console.log(Group2);
+                            localStorage.setItem('Group2',  JSON.stringify(Group2));
                         } else {
                             for (const Group3 of Group2.children) {
                                 Group3.expanded = false;
@@ -211,6 +214,7 @@ const toggleCollapse = (clickedItem) => {
                                 Group3.expanded = !Group3.expanded;
                                 if (Group3.expanded) {
                                     console.log(Group3);
+                                    localStorage.setItem('Group3',  JSON.stringify(Group3));
                                 } else {
                                     for (const item of Group3.children) {
                                         item.selected = false;
@@ -246,13 +250,17 @@ const toggleFontColor = (clickedItem) => {
 const logItem = (item) => {
     if (item.selected == false || item.selected == undefined) {
         console.log("item 是:", item);
+        localStorage.setItem('item',  JSON.stringify(item));
     }
 
 
 };
 
 initializeGroupedMenu();
-//console.log(groupedMenu);
+groupedMenu.value[0].expanded=true;
+groupedMenu.value[0].children[0].expanded=true;
+groupedMenu.value[0].children[0].children[0].expanded=true;
+console.log(groupedMenu);
 const props = defineProps({
     height: Number
 });

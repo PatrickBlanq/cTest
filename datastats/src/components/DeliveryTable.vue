@@ -1,5 +1,5 @@
 <template>
-    <div class="table-container" ref="container" :style="{ height: height + 'px' }">
+    <div class="table-container" ref="container" :style="{ height: (height) + 'px' }">
         <table>
             <thead>
                 <tr>
@@ -9,7 +9,7 @@
                     <th>状态</th>
                 </tr>
             </thead>
-            <tbody ref="tableBody">
+            <tbody ref="tableBody" :style="{ height: (height - 47) + 'px' }">
                 <tr v-for="item in displayedData" :key="item.id">
                     <td>{{ item.番号 }}</td>
                     <td>{{ item.邸名 }}</td>
@@ -38,17 +38,18 @@ const calculateVisibleCount = () => {
     //console.log(container.value.clientHeight);
     const rowHeight = 40;
     return Math.floor(containerHeight / rowHeight);
+     
 };
 
 const scrollData = () => {
-    const visibleCount = calculateVisibleCount();
-    
+    const visibleCount = calculateVisibleCount();    
     const firstItem = jsonData.shift();
     jsonData.push(firstItem);
     displayedData.value = jsonData.slice(0, visibleCount);
 };
 
 onMounted(async () => {
+    
     await nextTick();
     displayedData.value = jsonData.slice(0, calculateVisibleCount());
     interval = setInterval(scrollData, 1000);
@@ -69,12 +70,11 @@ const handleResize = () => {
 
 <style scoped>
 .table-container {
-    margin-top: 7px;
+    box-sizing: border-box;
+    margin-top: 0px;
     overflow: hidden;
     border: 0px solid red;
-    padding: 0px 7px 7px 5px;
-    flex-grow: 1;
-    flex-shrink: 1;
+    padding: 0px 3px 0px 3px;
 }
 
 table {
@@ -90,15 +90,21 @@ td {
     padding: 7px;
     text-align: center;
     font-size: 0.85rem;
+    height: 20px; /* 统一设置行高 */
 }
 
 th {
     color: #74A8FF;
     border-top: 3px solid #242C44;
     border-bottom: 3px solid #242C44;
+    background-color: #0C1530;
+
 
 }
 
+tbody{
+    border: 0px solid #ccc;
+}
 tbody tr:hover {
     background-color: #242C44;
 }

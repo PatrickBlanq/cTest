@@ -97,7 +97,7 @@ const renderChart = () => {
 .chart-container {
     width: 100%;
     height: 100%;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
     box-sizing: border-box;
 }
 </style>

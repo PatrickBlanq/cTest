@@ -12,8 +12,9 @@ const props = defineProps(["strTitle"])
 
 <style scoped>
 .title {
-    margin-top: 13px;
-    margin-left: 17px;
+    box-sizing: border-box;
+    padding-top: 13px;
+    padding-left: 17px;
     font-size: 1rem;
     font-weight: bold;
 }

@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom" style="display: flex; box-sizing: border-box; border: 0px solid #ccc;">
+            <div class="bottom" style="display: flex; box-sizing: border-box;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
                 <StackedHB></StackedHB>
             </div>
@@ -72,23 +72,32 @@
                     <Attendance @refreshPage="refreshPage"></Attendance>
                 </div>
                 <div class="right3">
-                    <Title strTitle="是正状况"></Title>
-                    <div style="display: flex;flex-direction: column; height: 100%;border: 0px solid #ccc;">
-                        <div style="flex: 2;display: flex; flex-direction: row; border: 0px solid #ccc;">
+                    <div style="flex: 1;">
+                        <Title strTitle="是正状况"></Title>
+                    </div>
+                    <div style="flex: 8; display: flex; flex-direction: column; height: 100%; border: 0px solid #ccc;">
+                        <div style="flex: 2;display: flex; height: 100%;  flex-direction: row;  border: 0px solid #ccc;">
                             <IndicateCardBuilding :num1="building1" :num2="building2" title="栋数前年比率">
                             </IndicateCardBuilding>
                             <IndicateCardMoney :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCardMoney>
                         </div>
-                        <div style="flex: 3;padding:0px; height: 100%; border: 0px solid #ccc;" ref="checkBackTableDiv">
-                            <CheckBackTable :height="checkBackTableHeight"></CheckBackTable>
+                        <div style="flex: 3; height: 100%;   border: 0px solid #ccc;"
+                            ref="checkBackTableDiv">
+                            <!-- <CheckBackTable :height="checkBackTableHeight"></CheckBackTable> -->
+                            <CheckBackTable v-if="checkBackTableHeight" :height="checkBackTableHeight"></CheckBackTable>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bottom">
-                <Title strTitle="纳期动态"></Title>
-                <div style=" height: 100%; box-sizing: border-box; border: 0px solid #ccc;" ref="deliveryTableDiv">
-                    <DeliveryTable :height="deliveryTableHeight"></DeliveryTable>
+                <div style="flex: 1;">
+                    <Title strTitle="纳期动态"></Title>
+                </div>
+                <div style="height: 90%;flex: 1;"></div>
+                <div style="flex: 8; box-sizing: border-box;  height: 100%; border: 0px solid #ccc;"
+                    ref="deliveryTableDiv">
+                    <!-- <DeliveryTable :height="deliveryTableHeight"></DeliveryTable> -->
+                    <DeliveryTable v-if="deliveryTableHeight" :height="deliveryTableHeight"></DeliveryTable>
                 </div>
             </div>
         </div>
@@ -196,19 +205,53 @@ const checkBackTableDiv = ref(null);
 let collapseHeight = ref(0);
 let deliveryTableHeight = ref(0);
 let checkBackTableHeight = ref(0);
+let oldWidth = ref(0);
+let oldHeight = ref(0);
 
-const updateHeight = () => {
-    deliveryTableHeight.value = deliveryTableDiv.value.clientHeight - 35;
-    checkBackTableHeight.value = checkBackTableDiv.value.clientHeight-35;
+const updateSize = () => {
+    //deliveryTableHeight.value = deliveryTableDiv.value.clientHeight - 45;
+    //checkBackTableHeight.value = checkBackTableDiv.value.clientHeight -25 ;
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+    const ratioWidth = newWidth >= oldWidth.value ? newWidth / oldWidth.value : -oldWidth.value / newWidth;
+    const ratioHeight = newHeight >= oldHeight.value ? newHeight / oldHeight.value : newHeight / oldHeight.value;
+    localStorage.setItem('ratioWidth', ratioWidth);
+    localStorage.setItem('ratioHeight', ratioHeight);
+
+    oldWidth.value = newWidth;
+    oldHeight.value = newHeight;
+    localStorage.setItem('oldWidth', oldWidth.value);
+    localStorage.setItem('oldHeight', oldHeight.value);
+
+    deliveryTableHeight.value = localStorage.getItem('deliveryHeight') * ratioHeight;
+    localStorage.setItem('deliveryHeight', deliveryTableHeight.value);
+
+    checkBackTableHeight.value = localStorage.getItem('checkBackHeight') * ratioHeight;
+    localStorage.setItem('checkBackHeight', checkBackTableHeight.value);
+    
 };
 
+
 onMounted(() => {
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
+    oldWidth.value = window.innerWidth;
+    oldHeight.value = window.innerHeight;
+    localStorage.setItem('oldWidth', oldWidth.value);
+    localStorage.setItem('oldHeight', oldHeight.value);
+
+    localStorage.setItem('deliveryHeight', deliveryTableDiv.value.clientHeight);
+    deliveryTableHeight.value = deliveryTableDiv.value.clientHeight
+
+    localStorage.setItem('checkBackHeight', checkBackTableDiv.value.clientHeight);
+    checkBackTableHeight.value = checkBackTableDiv.value.clientHeight
+
+    
+
+    window.addEventListener('resize', updateSize);
+
 });
 
 onUnmounted(() => {
-    window.removeEventListener('resize', updateHeight);
+    window.removeEventListener('resize', updateSize);
 });
 
 </script>
@@ -222,13 +265,20 @@ onUnmounted(() => {
     color: #fff;
 }
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+
+}
+
 .left,
 .center,
 .right {
+    box-sizing: border-box;
     display: flex;
     flex-shrink: 0;
     flex-direction: column;
-    margin: 17px 0px 17px 17px;
+    padding: 17px 0px 17px 17px;
     border: 0px solid #ccc;
 }
 
@@ -292,7 +342,7 @@ onUnmounted(() => {
 .collapse-component {
     flex-grow: 1;
     overflow: auto;
-    /* 当内容超过容器高度时，显示滚动条 */
+
 }
 
 .column-flex-row {
@@ -319,17 +369,6 @@ onUnmounted(() => {
     background-position: center;
     background-repeat: no-repeat;
 }
-
-.right1,
-.right2,
-.right3 {
-    display: flex;
-    flex-direction: column;
-    background-size: 100% 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
 .center1 {
     flex: 55;
     font-size: 2rem;
@@ -340,16 +379,45 @@ onUnmounted(() => {
     background-image: url('../assets/img/title.png');
 
 }
-
-.flex-row {
-    display: flex;
-    flex-direction: row;
-
-}
-
 .center2 {
     flex: 78;
     justify-content: space-around;
+}
+.center3 {
+    flex: 360;
+    margin-top: 7px;
+    background-image: url('../assets/img/map.png');
+}
+
+.right1,
+.right2,
+.right3 {
+    display: flex;
+    flex-direction: column;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 0px solid #ccc;
+}
+.right1 {
+    flex: 5;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #71FDF8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/img/time.png');
+}
+.right2 {
+    flex: 16;
+    margin-top: 7px;
+    background-image: url('../assets/img/module.png');
+}
+.right3 {
+    flex: 29;
+    margin-top: 7px;
+    background-image: url('../assets/img/module.png');
 }
 
 .t-c-2 {
@@ -364,35 +432,10 @@ onUnmounted(() => {
     background-image: url('../assets/img/number.png');
 }
 
-.center3 {
-    flex: 360;
-    margin-top: 7px;
-    background-image: url('../assets/img/map.png');
-}
 
 
-.right1 {
-    flex: 50;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #71FDF8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('../assets/img/time.png');
-}
 
-.right2 {
-    flex: 160;
-    margin-top: 7px;
-    background-image: url('../assets/img/module.png');
-}
 
-.right3 {
-    flex: 290;
-    margin-top: 7px;
-    background-image: url('../assets/img/module.png');
-}
 
 .top,
 .bottom {
@@ -401,6 +444,7 @@ onUnmounted(() => {
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
+    border: 0px solid #ccc;
 }
 
 .top {

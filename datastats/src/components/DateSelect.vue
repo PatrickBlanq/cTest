@@ -16,7 +16,7 @@
             {{ selectedMonth }} 月
             <div v-show="showDropdown === 'month'" class="dropdown">
                 <div v-for="month in months" :key="month" class="cell-flex hover" :data-value="month" data-type="month"
-                :class="selectedValue === 'month' ? 'hover-selected' : 'hover-not-selected'">
+                    :class="selectedValue === 'month' ? 'hover-selected' : 'hover-not-selected'">
                     {{ month }}</div>
             </div>
         </div>
@@ -79,6 +79,7 @@ const handleContainerClick = (event) => {
         const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
         console.log(formattedDay);
         console.log(type);
+        localStorage.setItem('date', [formattedDay, type]);
     } else if (type) {
         showDropdown.value = showDropdown.value === type ? null : type;
         //selectedValue.value = type;
@@ -177,7 +178,7 @@ onUnmounted(() => {
 }
 
 .hover-not-selected:hover {
-    border: 1px solid hsl(177,100%,70%);
+    border: 1px solid hsl(177, 100%, 70%);
 }
 
 .selected {
