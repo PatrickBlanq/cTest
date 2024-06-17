@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Capsule from './Capsule.vue';
 import jsonData from '../assets/json/datastats.json';
 
@@ -145,7 +145,10 @@ const toggleCollapse = (clickedItem) => {
                 Group1.expanded = !Group1.expanded;
                 if (Group1.expanded) {
                     console.log(Group1);
-                    localStorage.setItem('Group1',  JSON.stringify(Group1));
+                    localStorage.setItem('Group1', JSON.stringify(Group1));
+                    localStorage.removeItem('Group2');
+                    localStorage.removeItem('Group3');
+                    localStorage.removeItem('item');
                     /* localStorage.setItem('Group1',  Group1.group1); */
                 } else {
                     for (const Group2 of Group1.children) {
@@ -182,7 +185,9 @@ const toggleCollapse = (clickedItem) => {
                         Group2.expanded = !Group2.expanded;
                         if (Group2.expanded) {
                             console.log(Group2);
-                            localStorage.setItem('Group2',  JSON.stringify(Group2));
+                            localStorage.setItem('Group2', JSON.stringify(Group2));
+                            localStorage.removeItem('Group3');
+                            localStorage.removeItem('item');
                         } else {
                             for (const Group3 of Group2.children) {
                                 Group3.expanded = false;
@@ -214,7 +219,8 @@ const toggleCollapse = (clickedItem) => {
                                 Group3.expanded = !Group3.expanded;
                                 if (Group3.expanded) {
                                     console.log(Group3);
-                                    localStorage.setItem('Group3',  JSON.stringify(Group3));
+                                    localStorage.setItem('Group3', JSON.stringify(Group3));
+                                    localStorage.removeItem('item');
                                 } else {
                                     for (const item of Group3.children) {
                                         item.selected = false;
@@ -250,19 +256,67 @@ const toggleFontColor = (clickedItem) => {
 const logItem = (item) => {
     if (item.selected == false || item.selected == undefined) {
         console.log("item 是:", item);
-        localStorage.setItem('item',  JSON.stringify(item));
+        localStorage.setItem('item', JSON.stringify(item));
     }
-
-
 };
 
-initializeGroupedMenu();
-groupedMenu.value[0].expanded=true;
-groupedMenu.value[0].children[0].expanded=true;
-groupedMenu.value[0].children[0].children[0].expanded=true;
-localStorage.setItem('Group1',  JSON.stringify(groupedMenu.value[0]));
-localStorage.setItem('Group2',  JSON.stringify(groupedMenu.value[0].children[0]));
-localStorage.setItem('Group3',  JSON.stringify(groupedMenu.value[0].children[0].children[0]));
+
+
+onMounted(() => {
+    initializeGroupedMenu();
+
+    const storedGroup1 = JSON.parse(localStorage.getItem('Group1'));
+    const storedGroup2 = JSON.parse(localStorage.getItem('Group2'));
+    const storedGroup3 = JSON.parse(localStorage.getItem('Group3'));
+    const storedItem = JSON.parse(localStorage.getItem('item'));
+
+    if (storedGroup1) {
+        const group1Item = groupedMenu.value.find(item => item.group1 === storedGroup1.group1);
+        if (group1Item) group1Item.expanded = true;
+    }
+    if (storedGroup2) {
+        for (const group1Item of groupedMenu.value) {
+            const group2Item = group1Item.children.find(item => item.group2 === storedGroup2.group2);
+            if (group2Item) {
+                group2Item.expanded = true;
+                break;
+            }
+        }
+    }
+    if (storedGroup3) {
+        for (const group1Item of groupedMenu.value) {
+            for (const group2Item of group1Item.children) {
+                const group3Item = group2Item.children.find(item => item.group3 === storedGroup3.group3);
+                if (group3Item) {
+                    group3Item.expanded = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (storedItem) {
+        for (const group1Item of groupedMenu.value) {
+            for (const group2Item of group1Item.children) {
+                for (const group3Item of group2Item.children) {
+                    const item = group3Item.children.find(i => i.Name === storedItem.Name);
+                    if (item) {
+                        item.selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    if (!storedGroup1) {
+        groupedMenu.value[0].expanded = true;
+        groupedMenu.value[0].children[0].expanded = true;
+        groupedMenu.value[0].children[0].children[0].expanded = true;
+        localStorage.setItem('Group1', JSON.stringify(groupedMenu.value[0]));
+        localStorage.setItem('Group2', JSON.stringify(groupedMenu.value[0].children[0]));
+        localStorage.setItem('Group3', JSON.stringify(groupedMenu.value[0].children[0].children[0]));
+    }
+
+});
 //console.log(groupedMenu);
 const props = defineProps({
     height: Number
@@ -278,6 +332,7 @@ const props = defineProps({
     flex-grow: 1;
     flex-shrink: 1;
     margin: 20px 0.2rem 1rem 1.5rem;
+    padding-right: 17px;
     overflow-y: scroll;
     overflow-x: hidden;
     font-size: 15px;
@@ -286,7 +341,7 @@ const props = defineProps({
 }
 
 .collapse {
-    
+
     margin-top: 20px;
 }
 
@@ -308,9 +363,11 @@ const props = defineProps({
     color: #6FF8F4;
 
 }
-.group-text{
+
+.group-text {
     cursor: pointer;
 }
+
 .mark1 {
     margin-bottom: 0.25rem;
     display: inline-block;
@@ -338,20 +395,20 @@ const props = defineProps({
 
 .collapse-group1 {
     margin-right: 40px;
-    width: 188px;
+    width: 177px;
 }
 
 
 .collapse-group2 {
     margin-left: 10px;
     margin-right: 30px;
-    width: 188px;
+    width: 177px;
 }
 
 .collapse-group3 {
     margin-left: 20px;
     margin-right: 20px;
-    width: 188px;
+    width: 177px;
 }
 
 .collapse-item {
@@ -359,7 +416,7 @@ const props = defineProps({
     margin-right: 10px;
     white-space: nowrap;
     overflow: hidden;
-    width: 188px;
+    width: 177px;
 }
 
 .my-capsule {

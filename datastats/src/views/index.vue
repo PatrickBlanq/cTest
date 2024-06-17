@@ -52,14 +52,17 @@
                 </div>
             </div>
             <div class="bottom">
-                <TabControl>
-                    <Tab label="栋数" :index="0">
-                        <Annual :jsonData="jsonData1"></Annual>
-                    </Tab>
-                    <Tab label="壳上" :index="1">
-                        <Annual :jsonData="jsonData2"></Annual>
-                    </Tab>
-                </TabControl>
+
+                    <TabControl style="width: 100%; height: 100%; border: 0px solid #ccc;">
+                        <Tab label="栋数" :index="0">
+                            <Annual :jsonData="jsonData1"></Annual>
+                        </Tab>
+                        <Tab label="壳上" :index="1">
+                            <Annual :jsonData="jsonData2"></Annual>
+                        </Tab>
+                    </TabControl>
+
+
             </div>
         </div>
         <div class="right">
@@ -69,7 +72,7 @@
                 </div>
                 <div class="right2">
                     <Title strTitle="出勤人数"></Title>
-                    <Attendance @refreshPage="refreshPage"></Attendance>
+                    <Attendance></Attendance>
                 </div>
                 <div class="right3">
                     <div style="flex: 1;">
@@ -103,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, provide } from 'vue';
 import Title from '@/components/Title.vue';
 import DateSelect from '@/components/DateSelect.vue';
 import Arc from '@/components/Arc.vue';
@@ -193,10 +196,6 @@ const dataCard7 = {
     title: '依赖中'
 };
 
-const refreshPage = () => {
-    //location.reload();
-    console.log("reload");
-};
 
 const collapseDiv = ref(null);
 const deliveryTableDiv = ref(null);
@@ -250,6 +249,10 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('resize', updateSize);
 });
+
+
+const dateTimeDisplayTrigger = ref(null);
+provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
 
 </script>
 

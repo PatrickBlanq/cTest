@@ -1,7 +1,7 @@
 <template>
     <div ref="map" v-show="show" class="map" style="" @click="handleContainerClick">
         <div class="toggle-video" @click="toggleVideo"></div>
-        <div class="jilin" :class="{ 'selected': selectedValue === 'jilin' }" data-type="jilin"></div>
+        <div class="jilin" @click="" :class="{ 'selected': selectedValue === 'jilin' }" data-type="jilin"></div>
         <div class="tokyo" :class="{ 'selected': selectedValue === 'tokyo' }" data-type="tokyo"></div>
         <div class="okinawa" :class="{ 'selected': selectedValue === 'okinawa' }" data-type="okinawa"></div>
 
@@ -14,11 +14,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,inject  } from 'vue';
 const imageSrc = new URL('../assets/img/down.png', import.meta.url).href;
 const map = ref(null);
 let show = ref(true);
 let selectedValue = ref("jilin");
+
+const trigger = inject('dateTimeDisplayTrigger');
+
 
 const toggleVideo = () => {
     show.value = !show.value;
@@ -29,6 +32,8 @@ const handleContainerClick = (event) => {
     if (type !== undefined) {
         localStorage.setItem('map', type);
         selectedValue.value = type;
+        trigger.value();
+
     }
 }
 

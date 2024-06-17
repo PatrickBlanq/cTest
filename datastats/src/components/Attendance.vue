@@ -1,5 +1,6 @@
 <template>
     <div ref="target" class="chart-container"></div>
+
 </template>
 
 <script setup>
@@ -15,6 +16,7 @@ onMounted(() => {
     window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
     renderChart();
+
 });
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
@@ -26,7 +28,7 @@ function handleResize() {
 }
 
 const renderChart = () => {
-    const seriesData = jsonData.map(item => ({
+    const seriesData = jsonData.array1.map(item => ({
         name: item.状态,
         value: item.人数,
 
@@ -40,7 +42,7 @@ const renderChart = () => {
         },
         legend: {
             orient: 'horizontal',
-            bottom: '4%', 
+            bottom: '4%',
             itemWidth: 12,
             itemHeight: 12,
             itemGap: 20,
@@ -52,16 +54,33 @@ const renderChart = () => {
                 icon: 'rect',
             }))
         },
-
+        title: [{
+            text: jsonData.array2[0].人数.toString(),
+            left: 'center',
+            top: '19%',
+            textStyle: {
+                color: 'white',
+                fontSize: 20,
+            },
+        }, {
+            text: jsonData.array2[0].状态.toString() + "人数",
+            left: 'center',
+            top: '36%',
+            textStyle: {
+                color: 'white',
+                fontSize: 14,
+                fontWeight: 'normal',
+            },
+        }],
         series: [
             {
                 name: '状态',
                 type: 'pie',
                 padAngle: 5,
                 itemStyle: {
-                    borderRadius: 3
+                    borderRadius: 2
                 },
-                radius: ['30%', '50%'],
+                radius: ['45%', '60%'],
                 center: ['50%', '35%'],
                 position: "outside",
                 avoidLabelOverlap: false,
@@ -99,5 +118,6 @@ const renderChart = () => {
     height: 100%;
     border: 0px solid #ccc;
     box-sizing: border-box;
+    position: relative;
 }
 </style>

@@ -31,7 +31,7 @@ function handleResize() {
     }
 }
 
-const renderChart = (width, height) => {
+const renderChart = () => {
     const FontColor = '#848896'; // 文字颜色
     const gradientColors = [['#03E2D5', '#478EF8'], ['#F2B564', '#EA6832']]; // 每组柱状图的渐变色
 
@@ -56,7 +56,7 @@ const renderChart = (width, height) => {
                 }]
             }
         },
-        barWidth: props.jsonData[year].length > 4 ? 12 : 20 // 柱宽
+        barWidth: props.jsonData[year].length > 4 ? 10 : 20 // 柱宽
     }));
 
     const quarters = props.jsonData[years[0]].map(item => item.季度);
