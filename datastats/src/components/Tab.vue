@@ -31,6 +31,6 @@ onMounted(() => {
 <style scoped>
 .tab-content {
     height: 100%;
-    width: 100%;
+    width: 97%;
 }
 </style>

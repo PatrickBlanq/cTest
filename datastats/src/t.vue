@@ -1,35 +1,34 @@
 <template>
-  <div class="tab-control">
-      <div class="tab-list">
-          <div class="mark" style="margin-left: 17px; margin-right: 10px;"></div>
-          <!--遍历tabs数组，生成对应的tab，点击tab时，设置选中的tab-->
-          <div v-for="(tab, index) in tabs" :key="index" class="tab-container">
-              <div :class="['tab', { active: selectedTab === index }]" @click="selectedTab = index">
-                  {{ tab.label }}
-              </div>
-              <div v-show="index < tabs.length - 1" class="separator" style="margin-left: 10px;"></div>
-          </div>
-      </div>
-      <!--插入具体的tab内容-->
-      <div class="tab-panels">
-          <slot :selectedTab="selectedTab"></slot>
-      </div>
+  <!--只有在选中的选项卡是当前选项卡时，才显示内容-->
+  <div v-if="isSelected" class="tab-content">
+      <slot></slot>
   </div>
 </template>
 
 <script setup>
-import { ref, provide } from 'vue';
+import { inject, computed, onMounted } from 'vue';
 
-// 定义选项卡数组和选中的选项卡
-const tabs = ref([]);
-const selectedTab = ref(0);
+// 定义属性
+const props = defineProps({
+  label: {
+      type: String,
+      required: true,
+  },
+  index: {
+      type: Number,
+      required: true,
+  },
+});
 
-// 添加一个选项卡到选项卡数组
-function addTab(tab) {
-  tabs.value.push(tab);
-}
+// 从父组件注入选中的选项卡和添加选项卡的方法
+const selectedTab = inject('selectedTab');
+const addTab = inject('addTab');
 
-// 提供选中的选项卡和添加选项卡的方法给子组件使用
-provide('selectedTab', selectedTab);
-provide('addTab', addTab);
+// 计算当前选项卡是否被选中
+const isSelected = computed(() => selectedTab.value === props.index);
+
+// 在组件挂载后，将当前选项卡添加到选项卡数组
+onMounted(() => {
+  addTab({ label: props.label, index: props.index });
+});
 </script>

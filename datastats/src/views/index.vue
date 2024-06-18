@@ -55,10 +55,10 @@
 
                     <TabControl style="width: 100%; height: 100%; border: 0px solid #ccc;">
                         <Tab label="栋数" :index="0">
-                            <Annual :jsonData="jsonData1"></Annual>
+                            <Annual :jsonData="jsonData1" style="width: 100%; height: 100%;"></Annual>
                         </Tab>
                         <Tab label="壳上" :index="1">
-                            <Annual :jsonData="jsonData2"></Annual>
+                            <Annual :jsonData="jsonData2" style="width: 100%; height: 100%;"></Annual>
                         </Tab>
                     </TabControl>
 

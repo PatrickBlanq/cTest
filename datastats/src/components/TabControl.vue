@@ -19,7 +19,7 @@
 import { ref, provide } from 'vue';
 
 const tabs = ref([]);
-const selectedTab = ref(0);
+const selectedTab = ref(1);
 
 function addTab(tab) {
     tabs.value.push(tab);
@@ -63,7 +63,7 @@ provide('addTab', addTab);
 }
 
 .tab-panels {
-    border: 0px solid #ccc;
+    border: 1px solid #ccc;
     width: 100%;
     height: 90%;
     flex-grow: 1;

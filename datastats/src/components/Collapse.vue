@@ -269,45 +269,38 @@ onMounted(() => {
     const storedGroup2 = JSON.parse(localStorage.getItem('Group2'));
     const storedGroup3 = JSON.parse(localStorage.getItem('Group3'));
     const storedItem = JSON.parse(localStorage.getItem('item'));
+    let group1Item;
+    let group2Item;
+    let group3Item;
+    let item;
 
     if (storedGroup1) {
-        const group1Item = groupedMenu.value.find(item => item.group1 === storedGroup1.group1);
+        group1Item = groupedMenu.value.find(item => item.group1 === storedGroup1.group1);
         if (group1Item) group1Item.expanded = true;
-    }
-    if (storedGroup2) {
-        for (const group1Item of groupedMenu.value) {
-            const group2Item = group1Item.children.find(item => item.group2 === storedGroup2.group2);
+
+        if (storedGroup2) {
+            group2Item = group1Item.children.find(item => item.group2 === storedGroup2.group2);
             if (group2Item) {
                 group2Item.expanded = true;
-                break;
-            }
-        }
-    }
-    if (storedGroup3) {
-        for (const group1Item of groupedMenu.value) {
-            for (const group2Item of group1Item.children) {
-                const group3Item = group2Item.children.find(item => item.group3 === storedGroup3.group3);
-                if (group3Item) {
-                    group3Item.expanded = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (storedItem) {
-        for (const group1Item of groupedMenu.value) {
-            for (const group2Item of group1Item.children) {
-                for (const group3Item of group2Item.children) {
-                    const item = group3Item.children.find(i => i.Name === storedItem.Name);
-                    if (item) {
-                        item.selected = true;
-                        break;
+
+                if (storedGroup3) {
+                    group3Item = group2Item.children.find(item => item.group3 === storedGroup3.group3);
+                    if (group3Item) {
+                        group3Item.expanded = true;
+                        console.log(group3Item);
+
+                        if (storedItem) {
+                            item = group3Item.children.find(i => i.Name === storedItem.Name);
+                            if (item) {
+                                item.selected = true;
+
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-    if (!storedGroup1) {
+    } else {
         groupedMenu.value[0].expanded = true;
         groupedMenu.value[0].children[0].expanded = true;
         groupedMenu.value[0].children[0].children[0].expanded = true;
