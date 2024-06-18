@@ -45,20 +45,22 @@
 
 <script setup>
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted,inject } from 'vue';
 
 const years = [2022, 2023, 2024];
 const months = Array.from({ length: 12 }, (_, index) => index + 1);
 const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
-const selectedYear = ref(new Date().getFullYear());
-const selectedMonth = ref(new Date().getMonth() + 1);
-const selectedDay = ref(new Date().getDate());
+let selectedYear = ref(new Date().getFullYear());
+let selectedMonth = ref(new Date().getMonth() + 1);
+let selectedDay = ref(new Date().getDate());
 const selectedValue = ref("day");
 const showDropdown = ref(null); // 用于跟踪当前显示的下拉框类型
 const container = ref(null);
 const daysInMonth = computed(() => new Date(selectedYear.value, selectedMonth.value, 0).getDate());
 const firstDayOfWeek = computed(() => new Date(selectedYear.value, selectedMonth.value - 1, 1).getDay() + 1);
 const dayRows = computed(() => Math.ceil((daysInMonth.value + firstDayOfWeek.value) / 7));
+let formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
+const handleDateSelect = inject('handleDateSelect');
 const getday = (row, col) => {
     return (row - 1) * 7 + col - firstDayOfWeek.value + 1
 }
@@ -76,10 +78,23 @@ const handleContainerClick = (event) => {
         }
         selectedValue.value = type;
         showDropdown.value = null; // 关闭下拉框
-        const formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
-        console.log(formattedDay);
-        console.log(type);
+
+        formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
+        const selectedDate = new Date(formattedDay);
+        const today = new Date();
+        if (selectedDate >= today) {
+            const localdate= new Date(localStorage.getItem('date').split(',')[0]);
+            console.log(localdate);
+            selectedYear = ref(localdate.getFullYear());
+            selectedMonth = ref(localdate.getMonth() + 1);
+            selectedDay = ref(localdate.getDate());
+            alert("所选日期不能大于今天！");
+            return;
+        }
+
         localStorage.setItem('date', [formattedDay, type]);
+        
+        handleDateSelect()
     } else if (type) {
         showDropdown.value = showDropdown.value === type ? null : type;
         //selectedValue.value = type;
@@ -100,6 +115,7 @@ const closeDropdown = () => {
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);
+    localStorage.setItem('date', [formattedDay, "day"]);
 });
 
 onUnmounted(() => {
@@ -124,8 +140,6 @@ onUnmounted(() => {
     cursor: pointer;
     text-align: center;
 }
-
-
 
 .dropdown {
     position: absolute;
@@ -152,7 +166,7 @@ onUnmounted(() => {
 
 .day-dropdown {
 
-    width: 315px;
+    width: 305px;
 }
 
 .day-row {

@@ -31,6 +31,7 @@
             <div class="bottom" style="display: flex; box-sizing: border-box;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
                 <StackedHB></StackedHB>
+                <Attendance></Attendance>
             </div>
         </div>
         <div class="center">
@@ -53,14 +54,14 @@
             </div>
             <div class="bottom">
 
-                    <TabControl style="width: 100%; height: 100%; border: 0px solid #ccc;">
-                        <Tab label="栋数" :index="0">
-                            <Annual :jsonData="jsonData1" style="width: 100%; height: 100%;"></Annual>
-                        </Tab>
-                        <Tab label="壳上" :index="1">
-                            <Annual :jsonData="jsonData2" style="width: 100%; height: 100%;"></Annual>
-                        </Tab>
-                    </TabControl>
+                <TabControl style="width: 100%; height: 100%; border: 0px solid #ccc;">
+                    <Tab label="栋数" :index="0">
+                        <Annual :jsonData="bmData" style="width: 98%; height: 100%;"></Annual>
+                    </Tab>
+                    <Tab label="壳上" :index="1">
+                        <Annual :jsonData="bmData" style="width: 98%; height: 100%;"></Annual>
+                    </Tab>
+                </TabControl>
 
 
             </div>
@@ -123,8 +124,9 @@ import Map from '@/components/Map.vue'
 import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
-import jsonData1 from '../assets/json/annualMoney.json';
-import jsonData2 from '../assets/json/annualBuilding.json';
+import jsonYear from '../assets/json/bm-year.json';
+import jsonMonth from '../assets/json/bm-month.json';
+import jsonDay from '../assets/json/bm-day.json';
 
 import Attendance from '@/components/Attendance.vue'
 import IndicateCardMoney from '@/components/IndicateCardMoney.vue';
@@ -140,6 +142,7 @@ const building1 = dataIndicate2[0].building;
 const building2 = dataIndicate2[1].building;
 const money1 = dataIndicate2[0].money;
 const money2 = dataIndicate2[1].money;
+let bmData = ref(jsonDay);
 
 const dataArc1 = {
     num: 2654,
@@ -254,6 +257,23 @@ onUnmounted(() => {
 const dateTimeDisplayTrigger = ref(null);
 provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
 
+const handleDateSelect = () => {
+    let dataType = localStorage.getItem('date').split(',')[1]
+    switch (dataType) {
+        case 'year':
+            bmData.value = jsonYear;
+            break;
+        case 'month':
+            bmData.value = jsonMonth;
+            break;
+        case 'day':
+            bmData.value = jsonDay;
+            break;
+        default:
+            console.log('未知的日期类型');
+    }
+};
+provide('handleDateSelect', handleDateSelect);
 </script>
 
 <style scoped>
@@ -268,7 +288,6 @@ provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
 .flex-row {
     display: flex;
     flex-direction: row;
-
 }
 
 .left,
@@ -458,5 +477,6 @@ provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
     flex: 23;
     margin-top: 13px;
     background-image: url('../assets/img/module.png');
+    width: 100%;
 }
 </style>

@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import * as echarts from 'echarts';
 
 const props = defineProps({
@@ -13,33 +13,52 @@ const props = defineProps({
     }
 });
 
+watch(
+    () => props.jsonData,
+    (newJsonData) => {
+        // 使用 nextTick 确保在 myChart 初始化后才渲染图表
+        nextTick(() => {
+            if (myChart) {
+                renderChart(newJsonData);
+            }
+        });
+    },
+    { deep: true }
+);
+
 const target = ref(null);
 let myChart = null;
 
 onMounted(() => {
     window.addEventListener('resize', handleResize);
-    myChart = echarts.init(target.value);
+    myChart = echarts.init(target.value, null, {
+        width: '750px',
+        height: 'auto'
+    });
 
-    renderChart();
+    renderChart(props.jsonData);
 });
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
 });
 function handleResize() {
     if (myChart) {
-        myChart.resize();
+        myChart.resize({
+            width: '750px',
+            height: 'auto'
+        });
     }
 }
 
-const renderChart = () => {
+const renderChart = (jsonData) => {
     const FontColor = '#848896'; // 文字颜色
     const gradientColors = [['#03E2D5', '#478EF8'], ['#F2B564', '#EA6832']]; // 每组柱状图的渐变色
 
-    const years = Object.keys(props.jsonData);
+    const years = Object.keys(jsonData);
     const series = years.map((year, index) => ({
         name: year,
         type: 'bar',
-        data: props.jsonData[year].map(item => item.值),
+        data: jsonData[year].map(item => item.值),
         itemStyle: {
             color: {
                 type: 'linear',
@@ -56,10 +75,10 @@ const renderChart = () => {
                 }]
             }
         },
-        barWidth: props.jsonData[year].length > 4 ? 10 : 20 // 柱宽
+        barWidth: jsonData[year].length > 4 ? 10 : 20 // 柱宽
     }));
 
-    const quarters = props.jsonData[years[0]].map(item => item.季度);
+    const quarters = jsonData[years[0]].map(item => item.季度);
 
     const option = {
         legend: {
@@ -85,7 +104,7 @@ const renderChart = () => {
         },
         grid: {
             top: 25,
-            bottom: 35,
+            bottom: 45,
             left: 80,
             right: 50
         },
@@ -121,8 +140,28 @@ const renderChart = () => {
         series
     };
 
-    myChart.setOption(option);
+    if (quarters.length > 13) {
+        option.dataZoom = [{
+            type: 'slider',
+            start: 0,
+            end: 30,
+            height: 15,
+            bottom: 10,
+        }];
+    } else {
+        console.log(quarters.length);
+        option.dataZoom = [{
+            show: false
+        }];
+    }
+
+    myChart.setOption(option, { notMerge: true });
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.chart-container {
+    width: 98%;
+    height: auto;
+}
+</style>

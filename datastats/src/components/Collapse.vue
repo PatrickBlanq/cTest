@@ -287,8 +287,7 @@ onMounted(() => {
                     group3Item = group2Item.children.find(item => item.group3 === storedGroup3.group3);
                     if (group3Item) {
                         group3Item.expanded = true;
-                        console.log(group3Item);
-
+                        
                         if (storedItem) {
                             item = group3Item.children.find(i => i.Name === storedItem.Name);
                             if (item) {
