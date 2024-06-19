@@ -30,8 +30,8 @@
             </div>
             <div class="bottom" style="display: flex; box-sizing: border-box;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
-                <StackedHB></StackedHB>
-                <Attendance></Attendance>
+                <CategoryBarChart v-if="selectedValue === 'bar'" data-type="bar" style="height: 100%;"></CategoryBarChart>
+                <CategoryPieChart v-if="selectedValue === 'pie'" data-type="pie" style="height: 100%;"></CategoryPieChart>
             </div>
         </div>
         <div class="center">
@@ -114,7 +114,10 @@ import Arc from '@/components/Arc.vue';
 import DateTimeDisplay from '@/components/DateTimeDisplay.vue';
 import NumCard from '@/components/NumCard.vue';
 import Collapse from '@/components/Collapse.vue';
-import StackedHB from '@/components/StackedHB.vue';
+
+import CategoryBarChart from '@/components/CategoryBarChart.vue';
+import CategoryPieChart from '@/components/CategoryPieChart.vue'
+
 import IndicateCard from '@/components/IndicateCard.vue';
 
 import dataIndicate from '../assets/json/indicateCard.json';
@@ -143,6 +146,7 @@ const building2 = dataIndicate2[1].building;
 const money1 = dataIndicate2[0].money;
 const money2 = dataIndicate2[1].money;
 let bmData = ref(jsonDay);
+let selectedValue = ref("bar");
 
 const dataArc1 = {
     num: 2654,
@@ -274,6 +278,16 @@ const handleDateSelect = () => {
     }
 };
 provide('handleDateSelect', handleDateSelect);
+
+const provideGroupSelect = (value) => {
+    if (value == "item") {
+        selectedValue.value="pie";
+    }else{
+        selectedValue.value="bar";
+    }
+}
+provide('provideGroupSelect', provideGroupSelect);
+
 </script>
 
 <style scoped>

@@ -52,8 +52,9 @@
                                                 :class="['group-text', { 'selected': item.selected }]"
                                                 @click="logItem(item)">
 
-                                                <div class="marquee" :title="item.Name">
-                                                    &bull;&nbsp;&nbsp;{{ item.Name }}
+                                                <div class="marquee" :title="item.Name"
+                                                    :class="{ 'itemHover': item.selected }">
+                                                    <span>&bull;&nbsp;&nbsp;{{ item.Name }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,9 +73,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,inject } from 'vue';
 import Capsule from './Capsule.vue';
 import jsonData from '../assets/json/datastats.json';
+
+const provideGroupSelect = inject('provideGroupSelect');
 
 const groupedMenu = ref([]);
 
@@ -149,7 +152,7 @@ const toggleCollapse = (clickedItem) => {
                     localStorage.removeItem('Group2');
                     localStorage.removeItem('Group3');
                     localStorage.removeItem('item');
-                    /* localStorage.setItem('Group1',  Group1.group1); */
+                    provideGroupSelect("group1")
                 } else {
                     for (const Group2 of Group1.children) {
                         Group2.expanded = false;
@@ -257,14 +260,12 @@ const logItem = (item) => {
     if (item.selected == false || item.selected == undefined) {
         console.log("item 是:", item);
         localStorage.setItem('item', JSON.stringify(item));
+        provideGroupSelect("item")
     }
 };
 
 
-
-onMounted(() => {
-    initializeGroupedMenu();
-
+const initializeGroupedStatus = () => {
     const storedGroup1 = JSON.parse(localStorage.getItem('Group1'));
     const storedGroup2 = JSON.parse(localStorage.getItem('Group2'));
     const storedGroup3 = JSON.parse(localStorage.getItem('Group3'));
@@ -287,7 +288,7 @@ onMounted(() => {
                     group3Item = group2Item.children.find(item => item.group3 === storedGroup3.group3);
                     if (group3Item) {
                         group3Item.expanded = true;
-                        
+
                         if (storedItem) {
                             item = group3Item.children.find(i => i.Name === storedItem.Name);
                             if (item) {
@@ -307,6 +308,12 @@ onMounted(() => {
         localStorage.setItem('Group2', JSON.stringify(groupedMenu.value[0].children[0]));
         localStorage.setItem('Group3', JSON.stringify(groupedMenu.value[0].children[0].children[0]));
     }
+}
+
+onMounted(() => {
+    initializeGroupedMenu();
+    initializeGroupedStatus();
+
 
 });
 //console.log(groupedMenu);
@@ -427,6 +434,26 @@ const props = defineProps({
 
 }
 
+.itemHover {
+    display: flex;
+    width: 177;
+    resize: horizontal;
+    container-type: inline-size;
+    align-items: baseline;
+    overflow: hidden;
+    resize: none;
+
+    >span {
+        display: inline-block;
+        animation: marquee 3s linear infinite both alternate;
+    }
+}
+
+@keyframes marquee {
+    to {
+        transform: translateX(min(100cqw - 100%, 0px));
+    }
+}
 
 
 ::-webkit-scrollbar {

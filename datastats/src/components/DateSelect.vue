@@ -60,6 +60,7 @@ const daysInMonth = computed(() => new Date(selectedYear.value, selectedMonth.va
 const firstDayOfWeek = computed(() => new Date(selectedYear.value, selectedMonth.value - 1, 1).getDay() + 1);
 const dayRows = computed(() => Math.ceil((daysInMonth.value + firstDayOfWeek.value) / 7));
 let formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
+
 const handleDateSelect = inject('handleDateSelect');
 const getday = (row, col) => {
     return (row - 1) * 7 + col - firstDayOfWeek.value + 1

@@ -5,7 +5,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
-import data from '../assets/json/stacked.json';
+import data from '../assets/json/categoryBar.json';
 
 const target = ref(null);
 let myChart = null;
