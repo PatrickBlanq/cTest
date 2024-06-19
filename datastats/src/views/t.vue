@@ -6,42 +6,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
 
-const renderChart = (jsonData) => {
-  // ... 其他代码 ... 
+import { ref, onMounted, onUnmounted } from 'vue';
+import * as echarts from 'echarts';
+import axios from 'axios'; // 假设你使用 axios 发送请求
 
-  const years = Object.keys(jsonData);
-  // 在 series 循环外部定义 maxValue
-  let maxValue = 0; 
+const target = ref(null);
+let myChart = null;
 
-  const series = years.map((year, index) => {
-    // 获取当前 year 的 data 中的最大值，并更新 maxValue
-    maxValue = Math.max(maxValue, ...jsonData[year].map(item => item.值)); 
+onMounted(async () => {
+  window.addEventListener('resize', handleResize);
+  myChart = echarts.init(target.value);
 
-    return {
-      name: year,
-      type: 'bar',
-      data: jsonData[year].map(item => item.值),
-      // ... 其他 series 选项 ...
-    };
-  });
+  try {
+    // 发送请求获取 JSON 数据
+    const response = await axios.get('../assets/json/categoryPie.json');
+    const jsonData = response.data;
 
-  // ... 其他代码 ...
+    // 遍历 JSON 数据，将 value 替换为随机数
+    jsonData.forEach(item => {
+      item.value = Math.floor(Math.random() * 1000); // 生成 0 到 999 之间的随机数
+    });
 
-  const option = {
-    // ... 其他选项 ...
+    renderChart(jsonData); // 使用修改后的 JSON 数据渲染图表
+  } catch (error) {
+    console.error("获取 JSON 数据失败:", error);
+  }
+});
 
-    yAxis: {
-      // ... 其他 yAxis 选项 ...
+// ... 其他代码 (保持不变) ...
 
-      min: 0,
-      max: maxValue, // 使用外部作用域中的 maxValue 
-    },
-
-    // ... 其他选项 ...
-  };
-
-  // ... 其他代码 ...
+const renderChart = (jsonData) => { // 将 jsonData 作为参数传入
+  // ... 其他代码 (保持不变) ...
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div ref="target" class="chart-container" style="box-sizing: border-box; margin-left: 20px;"></div>
+    <div ref="target" class="chart-container" style="box-sizing: border-box; "></div>
 </template>
 
 <script setup>

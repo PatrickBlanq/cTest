@@ -30,8 +30,8 @@
             </div>
             <div class="bottom" style="display: flex; box-sizing: border-box;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
-                <CategoryBarChart v-if="selectedValue === 'bar'" data-type="bar" style="height: 100%;"></CategoryBarChart>
-                <CategoryPieChart v-if="selectedValue === 'pie'" data-type="pie" style="height: 100%;"></CategoryPieChart>
+                <CategoryBarChart v-if="selectedValue === 'bar'" data-type="bar" ></CategoryBarChart>
+                <CategoryPieChart v-if="selectedValue === 'pie'" data-type="pie" ></CategoryPieChart>
             </div>
         </div>
         <div class="center">

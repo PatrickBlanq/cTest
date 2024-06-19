@@ -1,26 +1,26 @@
 <template>
     <div ref="target" class="chart-container"></div>
-
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
-import jsonData from '../assets/json/attendance.json';
+import jsonData from '../assets/json/categoryPie.json';
 
 const target = ref(null);
 let myChart = null;
 
-
-onMounted(() => {
+onMounted(async () => {
     window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
+    await jsonData;
     renderChart();
-
 });
+
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
 });
+
 function handleResize() {
     if (myChart) {
         myChart.resize();
@@ -28,47 +28,73 @@ function handleResize() {
 }
 
 const renderChart = () => {
-    const seriesData = jsonData.array1.map(item => ({
-        name: item.状态,
-        value: item.人数,
+    const total = jsonData.data.reduce((sum, item) => sum + item.value, 0);
 
+    const seriesData = jsonData.data.map(item => ({
+        name: item.category,
+        value: item.value,
     }));
 
-    const colors = ['#488EF8', '#F88582', '#71FCF8', '#F2B564'];//bar的颜色
+    const colors = ['#488EF8', '#F88582', '#71FCF8', '#F2B564'];
+
+    const totalString = total.toString();
+    const totalLength = totalString.length;
+    const leftPosition = (totalLength > 4) ? (19.5 - totalLength * 0.88) : (20 - totalLength * 0.88);
+    const maxValueLength = Math.max(...seriesData.map(item => item.value.toString().length));
+    const maxCategoryLength = Math.max(...seriesData.map(item => item.name.toString().length));
 
     const option = {
         tooltip: {
             trigger: 'item',
+            show: false,
+        },
+        grid: {
+            left: '10%',
+            right: '25%',
         },
         legend: {
-            orient: 'right',
-            bottom: '4%',
-            itemWidth: 12,
-            itemHeight: 12,
-            itemGap: 20,
+            orient: 'vertical',
+            left: '50%',
+            top: 'middle',
+            itemGap: 22,
             data: seriesData.map((item, index) => ({
                 name: item.name,
                 textStyle: {
-                    color: colors[index]
+                    color: colors[index],
+                    fontSize: '1.2rem',
                 },
-                icon: 'rect',
-            }))
+                icon: 'circle',
+            })),
+
+            formatter: function (name) {
+                const item = seriesData.find(i => i.name === name);
+                const percentage = ((item.value / total) * 100).toFixed(0);
+                // 计算空格数量
+                const valueSpaceCount = (maxValueLength - item.value.toString().length);
+                const valueRightSpaces = ' '.repeat(valueSpaceCount + 3);
+                const ValueLeftSpaces = ' '.repeat(valueSpaceCount);
+                const categorySpaceCount = (maxCategoryLength - item.name.toString().length) * 3;
+                const categoryRightSpaces = ' '.repeat(categorySpaceCount + 3);
+
+                return `${item.name}${categoryRightSpaces} ${ValueLeftSpaces}${item.value}${valueRightSpaces} ${percentage}%`;
+            },
         },
         title: [{
-            text: jsonData.array2[0].人数.toString(),
-            left: 'center',
-            top: '19%',
-            textStyle: {
-                color: 'white',
-                fontSize: 20,
-            },
-        }, {
-            text: jsonData.array2[0].状态.toString() + "人数",
-            left: 'center',
+            text: totalString,
+            left: `${leftPosition}%`,
             top: '36%',
             textStyle: {
                 color: 'white',
-                fontSize: 14,
+                fontSize: '1.6rem',
+                fontWeight: 'bold',
+            },
+        }, {
+            text: "统计",
+            left: '18%',
+            top: '52%',
+            textStyle: {
+                color: 'white',
+                fontSize: 20,
                 fontWeight: 'normal',
             },
         }],
@@ -78,32 +104,28 @@ const renderChart = () => {
                 type: 'pie',
                 padAngle: 5,
                 itemStyle: {
-                    borderRadius: 2
+                    borderRadius: 7
                 },
-                radius: ['45%', '60%'],
-                center: ['50%', '35%'],
+                radius: ['58%', '70%'],
+                center: ['22%', '48%'],
                 position: "outside",
                 avoidLabelOverlap: false,
                 label: {
                     show: false,
                     fontSize: 14,
                     formatter: function (data) {
-                        return data.name + "" + data.percent.toFixed(0) + "%";
+                        return `${data.name} ${data.percent.toFixed(0)}%`;
                     },
-
                     color: 'inherit'
-
                 },
                 labelLine: {
                     show: false
                 },
                 data: seriesData,
-
             }
         ],
         color: colors
     };
-
 
     myChart.setOption(option);
 };
