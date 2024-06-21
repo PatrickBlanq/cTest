@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="t-l-column4" style="height: 100%; box-sizing: border-box;" ref="collapseDiv">
-                        <Collapse :height="collapseHeight"></Collapse>
+                        <Collapse :height="collapseHeight" :jsonData="jsonGroup"></Collapse>
                     </div>
                 </div>
             </div>
@@ -144,6 +144,7 @@ import jsonArc from '../assets/json/arc.json';
 import jsonCard from '../assets/json/numCard.json';
 import indicateBudget from '../assets/json/indicateBudget.json';
 import indicateCorrect from '../assets/json/indicateCorrect.json';
+import jsonGroup from '../assets/json/group.json';
 
 const budget1 = indicateBudget.data[0].budget;
 const actual1 = indicateBudget.data[0].actual;
@@ -154,6 +155,7 @@ const building1 = indicateCorrect.data[0].building;
 const building2 = indicateCorrect.data[1].building;
 const money1 = indicateCorrect.data[0].money;
 const money2 = indicateCorrect.data[1].money;
+
 let dataBM = ref(jsonDay);
 let selectedValue = ref("bar");
 let dataCategoryBar = ref(jsonBar)

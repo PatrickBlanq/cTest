@@ -1,5 +1,5 @@
 <template>
-    <div class="moduleStyle" :style="{ height: height + 'px' }">
+    <div class="moduleStyle" :style="{ height: props.height + 'px' }">
         <div v-for="Group1, index in groupedMenu" :key="index" :class="{ 'first-item': index === 0 }" class="collapse"
             style="border: 0px solid #ccc;">
             <div class="collapse-wrapper">
@@ -75,7 +75,7 @@
 <script setup>
 import { ref, onMounted,inject } from 'vue';
 import Capsule from './Capsule.vue';
-import jsonData from '../assets/json/datastats.json';
+import jsonData from '../assets/json/group.json';
 
 const injectGroupSelect = inject('provideGroupSelect');
 
@@ -315,12 +315,16 @@ const initializeGroupedStatus = () => {
 onMounted(() => {
     initializeGroupedMenu();
     initializeGroupedStatus();
-
+console.log(props.jsonData);
 
 });
 //console.log(groupedMenu);
 const props = defineProps({
-    height: Number
+    height: Number,
+    jsonData: {
+    type: Object,
+    required: true
+  }
 });
 
 </script>
@@ -456,7 +460,6 @@ const props = defineProps({
         transform: translateX(min(100cqw - 100%, 0px));
     }
 }
-
 
 ::-webkit-scrollbar {
     width: 9px;

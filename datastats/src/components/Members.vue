@@ -21,7 +21,6 @@
 
 <script setup>
 import jsondata from '../assets/json/members.json';
-const members = [155, 16, 8, 10];
 const sum = jsondata.data.reduce((total, item) => total + item.value, 0);
 </script>
 
