@@ -1,28 +1,27 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-
-const iframe = ref(null)
-const data = ref({})
-
-onMounted(() => {
-  iframe.value.onload = async () => {
-    try {
-      const response = await fetch(iframe.value.contentWindow.location.href)
-      const text = await response.text()
-      console.log(text);
-      data.value = JSON.parse(text)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-})
-</script>
-
 <template>
   <div>
-    <iframe ref="iframe" src="/mockData.js" style="display: none;"></iframe>
-    <div v-for="user in data.users" :key="user.id">
-      {{ user.name }} - {{ new Date(user.timestamp).toLocaleString() }}
-    </div>
+    总人数： {{ totalPeople }}
   </div>
 </template>
+
+<script>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+export default {
+  setup() {
+    const totalPeople = ref(0)
+
+    onMounted(async () => {
+      // 请更换为你的json文件的url
+      const response = await axios.get('/path/to/your/file.json')
+      const data = response.data
+      totalPeople.value = data.reduce((sum, item) => sum + item.人数, 0)
+    })
+
+    return {
+      totalPeople
+    }
+  }
+}
+</script>
