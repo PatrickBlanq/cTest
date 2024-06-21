@@ -84,7 +84,7 @@ const groupedMenu = ref([]);
 const initializeGroupedMenu = () => {
     const groupedByGroup1 = new Map();
 
-    for (const item of jsonData) {
+    for (const item of jsonData.data) {
         if (!groupedByGroup1.has(item.Group1)) {
             groupedByGroup1.set(item.Group1, []);
         }

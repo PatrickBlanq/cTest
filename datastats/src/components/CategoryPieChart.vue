@@ -125,7 +125,7 @@ const renderChart = (jsonData) => {
                 itemStyle: {
                     borderRadius: 7
                 },
-                radius: ['58%', '70%'],
+                radius: ['62.5%', '70%'],
                 center: ['22%', '48%'],
                 position: "outside",
                 avoidLabelOverlap: false,

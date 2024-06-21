@@ -43,15 +43,15 @@ const calculateVisibleCount = () => {
 
 const scrollData = () => {
     const visibleCount = calculateVisibleCount();    
-    const firstItem = jsonData.shift();
-    jsonData.push(firstItem);
-    displayedData.value = jsonData.slice(0, visibleCount);
+    const firstItem = jsonData.data.shift();
+    jsonData.data.push(firstItem);
+    displayedData.value = jsonData.data.slice(0, visibleCount);
 };
 
 onMounted(async () => {
     
     await nextTick();
-    displayedData.value = jsonData.slice(0, calculateVisibleCount());
+    displayedData.value = jsonData.data.slice(0, calculateVisibleCount());
     interval = setInterval(scrollData, 1000);
     window.addEventListener('resize', handleResize);
 
@@ -64,7 +64,7 @@ onUnmounted(() => {
 });
 
 const handleResize = () => {
-    displayedData.value = jsonData.slice(0, calculateVisibleCount());
+    displayedData.value = jsonData.data.slice(0, calculateVisibleCount());
 };
 </script>
 

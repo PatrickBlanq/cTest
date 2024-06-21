@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody ref="tableBody" :style="{ height: (height - 50) + 'px' }">
-                <tr v-for="item in jsonData" :key="item.id">
+                <tr v-for="item in jsonData.data" :key="item.id">
                     <td style="width: 20%;">{{ item.发生年月 }}</td>
                     <td style="width: 20%;">{{ item.取印先 }}</td>
                     <td style="width: 20%;">{{ item.管理番号 }}</td>
