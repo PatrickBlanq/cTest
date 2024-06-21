@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import jsonData from '../assets/json/checkBack.json';
+import jsonData from '../assets/json/correct.json';
 import {  onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({

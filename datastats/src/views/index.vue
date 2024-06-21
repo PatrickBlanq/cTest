@@ -35,10 +35,10 @@
                 <div class="center1">EPCOデータ掲示板</div>
                 <div class="center2 flex-row">
                     <div class="t-c-2">
-                        <IndicateCard :num1="budget1" :num2="budget2" title="予算壳上"> </IndicateCard>
+                        <IndicateBudget :num1="budget1" :num2="budget2" title="予算壳上"> </IndicateBudget>
                     </div>
                     <div class="t-c-2">
-                        <IndicateCard :num1="actual1" :num2="actual2" title="实际壳上"></IndicateCard>
+                        <IndicateBudget :num1="actual1" :num2="actual2" title="实际壳上"></IndicateBudget>
                     </div>
                     <div class="t-c-2">
                         <Members></Members>
@@ -78,12 +78,12 @@
                     <div style="flex: 8; display: flex; flex-direction: column; height: 100%; border: 0px solid #ccc;">
                         <div
                             style="flex: 2;display: flex; height: 100%;  flex-direction: row;  border: 0px solid #ccc;">
-                            <IndicateCardBuilding :num1="building1" :num2="building2" title="栋数前年比率">
-                            </IndicateCardBuilding>
+                            <IndicateCorrectBuilding :num1="building1" :num2="building2" title="栋数前年比率">
+                            </IndicateCorrectBuilding>
                             <IndicateCardMoney :num1="money1" :num2="money2" title="壳上前年比率"> </IndicateCardMoney>
                         </div>
-                        <div style="flex: 3; height: 90%;   border: 0px solid #ccc;" ref="checkBackTableDiv">
-                            <CheckBackTable v-if="checkBackTableHeight" :height="checkBackTableHeight"></CheckBackTable>
+                        <div style="flex: 3; height: 90%;   border: 0px solid #ccc;" ref="correctTableDiv">
+                            <CorrectTable v-if="correctTableHeight" :height="correctTableHeight"></CorrectTable>
                         </div>
                     </div>
                 </div>
@@ -114,10 +114,7 @@ import Collapse from '@/components/Collapse.vue';
 import CategoryBarChart from '@/components/CategoryBarChart.vue';
 import CategoryPieChart from '@/components/CategoryPieChart.vue'
 
-import IndicateCard from '@/components/IndicateCard.vue';
-
-import dataIndicate from '../assets/json/indicateCard.json';
-import dataIndicate2 from '../assets/json/indicateCard2.json';
+import IndicateBudget from '@/components/IndicateBudget.vue';
 import Members from '@/components/Members.vue';
 import Map from '@/components/Map.vue'
 import TabControl from '@/components/TabControl.vue';
@@ -125,10 +122,10 @@ import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
 
 import Attendance from '@/components/Attendance.vue'
-import IndicateCardMoney from '@/components/IndicateCardMoney.vue';
-import IndicateCardBuilding from '@/components/IndicateCardBuilding.vue';
+import IndicateCardMoney from '@/components/IndicateCorrectMoney.vue';
+import IndicateCorrectBuilding from '@/components/IndicateCorrectBuilding.vue';
 import DeliveryTable from '@/components/DeliveryTable.vue';
-import CheckBackTable from '@/components/CheckBackTable.vue';
+import CorrectTable from '@/components/CorrectTable.vue';
 
 //**********Json:Annual
 import jsonYear from '../assets/json/bm-year.json';
@@ -144,18 +141,19 @@ import jsonBar from '../assets/json/categoryBar.json';
 import jsonBar1 from '../assets/json/categoryBar1.json';
 
 import jsonArc from '../assets/json/arc.json';
-import jsonCard from '../assets/json/card.json';
+import jsonCard from '../assets/json/numCard.json';
+import indicateBudget from '../assets/json/indicateBudget.json';
+import indicateCorrect from '../assets/json/indicateCorrect.json';
 
+const budget1 = indicateBudget.data[0].budget;
+const actual1 = indicateBudget.data[0].actual;
+const budget2 = indicateBudget.data[1].budget;
+const actual2 = indicateBudget.data[1].actual;
 
-const budget1 = dataIndicate[0].budget;
-const budget2 = dataIndicate[1].budget;
-const actual1 = dataIndicate[0].actual;
-const actual2 = dataIndicate[1].actual;
-
-const building1 = dataIndicate2[0].building;
-const building2 = dataIndicate2[1].building;
-const money1 = dataIndicate2[0].money;
-const money2 = dataIndicate2[1].money;
+const building1 = indicateCorrect.data[0].building;
+const building2 = indicateCorrect.data[1].building;
+const money1 = indicateCorrect.data[0].money;
+const money2 = indicateCorrect.data[1].money;
 let dataBM = ref(jsonDay);
 let selectedValue = ref("bar");
 let dataCategoryBar = ref(jsonBar)
@@ -166,10 +164,10 @@ let dataCard = ref(jsonCard)
 //处理容器高度
 const collapseDiv = ref(null);
 const deliveryTableDiv = ref(null);
-const checkBackTableDiv = ref(null);
+const correctTableDiv = ref(null);
 let collapseHeight = ref(0);
 let deliveryTableHeight = ref(0);
-let checkBackTableHeight = ref(0);
+let correctTableHeight = ref(0);
 let oldWidth = ref(0);
 let oldHeight = ref(0);
 
@@ -189,8 +187,8 @@ const updateSize = () => {
     deliveryTableHeight.value = localStorage.getItem('deliveryHeight') * ratioHeight;
     localStorage.setItem('deliveryHeight', deliveryTableHeight.value);
 
-    checkBackTableHeight.value = localStorage.getItem('checkBackHeight') * ratioHeight;
-    localStorage.setItem('checkBackHeight', checkBackTableHeight.value);
+    correctTableHeight.value = localStorage.getItem('correctHeight') * ratioHeight;
+    localStorage.setItem('correctHeight', correctTableHeight.value);
 
 };
 
@@ -204,8 +202,8 @@ onMounted(() => {
     localStorage.setItem('deliveryHeight', deliveryTableDiv.value.clientHeight);
     deliveryTableHeight.value = deliveryTableDiv.value.clientHeight
 
-    localStorage.setItem('checkBackHeight', checkBackTableDiv.value.clientHeight);
-    checkBackTableHeight.value = checkBackTableDiv.value.clientHeight
+    localStorage.setItem('correctHeight', correctTableDiv.value.clientHeight);
+    correctTableHeight.value = correctTableDiv.value.clientHeight
 
     window.addEventListener('resize', updateSize);
 
