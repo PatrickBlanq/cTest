@@ -80,7 +80,7 @@ const renderChart = (jsonData) => {
                 name: item.name,
                 textStyle: {
                     color: colors[index],
-                    fontSize: '1.2rem',
+                    fontSize: '1rem',
                 },
                 icon: 'circle',
             })),

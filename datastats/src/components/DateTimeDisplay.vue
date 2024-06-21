@@ -21,7 +21,7 @@ function updateDateTime() {
     let now = new Date();
     city.value = localStorage.getItem('map');
     if (city.value != 'jilin') {
-        // 提前一小时
+        // 日本提前一小时
         now = new Date(now.getTime() + 3600 * 1000);
     }
     const year = now.getFullYear();
@@ -39,7 +39,9 @@ async function fetchWeather() {
     if(!city.value){
         city.value="jilin"
     }
+    //中文
     let requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city.value}&appid=fa5f86877980b30bde6e69bcde28506b&lang=zh_cn`
+    //日语
     if (city.value != "jilin") { requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city.value}&appid=fa5f86877980b30bde6e69bcde28506b&lang=ja` }
     //console.log(requestUrl);
     const response = await fetch(requestUrl)
@@ -59,9 +61,9 @@ onMounted(async () => {
 
 });
 
-const dateTimeDisplayTrigger = inject('dateTimeDisplayTrigger');
+const injectDateTimeDisplay = inject('triggerDateTimeDisplay');
 
-dateTimeDisplayTrigger.value = () => {
+injectDateTimeDisplay.value = () => {
     fetchWeather();
 }; 
 </script>

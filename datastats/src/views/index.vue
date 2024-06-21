@@ -215,16 +215,20 @@ onUnmounted(() => {
     window.removeEventListener('resize', updateSize);
 });
 
-
-const dateTimeDisplayTrigger = ref(null);
-provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
-
+//*************依赖provide************ */
+const triggerDateTimeDisplay = ref(null);
 let dataToggle = ref(true);
-const handleDateSelect = () => {
+const provideDateSelect = () => {
     let dataType = localStorage.getItem('date').split(',')[1]
+    let groupType = "group"
+    if (localStorage.getItem("item")) {
+         groupType = "item"
+         
+    }
+    provideGroupSelect(groupType)
     switch (dataType) {
         case 'year':
-            dataToggle = !dataToggle;
+
             if (dataToggle) {
                 dataBM.value = jsonYear1
             } else {
@@ -232,7 +236,7 @@ const handleDateSelect = () => {
             }
             break;
         case 'month':
-            dataToggle = !dataToggle;
+
             if (dataToggle) {
                 dataBM.value = jsonMonth1
             } else {
@@ -240,7 +244,7 @@ const handleDateSelect = () => {
             }
             break;
         case 'day':
-            dataToggle = !dataToggle;
+
             if (dataToggle) {
                 dataBM.value = jsonDay1
             } else {
@@ -252,10 +256,10 @@ const handleDateSelect = () => {
     }
 };
 
-provide('handleDateSelect', handleDateSelect);
 
-const provideGroupSelect = (value) => {
-    if (value == "item") {
+const provideGroupSelect = (groupType) => {
+    
+    if (groupType == "item") {
         selectedValue.value = "pie";
         dataToggle = !dataToggle;
         if (dataToggle) {
@@ -276,8 +280,10 @@ const provideGroupSelect = (value) => {
         }
     }
 }
-provide('provideGroupSelect', provideGroupSelect);
 
+provide('triggerDateTimeDisplay', triggerDateTimeDisplay);
+provide('provideDateSelect', provideDateSelect);
+provide('provideGroupSelect', provideGroupSelect);
 </script>
 
 <style scoped>

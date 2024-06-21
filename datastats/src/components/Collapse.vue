@@ -77,7 +77,7 @@ import { ref, onMounted,inject } from 'vue';
 import Capsule from './Capsule.vue';
 import jsonData from '../assets/json/datastats.json';
 
-const provideGroupSelect = inject('provideGroupSelect');
+const injectGroupSelect = inject('provideGroupSelect');
 
 const groupedMenu = ref([]);
 
@@ -152,7 +152,7 @@ const toggleCollapse = (clickedItem) => {
                     localStorage.removeItem('Group2');
                     localStorage.removeItem('Group3');
                     localStorage.removeItem('item');
-                    provideGroupSelect("group1")
+                    injectGroupSelect("group1")
                 } else {
                     for (const Group2 of Group1.children) {
                         Group2.expanded = false;
@@ -191,7 +191,7 @@ const toggleCollapse = (clickedItem) => {
                             localStorage.setItem('Group2', JSON.stringify(Group2));
                             localStorage.removeItem('Group3');
                             localStorage.removeItem('item');
-                            provideGroupSelect("group2")
+                            injectGroupSelect("group2")
                         } else {
                             for (const Group3 of Group2.children) {
                                 Group3.expanded = false;
@@ -225,7 +225,7 @@ const toggleCollapse = (clickedItem) => {
                                     console.log(Group3);
                                     localStorage.setItem('Group3', JSON.stringify(Group3));
                                     localStorage.removeItem('item');
-                                    provideGroupSelect("group3")
+                                    injectGroupSelect("group3")
                                 } else {
                                     for (const item of Group3.children) {
                                         item.selected = false;
@@ -262,7 +262,7 @@ const logItem = (item) => {
     if (item.selected == false || item.selected == undefined) {
         console.log("item 是:", item);
         localStorage.setItem('item', JSON.stringify(item));
-        provideGroupSelect("item")
+        injectGroupSelect("item")
     }
 };
 

@@ -20,8 +20,7 @@ const map = ref(null);
 let show = ref(true);
 let selectedValue = ref("jilin");
 
-const trigger = inject('dateTimeDisplayTrigger');
-
+const injectDateTimeDisplay = inject('triggerDateTimeDisplay');
 
 const toggleVideo = () => {
     show.value = !show.value;
@@ -32,7 +31,7 @@ const handleContainerClick = (event) => {
     if (type !== undefined) {
         localStorage.setItem('map', type);
         selectedValue.value = type;
-        trigger.value();
+        injectDateTimeDisplay.value();
 
     }
 }

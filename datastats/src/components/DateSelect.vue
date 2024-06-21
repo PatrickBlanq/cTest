@@ -61,7 +61,7 @@ const firstDayOfWeek = computed(() => new Date(selectedYear.value, selectedMonth
 const dayRows = computed(() => Math.ceil((daysInMonth.value + firstDayOfWeek.value) / 7));
 let formattedDay = `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`;
 
-const handleDateSelect = inject('handleDateSelect');
+const injectDateSelect = inject('provideDateSelect');
 const getday = (row, col) => {
     return (row - 1) * 7 + col - firstDayOfWeek.value + 1
 }
@@ -95,7 +95,7 @@ const handleContainerClick = (event) => {
 
         localStorage.setItem('date', [formattedDay, type]);
         
-        handleDateSelect()
+        injectDateSelect()
     } else if (type) {
         showDropdown.value = showDropdown.value === type ? null : type;
         //selectedValue.value = type;
