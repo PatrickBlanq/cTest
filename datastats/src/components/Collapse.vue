@@ -191,6 +191,7 @@ const toggleCollapse = (clickedItem) => {
                             localStorage.setItem('Group2', JSON.stringify(Group2));
                             localStorage.removeItem('Group3');
                             localStorage.removeItem('item');
+                            provideGroupSelect("group2")
                         } else {
                             for (const Group3 of Group2.children) {
                                 Group3.expanded = false;
@@ -224,6 +225,7 @@ const toggleCollapse = (clickedItem) => {
                                     console.log(Group3);
                                     localStorage.setItem('Group3', JSON.stringify(Group3));
                                     localStorage.removeItem('item');
+                                    provideGroupSelect("group3")
                                 } else {
                                     for (const item of Group3.children) {
                                         item.selected = false;

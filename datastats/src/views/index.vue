@@ -8,20 +8,14 @@
                         <DateSelect style="margin-left: 2rem;"></DateSelect>
                     </div>
                     <div class="t-l-column2" style="flex: 2; ">
-                        <Arc :data="dataArc1"></Arc>
-                        <Arc :data="dataArc2"></Arc>
-                        <Arc :data="dataArc3"></Arc>
-                        <Arc :data="dataArc4"></Arc>
+                        <div v-for="itemArc, index in dataArc.data">
+                            <Arc :data="itemArc"></Arc>
+                        </div>
                     </div>
-                    <div class="t-l-column3 flex-row" style="  ">
-                        <NumCard :data="dataCard1" />
-                        <NumCard :data="dataCard2" />
-                        <NumCard :data="dataCard3" />
-                        <NumCard :data="dataCard4" />
-                        <NumCard :data="dataCard5" />
-                        <NumCard :data="dataCard5" />
-                        <NumCard :data="dataCard5" />
-                        <NumCard :data="dataCard6" />
+                    <div class="t-l-column3 flex-row" style="">
+                        <div v-for="itemCard, index in dataCard.data">
+                            <NumCard :data="itemCard" />
+                        </div>
                     </div>
                     <div class="t-l-column4" style="height: 100%; box-sizing: border-box;" ref="collapseDiv">
                         <Collapse :height="collapseHeight"></Collapse>
@@ -30,8 +24,10 @@
             </div>
             <div class="bottom" style="display: flex; box-sizing: border-box;">
                 <Title style="flex-grow: 1;  " strTitle="在库种类状况"></Title>
-                <CategoryBarChart v-if="selectedValue === 'bar'" data-type="bar" ></CategoryBarChart>
-                <CategoryPieChart v-if="selectedValue === 'pie'" data-type="pie" ></CategoryPieChart>
+                <CategoryBarChart :jsonData="dataCategoryBar" v-if="selectedValue === 'bar'" data-type="bar">
+                </CategoryBarChart>
+                <CategoryPieChart :jsonData="dataCategoryPie" v-if="selectedValue === 'pie'" data-type="pie">
+                </CategoryPieChart>
             </div>
         </div>
         <div class="center">
@@ -56,10 +52,10 @@
 
                 <TabControl style="width: 100%; height: 100%; border: 0px solid #ccc;">
                     <Tab label="栋数" :index="0">
-                        <Annual :jsonData="bmData" style="width: 98%; height: 100%;"></Annual>
+                        <Annual :jsonData="dataBM" style="width: 98%; height: 100%;"></Annual>
                     </Tab>
                     <Tab label="壳上" :index="1">
-                        <Annual :jsonData="bmData" style="width: 98%; height: 100%;"></Annual>
+                        <Annual :jsonData="dataBM" style="width: 98%; height: 100%;"></Annual>
                     </Tab>
                 </TabControl>
 
@@ -127,15 +123,30 @@ import Map from '@/components/Map.vue'
 import TabControl from '@/components/TabControl.vue';
 import Tab from '@/components/Tab.vue';
 import Annual from '@/components/Annual.vue';
-import jsonYear from '../assets/json/bm-year.json';
-import jsonMonth from '../assets/json/bm-month.json';
-import jsonDay from '../assets/json/bm-day.json';
 
 import Attendance from '@/components/Attendance.vue'
 import IndicateCardMoney from '@/components/IndicateCardMoney.vue';
 import IndicateCardBuilding from '@/components/IndicateCardBuilding.vue';
 import DeliveryTable from '@/components/DeliveryTable.vue';
 import CheckBackTable from '@/components/CheckBackTable.vue';
+
+//**********Json:Annual
+import jsonYear from '../assets/json/bm-year.json';
+import jsonYear1 from '../assets/json/bm-year1.json';
+import jsonMonth from '../assets/json/bm-month.json';
+import jsonMonth1 from '../assets/json/bm-month1.json';
+import jsonDay from '../assets/json/bm-day.json';
+import jsonDay1 from '../assets/json/bm-day1.json';
+//**********Json:Category
+import jsonPie from '../assets/json/categoryPie.json';
+import jsonPie1 from '../assets/json/categoryPie1.json';
+import jsonBar from '../assets/json/categoryBar.json';
+import jsonBar1 from '../assets/json/categoryBar1.json';
+
+import jsonArc from '../assets/json/arc.json';
+import jsonCard from '../assets/json/card.json';
+
+
 const budget1 = dataIndicate[0].budget;
 const budget2 = dataIndicate[1].budget;
 const actual1 = dataIndicate[0].actual;
@@ -145,65 +156,14 @@ const building1 = dataIndicate2[0].building;
 const building2 = dataIndicate2[1].building;
 const money1 = dataIndicate2[0].money;
 const money2 = dataIndicate2[1].money;
-let bmData = ref(jsonDay);
+let dataBM = ref(jsonDay);
 let selectedValue = ref("bar");
+let dataCategoryBar = ref(jsonBar)
+let dataCategoryPie = ref(jsonPie)
+let dataArc = ref(jsonArc)
+let dataCard = ref(jsonCard)
 
-const dataArc1 = {
-    num: 2654,
-    title: '预算栋数',
-    endAngle: 340,
-    color: "#488EF7",
-};
-const dataArc2 = {
-    num: 2510,
-    title: '依赖栋数',
-    endAngle: 290,
-    color: "#F2B564",
-};
-const dataArc3 = {
-    num: 1200,
-    title: '纳品栋数',
-    endAngle: 250,
-    color: "#F2B564",
-};
-const dataArc4 = {
-    num: "45%",
-    title: '予算比率',
-    endAngle: 270,
-    color: "#F2B564",
-};
-
-const dataCard1 = {
-    num: 680,
-    title: '依赖前'
-};
-
-const dataCard2 = {
-    num: 460,
-    title: '今日的受信'
-};
-const dataCard3 = {
-    num: 120,
-    title: '保留'
-};
-const dataCard4 = {
-    num: 67,
-    title: '依赖中'
-};
-const dataCard5 = {
-    num: 87,
-    title: '戻り残'
-};
-const dataCard6 = {
-    num: 24,
-    title: '返却'
-};
-const dataCard7 = {
-    num: 456,
-    title: '依赖中'
-};
-
-
+//处理容器高度
 const collapseDiv = ref(null);
 const deliveryTableDiv = ref(null);
 const checkBackTableDiv = ref(null);
@@ -247,8 +207,6 @@ onMounted(() => {
     localStorage.setItem('checkBackHeight', checkBackTableDiv.value.clientHeight);
     checkBackTableHeight.value = checkBackTableDiv.value.clientHeight
 
-
-
     window.addEventListener('resize', updateSize);
 
 });
@@ -261,29 +219,61 @@ onUnmounted(() => {
 const dateTimeDisplayTrigger = ref(null);
 provide('dateTimeDisplayTrigger', dateTimeDisplayTrigger);
 
+let dataToggle = ref(true);
 const handleDateSelect = () => {
     let dataType = localStorage.getItem('date').split(',')[1]
     switch (dataType) {
         case 'year':
-            bmData.value = jsonYear;
+            dataToggle = !dataToggle;
+            if (dataToggle) {
+                dataBM.value = jsonYear1
+            } else {
+                dataBM.value = jsonYear
+            }
             break;
         case 'month':
-            bmData.value = jsonMonth;
+            dataToggle = !dataToggle;
+            if (dataToggle) {
+                dataBM.value = jsonMonth1
+            } else {
+                dataBM.value = jsonMonth
+            }
             break;
         case 'day':
-            bmData.value = jsonDay;
+            dataToggle = !dataToggle;
+            if (dataToggle) {
+                dataBM.value = jsonDay1
+            } else {
+                dataBM.value = jsonDay
+            }
             break;
         default:
             console.log('未知的日期类型');
     }
 };
+
 provide('handleDateSelect', handleDateSelect);
 
 const provideGroupSelect = (value) => {
     if (value == "item") {
-        selectedValue.value="pie";
-    }else{
-        selectedValue.value="bar";
+        selectedValue.value = "pie";
+        dataToggle = !dataToggle;
+        if (dataToggle) {
+            dataCategoryPie.value = jsonPie
+
+        } else {
+            dataCategoryPie.value = jsonPie1
+            
+        }
+
+    } else {
+        selectedValue.value = "bar";
+        dataToggle = !dataToggle;
+        if (dataToggle) {
+            dataCategoryBar.value = jsonBar
+        } else {
+            dataCategoryBar.value = jsonBar1
+        }
     }
 }
 provide('provideGroupSelect', provideGroupSelect);

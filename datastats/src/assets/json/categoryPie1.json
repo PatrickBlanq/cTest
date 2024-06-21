@@ -2,19 +2,19 @@
   "data": [
     {
       "category": "通常",
-      "value": 770
+      "value": 70
     },
     {
       "category": "变更",
-      "value": 150
+      "value": 130
     },
     {
       "category": "竣工图",
-      "value": 260
+      "value": 560
     },
     {
       "category": "其他",
-      "value": 30
+      "value": 10
     }
   ]
 }

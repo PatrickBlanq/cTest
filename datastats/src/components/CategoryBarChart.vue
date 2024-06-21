@@ -3,19 +3,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted,watch,nextTick } from 'vue';
 import * as echarts from 'echarts';
-import data from '../assets/json/categoryBar.json';
 
 const target = ref(null);
 let myChart = null;
-let seriesData = null;
+
+const props = defineProps({
+  jsonData: {
+    type: Object,
+    required: true
+  }
+});
+
+watch(
+  () => props.jsonData,
+  (newJsonData) => {
+    nextTick(() => {
+      if (myChart) {
+        renderChart(newJsonData.series);
+      }
+    });
+  },
+  { deep: true }
+);
 
 onMounted(() => {
     window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
-    seriesData = data.series;
-    renderChart();
+    renderChart(props.jsonData.series);
 });
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
@@ -25,7 +41,7 @@ function handleResize() {
         myChart.resize();
     }
 }
-const renderChart = () => {
+const renderChart = (seriesData) => {
     const colors = ['#488EF8', '#F88582', '#71FCF8', '#F2B564'];//bar的颜色
     const yAxisColor = '#098192'; // 指定 Y 轴的绿色
     const FontColor = '#fff'; // 文字白色
@@ -52,7 +68,7 @@ const renderChart = () => {
             }))
         },
         grid: {
-            left: -130,
+            left: -100,
             right: 50,
             bottom: 37,
             top: 10,

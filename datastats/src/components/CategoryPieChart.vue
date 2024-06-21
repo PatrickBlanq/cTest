@@ -3,18 +3,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted,watch,nextTick } from 'vue';
 import * as echarts from 'echarts';
-import jsonData from '../assets/json/categoryPie.json';
 
 const target = ref(null);
 let myChart = null;
 
+const props = defineProps({
+  jsonData: {
+    type: Object,
+    required: true
+  }
+});
+
+watch(
+  () => props.jsonData,
+  (newJsonData) => {
+    nextTick(() => {
+      if (myChart) {
+        
+        renderChart(newJsonData);
+      }
+    });
+  },
+  { deep: true }
+);
+
 onMounted(async () => {
     window.addEventListener('resize', handleResize);
     myChart = echarts.init(target.value);
-    await jsonData;
-    renderChart();
+    await props.jsonData;
+    renderChart(props.jsonData);
 });
 
 onUnmounted(() => {
@@ -27,7 +46,7 @@ function handleResize() {
     }
 }
 
-const renderChart = () => {
+const renderChart = (jsonData) => {
     const total = jsonData.data.reduce((sum, item) => sum + item.value, 0);
 
     const seriesData = jsonData.data.map(item => ({
