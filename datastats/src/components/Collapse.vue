@@ -306,7 +306,6 @@ const toggleFontColor = (clickedItem) => {
 
 
 const initializeGroupedStatus = () => {
-    console.log("initializeGroupedStatus");
     const storedGroup1 = JSON.parse(localStorage.getItem('Group1'));
     const storedGroup2 = JSON.parse(localStorage.getItem('Group2'));
     const storedGroup3 = JSON.parse(localStorage.getItem('Group3'));

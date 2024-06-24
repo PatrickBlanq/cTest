@@ -195,7 +195,6 @@ const updateSize = () => {
 
 };
 
-
 onMounted(() => {
     oldWidth.value = window.innerWidth;
     oldHeight.value = window.innerHeight;
@@ -209,7 +208,8 @@ onMounted(() => {
     correctTableHeight.value = correctTableDiv.value.clientHeight
 
     window.addEventListener('resize', updateSize);
-
+    provideDateSelect();
+        
 });
 
 onUnmounted(() => {
@@ -268,7 +268,6 @@ const provideDateSelect = () => {
     provideGroupSelect(groupType)
   
 };
-
 
 const provideGroupSelect = (groupType) => {
     dataToggle = !dataToggle;
