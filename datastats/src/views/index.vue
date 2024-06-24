@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="t-l-column4" style="height: 100%; box-sizing: border-box;" ref="collapseDiv">
-                        <Collapse :height="collapseHeight" :jsonData="jsonGroup"></Collapse>
+                        <Collapse :height="collapseHeight" :jsonData="dataGroup"></Collapse>
                     </div>
                 </div>
             </div>
@@ -145,6 +145,7 @@ import jsonCard from '../assets/json/numCard.json';
 import indicateBudget from '../assets/json/indicateBudget.json';
 import indicateCorrect from '../assets/json/indicateCorrect.json';
 import jsonGroup from '../assets/json/group.json';
+import jsonGroup1 from '../assets/json/group1.json';
 
 const budget1 = indicateBudget.data[0].budget;
 const actual1 = indicateBudget.data[0].actual;
@@ -162,7 +163,7 @@ let dataCategoryBar = ref(jsonBar)
 let dataCategoryPie = ref(jsonPie)
 let dataArc = ref(jsonArc)
 let dataCard = ref(jsonCard)
-
+let dataGroup = ref(jsonGroup)
 //处理容器高度
 const collapseDiv = ref(null);
 const deliveryTableDiv = ref(null);
@@ -215,17 +216,11 @@ onUnmounted(() => {
     window.removeEventListener('resize', updateSize);
 });
 
-//*************依赖provide************ */
+//*************provide************ */
 const triggerDateTimeDisplay = ref(null);
 let dataToggle = ref(true);
-const provideDateSelect = () => {
-    let dataType = localStorage.getItem('date').split(',')[1]
-    let groupType = "group"
-    if (localStorage.getItem("item")) {
-         groupType = "item"
-         
-    }
-    provideGroupSelect(groupType)
+let toggleGroup= ref(true);
+const toggleTab=(dataType)=>{
     switch (dataType) {
         case 'year':
 
@@ -254,31 +249,50 @@ const provideDateSelect = () => {
         default:
             console.log('未知的日期类型');
     }
+}
+const provideDateSelect = () => {
+    let dataType = localStorage.getItem('date').split(',')[1]
+    toggleTab(dataType);
+    let groupType = "group"
+    if (localStorage.getItem("item")) {
+        groupType = "item"
+
+    }
+    toggleGroup=! toggleGroup;
+    if (toggleGroup) {
+        dataGroup.value = jsonGroup
+    } else {
+        dataGroup.value = jsonGroup1
+    }
+
+    provideGroupSelect(groupType)
+  
 };
 
 
 const provideGroupSelect = (groupType) => {
-    
+    dataToggle = !dataToggle;
     if (groupType == "item") {
         selectedValue.value = "pie";
-        dataToggle = !dataToggle;
+
         if (dataToggle) {
             dataCategoryPie.value = jsonPie
 
         } else {
             dataCategoryPie.value = jsonPie1
-            
+
         }
 
     } else {
         selectedValue.value = "bar";
-        dataToggle = !dataToggle;
         if (dataToggle) {
             dataCategoryBar.value = jsonBar
         } else {
             dataCategoryBar.value = jsonBar1
         }
     }
+    let dataType = localStorage.getItem('date').split(',')[1]
+    toggleTab(dataType);
 }
 
 provide('triggerDateTimeDisplay', triggerDateTimeDisplay);

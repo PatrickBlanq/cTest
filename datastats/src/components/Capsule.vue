@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch, nextTick } from 'vue';
 
 const canvasRef = ref(null);
 let data = reactive({});
@@ -19,7 +19,18 @@ const props = defineProps({
         default: 0,
     },
 });
-onMounted(() => {
+
+watch(
+    () => props.totalExpected,
+    (newJsonData) => {
+        nextTick(() => {
+            loadData();
+            drawCapsule();
+        });
+    },
+    { deep: true }
+);
+const loadData = () => {
     const width = 250
     if (props.totalExpected == null || props.totalFinished == null || props.totalExpected == 0 || props.totalFinished == 0) {
         data = {
@@ -48,6 +59,10 @@ onMounted(() => {
         }
 
     }
+}
+onMounted(() => {
+
+    loadData();
 
     drawCapsule();
 });
@@ -55,6 +70,8 @@ onMounted(() => {
 const drawCapsule = () => {
     const canvas = canvasRef.value;
     const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     const x = 0; // 矩形左上角 x 坐标
     const y = 0; // 矩形左上角 y 坐标
     const width = canvas.width - 50; // 矩形宽度

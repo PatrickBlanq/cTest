@@ -49,8 +49,7 @@
                                     <div class="collapse-wrapper ">
                                         <div class="collapse-item">
                                             <div style="border: 0px solid #ccc;"
-                                                :class="['group-text', { 'selected': item.selected }]"
-                                                @click="logItem(item)">
+                                                :class="['group-text', { 'selected': item.selected }]">
 
                                                 <div class="marquee" :title="item.Name"
                                                     :class="{ 'itemHover': item.selected }">
@@ -73,15 +72,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted,inject } from 'vue';
+import { ref, onMounted, inject, watch, nextTick } from 'vue';
 import Capsule from './Capsule.vue';
-import jsonData from '../assets/json/group.json';
+
+const props = defineProps({
+    height: Number,
+    jsonData: {
+        type: Object,
+        required: true
+    }
+});
+
+watch(
+    () => props.jsonData,
+    (newJsonData) => {
+        nextTick(() => {
+            initializeGroupedMenu(newJsonData);
+            if (localStorage.getItem('item')) {
+                const jsonObject = JSON.parse(localStorage.getItem('item'));
+                toggleFontColor(jsonObject);
+            }
+            initializeGroupedStatus();
+        });
+    },
+    { deep: false }
+);
 
 const injectGroupSelect = inject('provideGroupSelect');
 
-const groupedMenu = ref([]);
+let groupedMenu = ref([]);
 
-const initializeGroupedMenu = () => {
+const initializeGroupedMenu = (jsonData) => {
+
+    groupedMenu.value = [];
     const groupedByGroup1 = new Map();
 
     for (const item of jsonData.data) {
@@ -122,6 +145,7 @@ const initializeGroupedMenu = () => {
                     Group3Item.totalExpected += item["納品予定"];
                     Group3Item.totalMiddleEstimate += item["中間見込"];
                     Group3Item.totalFinished += item["依頼棟数"];
+                    Group3Item.selected = false;
                 }
 
                 Group2Item.children.push(Group3Item);
@@ -142,6 +166,7 @@ const initializeGroupedMenu = () => {
 
 //折叠显示
 const toggleCollapse = (clickedItem) => {
+
     if (clickedItem.group1 !== null && clickedItem.group1 !== undefined) {
         for (const Group1 of groupedMenu.value) {
             if (Group1.group1 === clickedItem.group1) {
@@ -152,8 +177,12 @@ const toggleCollapse = (clickedItem) => {
                     localStorage.removeItem('Group2');
                     localStorage.removeItem('Group3');
                     localStorage.removeItem('item');
-                    injectGroupSelect("group1")
+                    injectGroupSelect("Group1")
                 } else {
+                    localStorage.removeItem('Group1');
+                    localStorage.removeItem('Group2');
+                    localStorage.removeItem('Group3');
+                    localStorage.removeItem('item');
                     for (const Group2 of Group1.children) {
                         Group2.expanded = false;
                         for (const Group3 of Group2.children) {
@@ -166,6 +195,7 @@ const toggleCollapse = (clickedItem) => {
                 }
             } else {
                 Group1.expanded = false;
+
                 for (const Group2 of Group1.children) {
                     Group2.expanded = false;
                     for (const Group3 of Group2.children) {
@@ -191,8 +221,11 @@ const toggleCollapse = (clickedItem) => {
                             localStorage.setItem('Group2', JSON.stringify(Group2));
                             localStorage.removeItem('Group3');
                             localStorage.removeItem('item');
-                            injectGroupSelect("group2")
+                            injectGroupSelect("Group2")
                         } else {
+                            localStorage.removeItem('Group2');
+                            localStorage.removeItem('Group3');
+                            localStorage.removeItem('item');
                             for (const Group3 of Group2.children) {
                                 Group3.expanded = false;
                                 for (const item of Group3.children) {
@@ -202,6 +235,7 @@ const toggleCollapse = (clickedItem) => {
                         }
                     } else {
                         Group2.expanded = false;
+
                         for (const Group3 of Group2.children) {
                             Group3.expanded = false;
                             for (const item of Group3.children) {
@@ -225,14 +259,17 @@ const toggleCollapse = (clickedItem) => {
                                     console.log(Group3);
                                     localStorage.setItem('Group3', JSON.stringify(Group3));
                                     localStorage.removeItem('item');
-                                    injectGroupSelect("group3")
+                                    injectGroupSelect("Group3")
                                 } else {
+                                    localStorage.removeItem('Group3');
+                                    localStorage.removeItem('item');
                                     for (const item of Group3.children) {
                                         item.selected = false;
                                     }
                                 }
                             } else {
                                 Group3.expanded = false;
+
                                 for (const item of Group3.children) {
                                     item.selected = false;
                                 }
@@ -251,23 +288,25 @@ const toggleFontColor = (clickedItem) => {
         for (const Group2 of Group1.children) {
             for (const Group3 of Group2.children) {
                 for (const item of Group3.children) {
-                    item.selected = (item === clickedItem);
+                    if (item === clickedItem) {
+                        item.selected = true;
+                        localStorage.setItem('item', JSON.stringify(item));
+                        injectGroupSelect("item")
+                        console.log(item);
+                    }
+                    else { item.selected = false }
+
                 }
             }
         }
     }
 };
 
-const logItem = (item) => {
-    if (item.selected == false || item.selected == undefined) {
-        console.log("item 是:", item);
-        localStorage.setItem('item', JSON.stringify(item));
-        injectGroupSelect("item")
-    }
-};
+
 
 
 const initializeGroupedStatus = () => {
+    console.log("initializeGroupedStatus");
     const storedGroup1 = JSON.parse(localStorage.getItem('Group1'));
     const storedGroup2 = JSON.parse(localStorage.getItem('Group2'));
     const storedGroup3 = JSON.parse(localStorage.getItem('Group3'));
@@ -279,7 +318,9 @@ const initializeGroupedStatus = () => {
 
     if (storedGroup1) {
         group1Item = groupedMenu.value.find(item => item.group1 === storedGroup1.group1);
-        if (group1Item) group1Item.expanded = true;
+        if (group1Item) {
+            group1Item.expanded = true
+        };
 
         if (storedGroup2) {
             group2Item = group1Item.children.find(item => item.group2 === storedGroup2.group2);
@@ -295,6 +336,7 @@ const initializeGroupedStatus = () => {
                             item = group3Item.children.find(i => i.Name === storedItem.Name);
                             if (item) {
                                 item.selected = true;
+                                console.log(item);
 
                             }
                         }
@@ -302,30 +344,17 @@ const initializeGroupedStatus = () => {
                 }
             }
         }
-    } else {
-        groupedMenu.value[0].expanded = true;
-        groupedMenu.value[0].children[0].expanded = true;
-        groupedMenu.value[0].children[0].children[0].expanded = true;
-        localStorage.setItem('Group1', JSON.stringify(groupedMenu.value[0]));
-        localStorage.setItem('Group2', JSON.stringify(groupedMenu.value[0].children[0]));
-        localStorage.setItem('Group3', JSON.stringify(groupedMenu.value[0].children[0].children[0]));
     }
 }
 
 onMounted(() => {
-    initializeGroupedMenu();
+    initializeGroupedMenu(props.jsonData);
     initializeGroupedStatus();
-console.log(props.jsonData);
+    // console.log(props.jsonData);
 
 });
-//console.log(groupedMenu);
-const props = defineProps({
-    height: Number,
-    jsonData: {
-    type: Object,
-    required: true
-  }
-});
+
+
 
 </script>
 
