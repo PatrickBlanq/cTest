@@ -1,31 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>
-            RunJS 演示代码
-        </title>
-        <!-- 如果是id属性,将.改为#即可 -->
-        <style>
-.text-container {
-  width: 100px; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap;
-  position: relative;
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .list-item {
+        background-color: #266fff;
+        border-radius: 5px;
+        color: #fff;
+        width: 250px;
+        padding: 5px;
+        margin-bottom: 10px;
+      }
+      .list-item.moving {
+        background-color: transparent;
+        color: transparent;
+        border: 1px solid #ccc;
+      }
+      .list{
+        
+        width: 50%;
+        /*首先我们设置边框只显示右侧，宽度为2px的实线。*/
+border-right: 2px solid;
+/*设置线性渐变*/
+border-image: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #00bbf2 20%, rgba(255, 255, 255, 0) 99%) 2 2 2 2;
 
-.text-container:hover .text {
-  white-space: normal; 
-  position: absolute;
-  background: #fff;
-  z-index: 1;
-}
-        </style>
+      }
+    </style>
   </head>
-    <body>
-      <div class="text-container">
-        <p class="text">这是一段非常长非常长非常长的文本</p>
-      </div>
+  <body>
+    <div class="list">
+      <div draggable="true" class="list-item">1</div>
+      <div draggable="true" class="list-item">2</div>
+      <div draggable="true" class="list-item">3</div>
+      <div draggable="true" class="list-item">4</div>
+      <div draggable="true" class="list-item">5</div>
+    </div>
   </body>
+  <script>
+    // 拖拽排序在很多站点里面是非常常见的，使用的API就是一个拖拽API
+ 
+    // 1、让元素变的可拖拽   找到这些元素，给这些元素加上 draggable 属性，值为true，这样就变得可拖拽了
+    // 2、拖拽的时候样式得变   class为moving的样式
+    const list = document.querySelector('.list')
+ 
+    // 用事件委托的方式 给父元素绑定事件
+    list.addEventListener('dragstart', function (e) {
+      // 当拖拽开始的时候要找到拖拽的那个元素给他添加类样式
+ 
+      // 为什么要用setTimeout,不用的话拖拽的那个元素也会变成虚线（就是添加了类样式后的样子），
+      // 它的样式取决于拖拽开始时候元素本身的样式，需要在拖拽开始的时候保持原来的样式 把它变成异步的
+      setTimeout(() => {
+        e.target.classList.add('moving')
+      }, 0)
+      sourceNode = e.target
+    })
+    // 用来记录当前拖拽的是哪个元素
+    let sourceNode = null
+ 
+    // 3、什么时候产生排序？拖拽的时候把拖拽对象放到了某些元素之上，这里就要监听拖拽进入事件
+    list.addEventListener('dragenter', function (e) {
+      e.preventDefault()
+      // 排除掉一些情况，比如拖拽的时候进入了父元素 或者 是本身自己
+      if (e.target == list || e.target == sourceNode) return
+      const children = [...list.children]
+      // 通过所处元素的下标来判断是上方还是下方
+      const sourceIndex = children.indexOf(sourceNode)
+      const targetIndex = children.indexOf(e.target)
+      console.log(sourceIndex, targetIndex)
+      // 4、当拖拽的元素进入到别的元素身上的时候，要做的一些事情
+      if (sourceIndex < targetIndex) {
+        // console.log('下方')
+        // 插入到那个元素下一个元素之前
+        list.insertBefore(sourceNode, e.target.nextElementSibling)
+      } else {
+        //  console.log('上方')
+        list.insertBefore(sourceNode, e.target)
+      }
+      console.log(sourceIndex)
+    })
+ 
+    // 拖拽完毕 松开鼠标
+    list.addEventListener('dragend', function (e) {
+      // 移除掉类样式即可
+      sourceNode.classList.remove('moving')
+    })
+  </script>
 </html>

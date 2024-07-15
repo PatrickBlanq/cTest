@@ -1,0 +1,28 @@
+{
+    "data": [
+      {
+        "num": 2555,
+        "title": "预算栋数",
+        "endAngle": 340,
+        "color": "#488EF7"
+      },
+      {
+        "num": 2010,
+        "title": "依赖栋数",
+        "endAngle": 290,
+        "color": "#F2B564"
+      },
+      {
+        "num": 1800,
+        "title": "纳品栋数",
+        "endAngle": 250,
+        "color": "#F2B564"
+      },
+      {
+        "num": "70%",
+        "title": "予算比率",
+        "endAngle": 300,
+        "color": "#F2B564"
+      }
+    ]
+  }

@@ -4,7 +4,7 @@
             <div class="top">
                 <div class="left1 flex-column">
                     <div class="t-l-column1 flex-row" style="align-items: baseline;">
-                        <Title strTitle="纳期状况"></Title>
+                        <Title strTitle="纳期状况" @click="requestUrl"></Title>
                         <DateSelect style="margin-left: 2rem;"></DateSelect>
                     </div>
                     <div class="t-l-column2" style="flex: 2; ">
@@ -146,6 +146,7 @@ import indicateBudget from '../assets/json/indicateBudget.json';
 import indicateCorrect from '../assets/json/indicateCorrect.json';
 import jsonGroup from '../assets/json/group.json';
 import jsonGroup1 from '../assets/json/group1.json';
+import axios from 'axios'
 
 const budget1 = indicateBudget.data[0].budget;
 const actual1 = indicateBudget.data[0].actual;
@@ -209,7 +210,7 @@ onMounted(() => {
 
     window.addEventListener('resize', updateSize);
     provideDateSelect();
-        
+
 });
 
 onUnmounted(() => {
@@ -219,8 +220,8 @@ onUnmounted(() => {
 //*************provide************ */
 const triggerDateTimeDisplay = ref(null);
 let dataToggle = ref(true);
-let toggleGroup= ref(true);
-const toggleTab=(dataType)=>{
+let toggleGroup = ref(true);
+const toggleTab = (dataType) => {
     switch (dataType) {
         case 'year':
 
@@ -258,7 +259,7 @@ const provideDateSelect = () => {
         groupType = "item"
 
     }
-    toggleGroup=! toggleGroup;
+    toggleGroup = !toggleGroup;
     if (toggleGroup) {
         dataGroup.value = jsonGroup
     } else {
@@ -266,7 +267,7 @@ const provideDateSelect = () => {
     }
 
     provideGroupSelect(groupType)
-  
+
 };
 
 const provideGroupSelect = (groupType) => {
@@ -501,5 +502,21 @@ provide('provideGroupSelect', provideGroupSelect);
     margin-top: 13px;
     background-image: url('../assets/img/module.png');
     width: 100%;
+}
+
+.left1,
+.right2,
+.right3,
+.bottom {
+    border: 3px solid transparent;
+    border-radius: 7px;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(to right, #0C1530, #0C1530),
+        linear-gradient(to right,
+            rgba(255, 255, 255, 0.15) 0%,
+            #488EF7 17%,
+            #488EF7 73%,
+            rgba(255, 255, 255, 0.1) 100%);
 }
 </style>
