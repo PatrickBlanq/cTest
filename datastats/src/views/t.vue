@@ -1,55 +1,35 @@
-<template>
-  <div class="card" v-loading="loading">
-    <!-- 你的界面内容 -->
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-
-const loading = ref(false);
-
-// 请求配置
-const request = axios.create({
-  baseURL: '你的 API 基础路径',
-  timeout: 5000, // 设置超时时间为 5000 毫秒（5 秒）
-});
-
-// 请求拦截器
-request.interceptors.request.use(config => {
-  loading.value = true;
-  return config;
-}, error => {
-  loading.value = false;
-  return Promise.reject(error);
-});
-
-// 响应拦截器
-request.interceptors.response.use(response => {
-  loading.value = false;
-  return response;
-}, error => {
-  loading.value = false;
-  if (error.code === 'ECONNABORTED') {
-    // 处理超时错误
-    alert('请求超时，请稍后再试');
-  }
-  return Promise.reject(error);
-});
-
-// 示例 API 请求函数
-async function fetchData() {
-  try {
-    const response = await request.get('/你的接口路径');
-    console.log(response.data);
-  } catch (error) {
-    console.error('请求出错:', error);
-  }
-}
-
-// 组件挂载时调用 API 请求
-onMounted(() => {
-  fetchData();
-});
-</script>
+<template>  
+  <div>  
+    <p v-for="item in data" :key="item.d_id">  
+      <pre>{{ formatGroupName(item.d_起案者所属name) }}</pre>  
+    </p>  
+  </div>  
+</template>  
+  
+<script setup>  
+import { ref } from 'vue';  
+  
+// 使用 ref 而不是 data 函数，因为 <script setup> 不需要返回任何东西  
+const data = ref([  
+  {  
+    d_作成日: "2024.03.05",  
+    d_メーカーname: "カネカソーラー",  
+    d_起案者所属name: "東京設計センター　東京第１グループ",  
+    d_id: "0453de82-866c-417b-b9de-76081fb7dfe7",  
+    d_管理番号: "KANEKA-147637",  
+    d_支払金額: 45670.00  
+  }  
+]);  
+  
+// 方法定义保持不变  
+function formatGroupName(name) {  
+  return name.replace(/　/g, '\n');  
+}  
+</script>  
+  
+<style>  
+/* CSS 保持不变 */  
+pre {  
+  white-space: pre-wrap;  
+}  
+</style>
