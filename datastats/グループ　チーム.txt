@@ -1,1 +1,22 @@
 ハウジング
+mutation是同步，要commit来更新
+action是异步，用dispatch更新
+getters是缓存，相当于计算属性
+
+
+{
+    path: '/video',
+    name: 'video',
+    component: Video
+  }
+
+const store = useStore();
+console.log(store.state.auth.user);
+
+
+<script>
+// 导出组件
+export default {
+    name: 'video'
+}
+</script>

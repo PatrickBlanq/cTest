@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="center3">
-                    <Map></Map>
+                    <!--   <Map></Map> -->
                 </div>
             </div>
             <div class="bottom">
