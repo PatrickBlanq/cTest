@@ -1,27 +1,32 @@
 <template>
-  <div>
-    <h2>子组件</h2>
-    <p>窗口大小改变时将调用父组件的刷新方法</p>
+  <div @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
+    <div v-show="selected">
+      tttttttt悬停显示的内容
+    </div>
+    常规显示的内容
   </div>
 </template>
 
-<script setup>
-import { onMounted, onUnmounted } from 'vue';
-import { emit } from 'vue'; // 这里需要显式导入
+<script>
+import { ref } from 'vue';
 
-const emitEvent = () => {
-  emit('refresh');
+export default {
+  setup() {
+    const selected = ref(false);
+
+    const handleMouseOver = () => {
+      selected.value = true;
+    };
+
+    const handleMouseLeave = () => {
+      selected.value = false;
+    };
+
+    return {
+      selected,
+      handleMouseOver,
+      handleMouseLeave
+    };
+  }
 };
-
-const handleResize = () => {
-  emitEvent();
-};
-
-onMounted(() => {
-  window.addEventListener('resize', handleResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
 </script>
