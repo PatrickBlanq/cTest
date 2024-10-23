@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="center3">
-                       <Map></Map> 
+                    <Map></Map>
                 </div>
             </div>
             <div class="bottom">
@@ -151,6 +151,7 @@ import { useStore } from 'vuex'
 const store = useStore()
 console.log(store.state.data);
 store.commit('setData', 'Updated Test Data');
+
 const budget1 = indicateBudget.data[0].budget;
 const actual1 = indicateBudget.data[0].actual;
 const budget2 = indicateBudget.data[1].budget;
@@ -198,12 +199,17 @@ const updateSize = () => {
     localStorage.setItem('correctHeight', correctTableHeight.value);
 
 };
-const requestUrl=()=>{
-    const storedData = localStorage.getItem('myCustomKey');  
-    const parsedData = JSON.parse(storedData);  
-    console.log(parsedData.members.data);
+
+const requestUrl = () => {
+    const storedData = localStorage.getItem('myCustomKey');
+    const parsedData = JSON.parse(storedData);
+    if (parsedData.members.error==='null') {
+        console.log('1');
+    }
     
 }
+
+
 onMounted(() => {
     oldWidth.value = window.innerWidth;
     oldHeight.value = window.innerHeight;

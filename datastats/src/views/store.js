@@ -36,9 +36,8 @@ export default createStore({
   },
   plugins: [  
     createPersistedState({  
-      key: 'myCustomKey', // 设置自定义键名
-      paths: ['data','members.data'],  
-      // 默认使用 localStorage 存储  
+      key: 'myCustomKey', 
+      paths: ['data','members.data','error','members.error'],  
       storage: window.localStorage  
     })  
   ]
