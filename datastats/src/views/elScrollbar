@@ -1,0 +1,53 @@
+                <el-scrollbar ref="scrollableDiv" class="scrollabl-div">
+                    <div v-for="(item, index) in selectedItems" :key="index">
+
+                        <div v-if="item.checkingContentCN !== null && !item.isHidden" class="table-row">
+                            <div class="table-cell" style="background-color: #DBE3F4;  "> {{ item.no }}</div>
+                            <div :style="{ backgroundColor: '#DBE3F4' }"
+                                :class="{ 'checkContent': true, 'table-cell': true, 'text-red': item.checkItemCorrectID !== -1, 'text-black': item.checkItemCorrectID === -1 }">
+                                {{ isShiftCheckingContent ? item.checkingContentCN : item.checkingContentJP }}
+                                <div class="showSub" v-if="item.subViewFileChecks.length !== 0"
+                                    :style="{ backgroundImage: `url(${item.isShowSub ? showSubImage : closeSubImage})`, border: '0px dashed red' }"
+                                    @click="showSubClick(item)">
+ 
+                                </div>
+
+                            </div>
+
+
+                            <!--  showType手动 0-[]OK, 自动 1-NG 2-OK -->
+                            <!--    todo
+                          <div v-if="item.showType === 0">OK</div>
+                          <div v-else-if="item.showType === 1">NG</div>
+                          <div v-else-if="item.showType === 2">OK</div> 
+                          -->
+                            <div v-if="item.showType === 0" class="table-cell"
+                                @click="isDutyEditable ? checkboxClick(item.itemID) : null"
+                                :style="{ cursor: isDutyEditable ? 'pointer' : 'default', backgroundColor: '#DBE3F4' }">
+                                <div class="checkbox-container"
+                                    :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"> <input type="checkbox"
+                                        :id="item.itemID" :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"
+                                        v-model="item.isChecked" :disabled="!isDutyEditable" />
+                                    <label :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }">OK</label>
+                                </div>
+                            </div>
+                            <!--    自动检图背景色 -->
+                            <div class="table-cell" style="background-color: #D9D9D9;">-</div>
+                            <div class="table-cell" style="background-color: #D9D9D9;">-</div>
+                            <!--    todo -->
+                            <div class="table-cell"
+                                :style="{ cursor: 'pointer', backgroundColor: item.checkBackId > 0 ? '#FCE7E9' : '#D9D9D9' }"
+                                @click="clickCheckBack(item)">
+                                {{ item.checkBackId > 0 ? 'NG' : '-' }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div v-show="item.checkingContentCN !== null && !item.isHidden && (item.children.length !== 0 || item.IsShowSub)">
+
+                </el-scrollbar>
+
+                

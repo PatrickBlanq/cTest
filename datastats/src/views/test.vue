@@ -1,14 +1,14 @@
 <template>
   <div class="container">
       <div class="search generalBorder flex-row">
-          <div class="box" style="width: 65px;; padding: 6px 20px;">
+          <div class="box" style="width: 65px;; padding: 0px 20px;">
               <div class="box-1"></div>
           </div>
           <div class="flex-row">
               <div class="search-box">
                   <input type="text" class="search-input" v-model="epcoCode" placeholder="入力番号"
-                      @keydown.enter="ordersearch" />
-                  <span class="search-icon" @click="ordersearch"></span>
+                      @keydown.enter="ordersearchClick" />
+                  <span class="search-icon" @click="ordersearchClick"></span>
               </div>
 
               <div class="OrderType-div">
@@ -37,15 +37,20 @@
               </div>
           </div>
 
-          <div class="flex-row" style="flex: 1;  display: flex; align-items: center;">
-              <div class="viewAll" title="切换OK项显示"
-                  :style="{ backgroundImage: `url(${isViewAllActive ? activeImage : defaultImage})` }"
+          <div class="flex-row" style="flex: 1;  display: flex; align-items: center;padding-right: 15px;">
+              <div class="viewAll imageStyle" title="切换OK项显示"
+                  :style="{ backgroundImage: `url(${isViewAllActive ? eyeOpenImage : eyeCloseImage})` }"
                   @click="toggleViewCheckbox"></div>
 
-              <div class="shift" title="切换检查内容的中日文字显示" @click="shifting"></div>
-              <div class="errorFeedBack" title="只显示NG标识项" @click="toggleNGView"></div>
-              <div class="exportExcel" title="导出Excel"></div>
-              <div class="setting" title="前往设置页面" @click="openSettingLink"></div>
+              <div class="shift imageStyle" title="切换检查内容的中日文字显示"
+                  :style="{ backgroundImage: `url(${!isShiftCheckingContent ? shiftJPImage : shiftZHImage})` }"
+                  @click="shifting"></div>
+
+
+
+              <div class="errorFeedBack imageStyle" title="只显示NG标识项" @click="toggleNGView"></div>
+              <div class="exportExcel imageStyle" title="导出Excel"></div>
+              <div class="setting imageStyle" title="前往设置页面" @click="openSettingLink"></div>
               <!--                 <div class="handOver" :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"
                   @click="handOverClick()"></div> -->
 
@@ -79,7 +84,7 @@
       <div class=" content generalBorder flex-row">
           <div :class="isMenuHidden ? 'menu' : 'hidden'">
               <div class="stretch" @click="toggleMenu"></div>
-              <div :key="Object.keys(groupedData).join(',')" style="padding: 0 7px 0 7px;">
+              <div :key="Object.keys(groupedData).join(',')" style="padding: 0 7px 0 7px; overflow-y: auto;">
                   <div v-if="isMenuHidden"
                       style="border-radius: 7px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); cursor: pointer; width: 100%; font-size: 14px; height: 40px;margin-bottom: 5px;  text-align: center; border: 1px solid #91AADF; display: flex; align-items: center; justify-content: center;"
                       v-for="menu in menuArry" :key="menu.name" @click="menuNameClick(menu.name)" :class="{
@@ -92,11 +97,11 @@
               </div>
 
 
-
           </div>
           <div class="checkingContent">
 
               <div class="table-header flex-row">
+                  <div class="table-cell" style="border-right: 2px solid #ccc; ">NO</div>
                   <div class="table-cell" style="border-right: 2px solid #ccc; ">検査内容</div>
                   <div class="table-cell" style="border-right: 2px solid #ccc;">結果</div>
                   <div class="table-cell" style="border-right: 2px solid #ccc;">確認情報</div>
@@ -107,29 +112,37 @@
               <el-scrollbar ref="scrollableDiv" class="scrollabl-div">
                   <div v-for="(item, index) in selectedItems" :key="index">
 
-                      <div v-if="item.checkingContentCN !== null && !item.isHidden" class="table-row">
+                      <div v-if="item.checkingContentCN !== null && !item.isHidden && (item.children.length !== 0 || item.isShowSub)"
+                          class="table-row">
+                          <div class="table-cell" style="background-color: #DBE3F4;  ">{{ item.children.length !== 0 ?
+                              item.no : '(' + item.father + '-' + item.no + ')' }} </div>
+                          <div :style="{ backgroundColor: '#DBE3F4', cursor: item.children.length !== 0 ? 'pointer' : 'default' }"
+                              @click="showSubClick(item)"
+                              :class="{ 'checkContent': true, 'table-cell': true, 'text-red': item.checkItemCorrectID !== -1, 'text-black': item.checkItemCorrectID === -1 }">
+                              {{ isShiftCheckingContent ? item.checkingContentCN : item.checkingContentJP }}
+                              <div class="parentDiv">
+                                  <div class="showSub" v-if="item.children.length !== 0"
+                                      :style="{ backgroundImage: `url(${item.isShowSub ? showSubImage : closeSubImage})`, border: '0px dashed red' }">
 
-                          <div v-if="isShiftCheckingContent" style="background-color: #DBE3F4;  "
-                              :class="{ 'table-cell': true, 'text-red': item.checkItemCorrectID !== -1, 'text-black': item.checkItemCorrectID === -1 }">
-                              {{ item.checkingContentCN }}
+                                  </div>
+                              </div>
                           </div>
-                          <div v-else class="table-cell" style="background-color: #DBE3F4;"
-                              :class="{ 'table-cell': true, 'text-red': item.checkItemCorrectID !== -1, 'text-black': item.checkItemCorrectID === -1 }">
-                              {{ item.checkingContentJP }}
-                          </div>
+
 
                           <!--  showType手动 0-[]OK, 自动 1-NG 2-OK -->
                           <!--    todo
-                          <div v-if="item.showType === 0">OK</div>
-                          <div v-else-if="item.showType === 1">NG</div>
-                          <div v-else-if="item.showType === 2">OK</div> 
-                          -->
+                        <div v-if="item.showType === 0">OK</div>
+                        <div v-else-if="item.showType === 1">NG</div>
+                        <div v-else-if="item.showType === 2">OK</div> 
+                        -->
                           <div v-if="item.showType === 0" class="table-cell"
-                              @click="isDutyEditable ? checkboxClick(item.itemID) : null"
+                              @click="isDutyEditable ? checkboxClick(item) : null"
                               :style="{ cursor: isDutyEditable ? 'pointer' : 'default', backgroundColor: '#DBE3F4' }">
-                              <div class="checkbox-container"> <input type="checkbox" :id="item.itemID"
+                              <div class="checkbox-container"
+                                  :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"> <input type="checkbox"
+                                      :id="item.itemID" :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"
                                       v-model="item.isChecked" :disabled="!isDutyEditable" />
-                                  <label>OK</label>
+                                  <label :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }">OK</label>
                               </div>
                           </div>
                           <!--    自动检图背景色 -->
@@ -153,55 +166,80 @@
 
 
       <div v-if="components" class="modal-overlay" @mousedown.self="closeComponent">
+
           <div class="modal" @click.stop>
-              <component :is="components.component" :data="components.data" @updateGroupedData="updateGroupedData"
-                  @close="closeComponent" />
+              <button class="modal-close-btn" @click="closeComponent">
+                  &times;
+              </button>
+
+              <div class="modalWindowTop">
+                  <button class="modal-close-btn" @click="closeComponent">
+                      &times;
+                  </button>
+              </div>
+
+              <div class="modalContent">
+                  <component :is="components.component" :data="components.data" @updateGroupedData="updateGroupedData"
+                      @close="closeComponent" />
+              </div>
           </div>
       </div>
 
+
       <div v-if="isOrdersearch" class="modal-overlay" @mousedown.self="isOrdersearchClose">
           <div class="modal">
-              <div class="flex-row">
-                  <div class="search-box ">
-                      <input type="text" class="search-input" v-model="epcoCode" placeholder="入力番号"
-                          @keydown.enter="ordersearch" />
-                      <span class="search-icon" @click="ordersearch"></span>
+              <div class="modalWindowTop">
+                  <div class=" generalBorder flex-row">
+                      <div class="flex-row">
+                          <div class="search-box " style="padding-left: 20px;">
+                              <input type="text" class="search-input" v-model="epcoCode" placeholder="入力番号"
+                                  @keydown.enter="ordersearchClick" />
+                              <span class="search-icon" @click="ordersearchClick"></span>
+                          </div>
+                          <button class="modal-close-btn" @click="isOrdersearchClose">
+                              &times;
+                          </button>
+                      </div>
                   </div>
-
               </div>
-              <table class="scrollable-table">
-                  <thead>
-                      <tr>
-                          <th style="width: 30px;">No</th>
-                          <th style="width: 50px;">状况</th>
-                          <th style="width: 70px;">厂家名称</th>
-                          <th style="width: 250px;">種類</th>
-                          <th style="width: 110px;">受理编号</th>
-                          <th style="width: 50px;">作图者</th>
-                          <th style="width: 50px;">检图者</th>
-                          <th style="width: 70px;">图纸ID</th>
-                      </tr>
-                  </thead>
-                  <tbody v-loading="isLoading" element-loading-text="Loading..."
-                      element-loading-spinner="el-icon-loading">
-                      <tr v-if="!isLoading && ordersArry.length === 0">
-                          <td colspan="8" style="border: none; text-align: center; padding: 20px;">
 
-                              {{ epcoCode.value ? 'No Data...' : '请输入番号' }}
-                          </td>
-                      </tr>
-                      <tr v-else v-for="order in ordersArry" :key="order.id" @click="orderTableClick(order.id)">
-                          <td>{{ order.no }}</td>
-                          <td class="ellipsis-cell" :title="order.operation">{{ order.operation }}</td>
-                          <td class="ellipsis-cell" :title="order.makerCode">{{ order.makerCode }}</td>
-                          <td class="ellipsis-cell" :title="order.orderType">{{ order.orderType }}</td>
-                          <td class="ellipsis-cell" :title="order.epcoCode">{{ order.epcoCode }}</td>
-                          <td class="ellipsis-cell" :title="order.name">{{ order.name }}</td>
-                          <td class="ellipsis-cell" :title="order.inspecterName">{{ order.inspecterName }}</td>
-                          <td class="ellipsis-cell" :title="order.id">{{ order.id }}</td>
-                      </tr>
-                  </tbody>
-              </table>
+              <div class="modalContent">
+
+                  <table class="scrollable-table">
+                      <thead>
+                          <tr>
+                              <th style="width: 30px;">No</th>
+                              <th style="width: 50px;">状况</th>
+                              <th style="width: 70px;">厂家名称</th>
+                              <th style="width: 250px;">種類</th>
+                              <th style="width: 110px;">受理编号</th>
+                              <th style="width: 50px;">作图者</th>
+                              <th style="width: 50px;">检图者</th>
+                              <th style="width: 70px;">图纸ID</th>
+                          </tr>
+                      </thead>
+                      <tbody v-loading="isLoading" element-loading-text="Loading..."
+                          element-loading-spinner="el-icon-loading">
+                          <tr v-if="!isLoading && ordersArry.length === 0">
+                              <td colspan="8" style="border: none; text-align: center; padding: 20px;">
+
+                                  {{ epcoCode.value !== '' ? 'No Data...' : '请输入番号' }}
+                              </td>
+                          </tr>
+                          <tr v-else v-for="order in ordersArry" :key="order.id" @click="orderTableClick(order.id)">
+                              <td>{{ order.no }}</td>
+                              <td class="ellipsis-cell" :title="order.operation">{{ order.operation }}</td>
+                              <td class="ellipsis-cell" :title="order.makerCode">{{ order.makerCode }}</td>
+                              <td class="ellipsis-cell" :title="order.orderType">{{ order.orderType }}</td>
+                              <td class="ellipsis-cell" :title="order.epcoCode">{{ order.epcoCode }}</td>
+                              <td class="ellipsis-cell" :title="order.name">{{ order.name }}</td>
+                              <td class="ellipsis-cell" :title="order.inspecterName">{{ order.inspecterName }}</td>
+                              <td class="ellipsis-cell" :title="order.id">{{ order.id }}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+
           </div>
       </div>
 
@@ -219,16 +257,12 @@
 
 import http from '@/api/http.js'
 import extend from '@/extension/CheckItem/FileCheck.js';
-import Setting from './CheckBack.vue';
-import Search from './ordermanager/OrderManager.vue';
-import Test from './CheckBack.vue';
 import CheckBack from './CheckBack.vue';
-import { ref, onMounted, reactive, nextTick, set, computed } from 'vue';
+import { ref, onMounted, reactive, nextTick, } from 'vue';
 import { useRoute } from 'vue-router';
+
+
 const componentsName = {
-  Setting,
-  Search,
-  Test,
   CheckBack,
 };
 const components = ref(null);
@@ -243,7 +277,9 @@ const categoryName = ref(null);
 let tblOrderTypeCategoryID = ref(-1)
 let ordersArry = reactive([]);
 let inChargeArryNames = ref([]);
-let inChargeArryIDs = ref([]);
+let inChargeArryIDint = ref([]);
+let inChargeArryIDstr = ref([]);
+
 let isOrdersearch = ref(false)
 let isInChargeCharge = ref(null);
 let isMenuHidden = ref(true);
@@ -253,14 +289,21 @@ const isViewAllActive = ref(false);
 const isCheckBackNG = ref(false);
 
 const scrollableDiv = ref(null);
-const activeImage = require('@/assets/imgs/FileCheck/viewAllTrue.png');
-const defaultImage = require('@/assets/imgs/FileCheck/viewAllFalse.png');
+const eyeOpenImage = require('@/assets/imgs/FileCheck/viewAllTrue.png');
+const eyeCloseImage = require('@/assets/imgs/FileCheck/viewAllFalse.png');
+const showSubImage = require('@/assets/imgs/FileCheck/showSub.png');
+const closeSubImage = require('@/assets/imgs/FileCheck/closeSub.png');
+
+const shiftJPImage = require('@/assets/imgs/FileCheck/shiftJP.png');
+const shiftZHImage = require('@/assets/imgs/FileCheck/shiftZH.png');
+
 const checkbackItem = ref(null);
 
 let selectedMenukey = ref(null);
 let selectedItems = ref([]);
 let groupedData = reactive({});
-let groupedDataSaved = reactive({});
+let groupedDataDisplay = reactive({});
+let saveGroupedData = reactive({});
 let menuArry = ref([])
 
 let isDutyEditable = ref(false);
@@ -275,6 +318,8 @@ let fileCheckHistory = reactive({
   updateTime: new Date().toLocaleString(),
   paperWork: ''
 });
+
+
 
 onMounted(async () => {
 
@@ -305,11 +350,12 @@ const resolveOrderSearch = async (result) => {
 
       OrderType.value = result.data[0].orderType;
       epcoCode.value = result.data[0].epcoCode;
-
-      inChargeArryIDs.value.push(result.data[0].employeeID, result.data[0].inspecterID, result.data[0].secondInspecterID, result.data[0].JapanId)
-      for (let i = 0; i < inChargeArryIDs.value.length; i++) {
-          if (inChargeArryIDs.value[i] == '' || inChargeArryIDs.value[i] == undefined) {
-              inChargeArryIDs.value[i] = '88888888'
+      orderId.value = result.data[0].id;
+      inChargeArryIDstr.value.push(result.data[0].employeeID, result.data[0].inspecterID, result.data[0].secondInspecterID, result.data[0].JapanId)
+      inChargeArryIDint.value = inChargeArryIDstr.value
+      for (let i = 0; i < inChargeArryIDint.value.length; i++) {
+          if (inChargeArryIDint.value[i] == '' || inChargeArryIDint.value[i] == undefined) {
+              inChargeArryIDint.value[i] = '88888888'
 
           }
       }
@@ -340,7 +386,7 @@ const resolveOrderSearch = async (result) => {
 
       tblOrderTypeCategoryID.value = result.data[0].tblOrderTypeCategoryID
       await extend.getGetFileCheckHistorys(orderId.value, resolveFileCheckHistorys)
-      //extend.getViewFileChecks(tblOrderTypeCategoryID.value, orderId.value, userEmployeeID.value, resolveViewFileChecks);
+
 
   } else {
       console.log('No Result resolveOrderSearch');
@@ -364,7 +410,7 @@ const resolveFileCheckHistorys = async (result) => {
           if (result.data.length > 0) {
               //判断状态，是否可编辑。
               fileCheckHistory = result.data[0];
-              console.log(fileCheckHistory);
+
 
               paperStatus.value = result.data[0].paperStatus
 
@@ -377,10 +423,9 @@ const resolveFileCheckHistorys = async (result) => {
               const parsedData = JSON.parse(result.data[0].paperWork);
               //TODO如果paper为空需要重新获取
               Object.assign(groupedData, parsedData);
-              console.log('groupedData: ' + console.log(Object.keys(groupedData)[0])
-              );
-
+              Object.assign(saveGroupedData, groupedData);
               initiateMenuArry(groupedData);
+              synchronizeCheckboxStatus();
               await nextTick(() => {
                   selectedMenukey.value = Object.keys(groupedData)[0];
 
@@ -405,19 +450,13 @@ const resolveFileCheckHistorys = async (result) => {
                   }
               }
           }
-          if (result.data.length === 0) {
-
-              groupedData = JSON.parse(JSON.stringify({}));
-              groupedDataSaved = JSON.parse(JSON.stringify({}));
-              menuArry.value = [];
-          }
       }
 
       //优先展示作业人
       let index = -1;
-      for (let i = 0; i < inChargeArryIDs.value.length; i++) {
-          if (inChargeArryIDs.value[i] !== '' && inChargeArryIDs.value[i] !== undefined) {
-              if (Number(inChargeArryIDs.value[i]) === Number(userEmployeeID.value)) {
+      for (let i = 0; i < inChargeArryIDint.value.length; i++) {
+          if (inChargeArryIDint.value[i] !== '' && inChargeArryIDint.value[i] !== undefined) {
+              if (Number(inChargeArryIDint.value[i]) === Number(userEmployeeID.value)) {
                   index = i;
                   break;
               }
@@ -429,9 +468,9 @@ const resolveFileCheckHistorys = async (result) => {
 
       //对非作业人，展示当前记录fileCheckHistory.employeeID
       if (index == -1) {
-          for (let i = 0; i < inChargeArryIDs.value.length; i++) {
-              if (inChargeArryIDs.value[i] !== '' && inChargeArryIDs.value[i] !== undefined) {
-                  if (Number(inChargeArryIDs.value[i]) === Number(fileCheckHistory.employeeID)) {
+          for (let i = 0; i < inChargeArryIDint.value.length; i++) {
+              if (inChargeArryIDint.value[i] !== '' && inChargeArryIDint.value[i] !== undefined) {
+                  if (Number(inChargeArryIDint.value[i]) === Number(fileCheckHistory.employeeID)) {
                       index = i;
                       break;
                   }
@@ -441,6 +480,7 @@ const resolveFileCheckHistorys = async (result) => {
           }
 
       }
+      console.log(index);
 
       inChargeClick(index);
   } else {
@@ -452,48 +492,52 @@ const resolveFileCheckHistory = async (result) => {
   if (result.status === true) {
       fileCheckHistory.ID = await result.data
 
+
+
   } else {
       console.log('No Result resolveFileCheckHistory');
 
   }
 }
+
+
 const resolveGetViewFileChecks = async (result) => {
 
 
   if (result.status === true) {
-      console.log('ViewFileChecks length: ' + result.data.length);
-      if (result.data.length > 0) {
-
-          let groupedDataTemp = reactive({});
-          await result.data.forEach((item) => {
-              const { name } = item;
-              if (!groupedDataTemp[name]) {
-                  groupedDataTemp[name] = [];
-              }
-              groupedDataTemp[name].push(item);
-          });
-          console.log('groupedData :new ' + groupedData);
-
-          Object.assign(groupedData, groupedDataTemp);
-          initiateMenuArry(groupedData);
+      if (result.data !== 0) {
+          inChargeClick(0);
+          /*             let groupedDataTemp = reactive({});
+          
+                      Object.assign(groupedDataTemp, result.data); */
+          /* console.log(groupedDataTemp);
+                      
+                      let no = 1;
+                      await groupedDataTemp.forEach((item) => {
+                          const { name } = item;
+                          item.no = no++;
+                          groupedDataTemp[name].push(item);
+                      }); */
 
 
-          //console.log(groupedData);
-          //await updateFileCheckHistory(groupedData);
-          await nextTick(() => {
-              selectedMenukey.value = Object.keys(groupedData)[0];
-          });
-          await nextTick(() => {
-              selectedItems.value = groupedData[selectedMenukey.value];
-          });
 
-          fileCheckHistory.paperWork = await JSON.stringify(groupedData)
-          fileCheckHistory.orderId = orderId.value
-          fileCheckHistory.employeeID = userEmployeeID.value
-          fileCheckHistory.paperStatus = 0
-          fileCheckHistory.updateTime = new Date().toLocaleString()
-          fileCheckHistory.duty = 0;
-          await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory)
+          /*             Object.assign(groupedData, result.data);
+          
+                      Object.assign(saveGroupedData, groupedData);
+                      initiateMenuArry(groupedData);
+                      selectedMenukey.value = Object.keys(groupedData)[0];
+                      selectedItems.value = groupedData[selectedMenukey.value];
+          
+                      fileCheckHistory.paperWork = JSON.stringify(saveGroupedData)
+                      fileCheckHistory.orderId = orderId.value
+                      fileCheckHistory.employeeID = userEmployeeID.value
+                      fileCheckHistory.paperStatus = 0
+                      fileCheckHistory.updateTime = new Date().toLocaleString()
+                      fileCheckHistory.duty = 0;
+                      await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory) */
+
+
+
       }
 
 
@@ -505,13 +549,13 @@ const resolveGetViewFileChecks = async (result) => {
 
 };
 
-const updateFileCheckHistory = async (groupedData) => {
+const updateFileCheckHistory = async (dataToSave) => {
 
 
-  if (!Object.keys(groupedData).length) {
+  if (!Object.keys(dataToSave).length) {
       alert("groupedData cannot be null");
   }
-  fileCheckHistory.paperWork = JSON.stringify(groupedData);
+  fileCheckHistory.paperWork = JSON.stringify(dataToSave);
   fileCheckHistory.updateTime = new Date().toLocaleString();
 
   await extend.updateFileCheckHistory(fileCheckHistory, resolveupdateFileCheckHistory)
@@ -529,11 +573,7 @@ const resolveupdateFileCheckHistory = (result) => {
 
 const menuNameClick = (name) => {
   selectedMenukey.value = name;
-
-
   selectedItems.value = groupedData[name];
-
-  console.log(Object.keys(groupedData)[0]);
 
   const wrapElement = scrollableDiv.value.$el.querySelector('.el-scrollbar__wrap')
   if (wrapElement) {
@@ -548,30 +588,15 @@ const selectItem = (checkingID) => {
 
 
 const getVueData = (name) => {
-  switch (name) {
-      case 'Setting':
-          return {
-              title: 'Setting',
-              content: 'Setting '
-          };
-      case 'Search':
-          return {
-              title: 'Search',
-              content: 'Search '
-          };
-      case 'CheckBack':
-          return {
-              title: isShiftCheckingContent ? checkbackItem.value.checkingContentCN : checkbackItem.value.checkingContentJP,
-              orderId: orderId.value,
-              employeeID: userEmployeeID.value,
-              id_CheckingItem: checkbackItem.value.id_CheckingItem,
-              checkBackId: checkbackItem.value.checkBackId,
-              // TODO，加入已确认
-              isEditable: duty.value === 0 ? false : isDutyEditable.value,
-          };
-      default:
-          return {};
-  }
+  return {
+      title: isShiftCheckingContent ? checkbackItem.value.checkingContentCN : checkbackItem.value.checkingContentJP,
+      orderId: orderId.value,
+      employeeID: userEmployeeID.value,
+      id_CheckingItem: checkbackItem.value.id_CheckingItem,
+      checkBackId: checkbackItem.value.checkBackId,
+      // TODO，加入已确认
+      isEditable: duty.value === 0 ? false : isDutyEditable.value,
+  };
 }
 
 
@@ -587,18 +612,17 @@ const closeComponent = () => {
 };
 
 const inChargeClick = async (index) => {
-  groupedData = JSON.parse(JSON.stringify({}));
-
   isInChargeCharge.value = index;
-  console.log
+  isCheckBackNG.value = false;
   if (index === -1) {
       isInChargeCharge.value = null;
   }
-  console.log(index);
 
-
-  fileCheckHistory.employeeID = inChargeArryIDs.value[index]
-
+  if (orderId.value) {
+      fileCheckHistory.orderId = orderId.value
+  }
+  fileCheckHistory.employeeID = inChargeArryIDint.value[index]
+  fileCheckHistory.paperWork = ''
   await getFileCheckHistories(fileCheckHistory)
 };
 
@@ -611,8 +635,8 @@ const resolveGetFileCheckHistories = async (result) => {
 
   if (result.status === true) {
       const parsedData = JSON.parse(result.data[0].paperWork);
-
       Object.assign(groupedData, parsedData);
+      Object.assign(saveGroupedData, groupedData);
       initiateMenuArry(groupedData);
       synchronizeCheckboxStatus();
       nextTick(() => {
@@ -633,7 +657,9 @@ const resolveGetFileCheckHistories = async (result) => {
       }
 
   } else {
-
+      menuArry.value = JSON.parse(JSON.stringify([]))
+      groupedData = JSON.parse(JSON.stringify({}));
+      saveGroupedData = JSON.parse(JSON.stringify({}));
       Object.keys(groupedData).forEach(key => {
           delete groupedData[key];
       });
@@ -641,7 +667,6 @@ const resolveGetFileCheckHistories = async (result) => {
           selectedMenukey.value = Object.keys(groupedData)[0];
 
       });
-
       nextTick(() => {
           selectedItems.value = groupedData[selectedMenukey.value];
       });
@@ -660,19 +685,97 @@ const shifting = () => {
   isShiftCheckingContent.value = !isShiftCheckingContent.value;
 }
 
-const checkboxClick = async (itemID) => {
-  const item = selectedItems.value.find(item => item.itemID === itemID)
+const checkboxClick = async (item) => {
+
   if (item) {
       item.isChecked = !item.isChecked
       if (!isViewAllActive.value) {
           item.isHidden = item.isChecked;
       }
-      await updateFileCheckHistory(groupedData);
+
+      const items = saveGroupedData[selectedMenukey.value];
+      for (const entity of items) {
+          if (entity === item) {
+              entity.isChecked = item.isChecked;
+
+              if (!isViewAllActive.value) {
+                  entity.isHidden = item.isHidden;
+              }
+              break;
+          }
+      }
+
+      if (item.children.length > 0) {
+          const items = saveGroupedData[selectedMenukey.value];
+          for (const entity of items) {
+              item.children.forEach((child) => {
+                  if (entity.checkingItemID === child) {
+                      entity.isChecked = item.isChecked;
+
+                      if (!isViewAllActive.value) {
+                          entity.isHidden = item.isHidden;
+                      }
+
+                  }
+              })
+
+          }
+      }
+
+
+      if (item.children.length === 0) {
+          const items = saveGroupedData[selectedMenukey.value];
+          let childrens = ref([]);
+          let father;
+          for (const entity of items) {
+              if (entity.father == item.father && entity.children.length > 0) {
+                  childrens.value = entity.children;
+                  father = entity;
+              }
+          }
+          if (item.isChecked === false) {
+              for (const entity of items) {
+                  if (entity.father == item.father && entity.children.length > 0) {
+                      entity.isChecked = false;
+                      if (!isViewAllActive.value) {
+                          entity.isHidden = false;
+                      }
+                  }
+              }
+          }
+          if (item.isChecked === true) {
+              let count = ref(0);
+              for (const entity of items) {
+                  for (let index = 1; index < childrens.value.length; index++) {
+                      const element = childrens.value[index];
+                      if (entity.isChecked === true && entity.checkingItemID === element) {
+                          count.value = count.value + 1
+                          if (count.value === childrens.value.length - 1) {
+                              for (const entity of items) {
+                                  if (entity === father) {
+                                      father.isChecked = true
+                                      entity.isHidden = item.isHidden;
+                                  }
+                              }
+                          }
+                      }
+                  }
+
+              }
+          }
+      }
+
+      await updateFileCheckHistory(saveGroupedData);
   }
+
 
 };
 
 const synchronizeCheckboxStatus = () => {
+
+  Object.keys(groupedDataDisplay).forEach(key => { delete groupedDataDisplay[key]; });
+  Object.assign(groupedDataDisplay, groupedData);
+
   if (isViewAllActive.value) {
       Object.keys(groupedData).forEach(group => {
           groupedData[group].forEach(item => {
@@ -681,6 +784,8 @@ const synchronizeCheckboxStatus = () => {
       });
   }
   else {
+
+
       Object.keys(groupedData).forEach(group => {
           groupedData[group].forEach(item => {
               if (item.isChecked) {
@@ -689,13 +794,20 @@ const synchronizeCheckboxStatus = () => {
           });
       });
   }
-
+  Object.assign(groupedData, groupedDataDisplay);
 }
 const toggleViewCheckbox = () => {
+  /*     Object.keys(groupedData).forEach(group => {
+              groupedData[group].forEach(item => {
+                  item.isShowSub = true;
+              });
+          });
+      console.log(groupedData);
+       */
   isViewAllActive.value = !isViewAllActive.value;
   synchronizeCheckboxStatus();
-};
 
+};
 
 const clickCheckBack = (item) => {
 
@@ -752,9 +864,9 @@ const handOverFileCheckHistory = async (groupedData, action) => {
   fileCheckHistory.paperStatus = 1;
 
   let index = -1;
-  for (let i = 0; i < inChargeArryIDs.value.length; i++) {
-      if (inChargeArryIDs.value[i] !== '' && inChargeArryIDs.value[i] !== undefined) {
-          if (Number(inChargeArryIDs.value[i]) === Number(userEmployeeID.value)) {
+  for (let i = 0; i < inChargeArryIDint.value.length; i++) {
+      if (inChargeArryIDint.value[i] !== '' && inChargeArryIDint.value[i] !== undefined) {
+          if (Number(inChargeArryIDint.value[i]) === Number(userEmployeeID.value)) {
               index = i;
               break;
           }
@@ -768,7 +880,7 @@ const handOverFileCheckHistory = async (groupedData, action) => {
       await extend.updateFileCheckHistory(fileCheckHistory, resolveupdateFileCheckHistory)
 
       //back给down级
-      tmp = groupedData;
+      tmp = saveGroupedData;
       resetGroupedBoolData(tmp);
       fileCheckHistory.paperWork = JSON.stringify(tmp);
       fileCheckHistory.updateTime = new Date(new Date().setSeconds(new Date().getSeconds() + 1)).toLocaleString();;
@@ -780,14 +892,14 @@ const handOverFileCheckHistory = async (groupedData, action) => {
           case 1:
               fileCheckHistory.duty = 0;
               fileCheckHistory.paperStatus = 0;
-              fileCheckHistory.employeeID = inChargeArryIDs.value[Number(index) - 1]
+              fileCheckHistory.employeeID = inChargeArryIDstr.value[Number(index) - 1]
               await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory)
 
               break;
           case 2:
               fileCheckHistory.duty = 1;
               fileCheckHistory.paperStatus = 0;
-              fileCheckHistory.employeeID = inChargeArryIDs.value[Number(index) - 1]
+              fileCheckHistory.employeeID = inChargeArryIDstr.value[Number(index) - 1]
               await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory)
 
               break;
@@ -808,13 +920,13 @@ const handOverFileCheckHistory = async (groupedData, action) => {
               await extend.updateFileCheckHistory(fileCheckHistory, resolveupdateFileCheckHistory)
 
               //forword给 up 级
-              tmp = groupedData;
+              tmp = saveGroupedData;
               resetGroupedBoolData(tmp);
               fileCheckHistory.paperWork = JSON.stringify(tmp);
               fileCheckHistory.updateTime = new Date(new Date().setSeconds(new Date().getSeconds() + 1)).toLocaleString();;
 
               fileCheckHistory.paperStatus = 0;
-              fileCheckHistory.employeeID = inChargeArryIDs.value[Number(index) + 1]
+              fileCheckHistory.employeeID = inChargeArryIDstr.value[Number(index) + 1]
               fileCheckHistory.duty = 1;
               await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory)
 
@@ -822,7 +934,7 @@ const handOverFileCheckHistory = async (groupedData, action) => {
           case 1:
               //保存自己前，判断是否还有而检，
               //todo，有未确定的ng项目，提示
-              nextInspector = inChargeArryIDs.value[Number(index) + 1]
+              nextInspector = inChargeArryIDint.value[Number(index) + 1]
 
               if (nextInspector === '88888888') {
 
@@ -832,13 +944,13 @@ const handOverFileCheckHistory = async (groupedData, action) => {
                   await extend.updateFileCheckHistory(fileCheckHistory, resolveupdateFileCheckHistory)
 
                   //forword给 up 级
-                  tmp = groupedData;
+                  tmp = saveGroupedData;
                   resetGroupedBoolData(tmp);
                   fileCheckHistory.paperWork = JSON.stringify(tmp);
                   fileCheckHistory.updateTime = new Date(new Date().setSeconds(new Date().getSeconds() + 1)).toLocaleString();;
 
                   fileCheckHistory.paperStatus = 0;
-                  fileCheckHistory.employeeID = inChargeArryIDs.value[Number(index) + 1]
+                  fileCheckHistory.employeeID = inChargeArryIDstr.value[Number(index) + 1]
                   fileCheckHistory.duty = 1;
                   await extend.createFileCheckHistorys(fileCheckHistory, resolveFileCheckHistory)
               }
@@ -902,21 +1014,32 @@ const updateGroupedData = async (id_CheckingItem, checkBackId, done) => {
   });
   if (done) done();
 
-  await updateFileCheckHistory(groupedData);
+  const items = saveGroupedData[selectedMenukey.value];
+  for (const itemsaveGroupedData of items) {
+      if (itemsaveGroupedData.id_CheckingItem === id_CheckingItem) {
+          itemsaveGroupedData.checkBackId = checkBackId
+          break;
+      }
+  }
+  await updateFileCheckHistory(saveGroupedData);
 }
 
 let isLoading = ref(false)
-const ordersearch = async () => {
+const ordersearchClick = async () => {
   ordersArry.length = 0;
   isLoading.value = true;
   isOrdersearch.value = true;
-  console.log(epcoCode.value);
+
+
 
   if (epcoCode.value != '' && epcoCode.value != null) {
       extend.getOrderInfos(epcoCode.value, resolveOrderInfos);
   }
+  else {
+      isLoading.value = false
+  }
 
-  console.log(epcoCode.value);
+
 };
 
 const resolveOrderInfos = async (result) => {
@@ -935,8 +1058,7 @@ const resolveOrderInfos = async (result) => {
 const orderTableClick = async (orderTableOrderId) => {
   //todo查询后显示有问题
   inChargeArryNames.value.length = 0;
-  inChargeArryIDs.value.length = 0;
-  console.log('orderId:' + orderTableOrderId)
+  inChargeArryIDint.value.length = 0;
   orderId.value = orderTableOrderId
   await extend.getOrder(userEmployeeID.value, orderTableOrderId, resolveOrderSearch);
 }
@@ -950,6 +1072,7 @@ const openSettingLink = () => {
   window.open(url, '_blank');
 }
 
+
 const isNGViewActive = ref(false);
 const toggleNGView = () => {
   isNGViewActive.value = !isNGViewActive.value;
@@ -958,7 +1081,7 @@ const toggleNGView = () => {
 };
 const changeToNGGroup = async () => {
   if (isNGViewActive.value) {
-      groupedDataSaved = JSON.parse(JSON.stringify(groupedData));
+
       let groupedDataTemp = JSON.parse(JSON.stringify(groupedData));
       Object.keys(groupedDataTemp).forEach(key => {
           const items = groupedDataTemp[key];
@@ -971,7 +1094,7 @@ const changeToNGGroup = async () => {
       Object.assign(groupedData, groupedDataTemp);
   } else {
 
-      Object.assign(groupedData, groupedDataSaved);
+      Object.assign(groupedData, saveGroupedData);
   }
   //initiateMenuArry(groupedData);
   await nextTick(() => {
@@ -985,14 +1108,43 @@ const changeToNGGroup = async () => {
 const initiateMenuArry = (groupedData) => {
   menuArry.value = [];
   let groupedDataMenu = JSON.parse(JSON.stringify(groupedData));
+
   Object.keys(groupedDataMenu).forEach(group => {
       menuArry.value.push({
           'name': group,
-          'enable': groupedDataMenu[group][0].differentiationEnable,
+          'enable': groupedDataMenu[group][0].enableDifferentiation,
       })
   });
-  console.log(Object.keys(groupedData)[0]);
+
 }
+
+const showSubClick = (item) => {
+  Object.keys(groupedDataDisplay).forEach(key => { delete groupedDataDisplay[key]; });
+  Object.assign(groupedDataDisplay, groupedData);
+  item.children.forEach((child) => {
+      Object.keys(groupedDataDisplay).forEach(group => {
+          groupedDataDisplay[group].forEach(entity => {
+              if (child === entity.checkingItemID) {
+                  entity.isShowSub = !entity.isShowSub;
+              }
+          });
+      });
+
+
+
+  });
+
+  console.log(groupedData);
+  (groupedData)
+  Object.assign(groupedData, groupedDataDisplay);
+
+  if (isDutyEditable.value) {
+
+      updateFileCheckHistory(saveGroupedData);
+  }
+
+};
+
 
 
 
@@ -1011,7 +1163,6 @@ const toggleViewAll1 = () => {
 
 
 </script>
-
 
 
 
@@ -1092,7 +1243,7 @@ input[type="text"]:focus {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  border: 1px solid #ccc;
+  border: 0px solid #ccc;
   border-radius: 15px;
   overflow: hidden;
 }
@@ -1150,61 +1301,57 @@ input[type="text"]:focus {
 
 }
 
+.imageStyle {
+  margin-right: 1px;
+}
+
 .viewAll {
   background-image: url("~@/assets/imgs/FileCheck/viewAllTrue.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 100%;
 }
 
 .shift {
-  background-image: url("~@/assets/imgs/FileCheck/shift.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 100%;
+  background-image: url("~@/assets/imgs/FileCheck/shiftZH.png");
 }
 
 /* 显示NG */
 .errorFeedBack {
   background-image: url("~@/assets/imgs/FileCheck/errorFeedBack.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 100%;
 }
 
 .exportExcel {
   background-image: url("~@/assets/imgs/FileCheck/exportExcel.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 100%;
 }
 
 .setting {
   background-image: url("~@/assets/imgs/FileCheck/setting.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 100%;
 }
 
 .handOver {
   background-image: url("~@/assets/imgs/FileCheck/handOver.png");
+}
+
+.showSub {
+  background-image: url("~@/assets/imgs/FileCheck/showSub.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  width: 100%;
+  width: 35px;
+  height: 17px;
+  cursor: pointer;
+
+}
+
+.parentDiv {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 0px solid red;
   height: 100%;
 
 }
+
+
 
 .viewAll,
 .shift,
@@ -1215,8 +1362,8 @@ input[type="text"]:focus {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   cursor: pointer;
 }
 
@@ -1234,22 +1381,22 @@ input[type="text"]:focus {
   padding-right: 7px;
   padding-left: 10px;
   width: 150px;
-  height: 25px;
+  height: 30px;
   border-radius: 7px;
-  border: 1px solid #e0f7fa;
+  border: 1px solid #DBE3F4;
 }
 
 .search-icon {
   position: absolute;
-  right: 3%;
+  right: 3.5%;
   top: 50%;
   transform: translateY(-50%);
   background-image: url("~@/assets/imgs/FileCheck/search.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 24px;
   cursor: pointer;
 }
 
@@ -1279,12 +1426,27 @@ button {
 }
 
 .modal {
+  position: relative;
   background: #fff;
-  padding: 20px;
+
   max-width: 800px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 10000;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 5px;
+  right: 13px;
+  background: none;
+  border: none;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  color: #7759D5;
 }
 
 .inChargeBordered-div {
@@ -1408,36 +1570,45 @@ button {
 }
 
 
-
-
 .table-header .table-cell:nth-child(1),
 .table-row .table-cell:nth-child(1) {
-  flex: 10;
-  justify-content: flex-start;
-}
-
-.table-header .table-cell:nth-child(1) {
-
+  flex: 0.5;
   justify-content: center;
 }
 
 .table-header .table-cell:nth-child(2),
 .table-row .table-cell:nth-child(2) {
-  flex: 1;
+  flex: 10;
+  justify-content: flex-start;
+}
+
+.table-row .table-cell:nth-child(2) {
+  text-align: left;
+  justify-content: flex-start !important;
+}
+
+.table-header .table-cell:nth-child(2) {
+
+  justify-content: center;
 }
 
 .table-header .table-cell:nth-child(3),
 .table-row .table-cell:nth-child(3) {
-  flex: 3;
+  flex: 1;
 }
 
 .table-header .table-cell:nth-child(4),
 .table-row .table-cell:nth-child(4) {
-  flex: 1;
+  flex: 3;
 }
 
 .table-header .table-cell:nth-child(5),
 .table-row .table-cell:nth-child(5) {
+  flex: 1;
+}
+
+.table-header .table-cell:nth-child(6),
+.table-row .table-cell:nth-child(6) {
   flex: 1;
 }
 
@@ -1511,5 +1682,23 @@ button {
 
 .menuDisableColor {
   background-color: #D9D9D9;
+}
+
+.modalWindowTop {
+  background-color: #82A5E7;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.modalContent {
+  padding: 0px 20px 20px 20px;
+}
+
+.checkContent {
+  display: flex;
+  flex-direction: row;
 }
 </style>
