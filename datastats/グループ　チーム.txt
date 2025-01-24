@@ -20,3 +20,71 @@ export default {
     name: 'video'
 }
 </script>
+
+13  要告诉别人你想做什么, 把动词マス形的「masu」去掉，加上「tai」。「mitai」是「mimasu」（「miru」看）接续「tai」的形式。
+14  表达自己的愿望时，用「动词的テ形＋mitai」。「itte mitai」的「itte」是动词「iku」（去）的テ形
+17  要说明你现在正在做的事，可以用这个说法：「动词的テ形＋imasu」。
+18  イ形容词的过去形是把词尾「i（desu）」变成「katta（desu）」。如果是ナ形容词或名词，就把句尾的「desu」变成「deshita」。
+ 20  告 诉 对 方 你 不 想 要 某 种 食 材 等 ， 可 以 用 这 个 说 法 ： 「 动 词 的 ナ イ 形 ＋ d ekudasai」 。ナイ形就是词尾为「nai」的活用形，表示否定。「ireru」（放入）のナイ形是「irenai」。　
+21  向对方发出邀请时，把动词マス形的词尾「masu」变成「mashoo」
+22  要告诉别人你喜欢什么，可以用这个说法：「【东西】ga suki desu」。「suki」（喜欢）是ナ形容词，喜欢的对象【东西】的后面要加上助词「ga」。
+24  要告诉对方你不能吃什么，可以用这个说法：「【食物】wa taberaremasen（不能吃【食物】）」。「taberaremasen」是动词「taberu」（吃）的可能形「taberareru」（能吃）的郑重语气的否定形。
+25  向别人说明自己身体不舒服等情况时，在句尾加上「～n desu」。如果是有什么地方感到疼的话，可以用イ形容词「itai」（疼），这样说：「【身体部位】ga itaindesu」。
+26  连续使用两个或两个以上的形容词时，如果是イ形容词，就把词尾「～i」变成「～kute」，再接下一个形容词。例如：「amai」→「amakute」（甜）。如果是ナ形容词，就把词尾「～na」变成「～de」。例如：「kiree（na）」→「kiree de」（漂亮）。
+27  「ichiban」（第一）接在形容词前面时，意思是“最”。
+28  向对方寻求许可时，可以用这个说法：「动词的テ形＋mo ii desu ka」。「～temo ii （desu）」表示许可，意思是“可以～”。「shashin o totte」是「shashin otoru」（拍照）的テ形。
+29  「マス形的动词去掉masu＋ni iku」，用这个说法可以表示去的目的。在这个句子里，目的是「piano no ensoo o kiku」（听钢琴演奏），所以，把「kiku」（听）的マス形「kikimasu」的「masu」去掉，加上「ni iku」。
+30  从多个行为中进行列举时，可以使用动词接续「tari」的形式。变换方法是把动词テ形的「te」去掉，加上「tari」。
+31  向对方发出邀请时，把动词マス形的词尾「masu」变成「masen ka」，用升调来读。「～masen」是否定形，但「～masen ka」是表示邀请的意思。如果接受邀请，可以说「ii desu ne」（好啊）
+32  问路时：「【目的地】made, doo ittara ii desuka」。「ittara」是动词「iku」（走）的假定形式，
+33  询问所需时间时，使用询问时间长度、距离或数量的疑问词「donokurai」，和「machimasu ka」 （「matsu」等候）、「kakarimasu ka」（「kakaru」需要）等一起使用。
+34  読よんだことあります。要叙述自己的经验，可以用这个说法：「动词的タ形＋koto (ga) arimasu」。タ形就是以「ta/da」结尾的动词活用形，表示过去或完了。变换方法就是把テ形的「～te/de」变成「～ta/da」。
+35  依次叙述两个或两个以上的动作时，用动词的テ形将它们连接起来。例如：「【动词１的テ形】、【动词２】」。以重点语句为例，先把动词「iku」（去）变成テ形「itte」，然后接续下一个句子。
+36  询问开始和结束的时间时，用「nan-ji」（几点）这个词，这样问：「nan-ji karanan-ji made desu ka」。要先说出疑问对象，在后面加上助词「wa」。「kara」是“从”，「made」是“到”的意思。
+37  说明不正常情况时，在动词的ナイ形后面，加上「～n desu ga」。ナイ形是否定形，表示因事出所料而感到困惑。「～n desu ga…」表示向对方说明情况，希望对方加以应对
+38  对两个东西进行比较时，可以用这个说法：「（A yori） B no hoo ga ＋形容词」，表示对A和B进行比较后，B的程度比较高。如果比较的对象是不言而喻的，则不必说「A yori」。
+39  说明自己的失误，可以用这个说法：「动词的テ形＋shimaimashita」。「shimaimashita」表示对所发生的事情感到遗憾或后悔，所以，在丢东西时等使用这个说法十分贴切。
+40  说明理由时，使用助词「kara」（因为······，所以······）。在「【句子1】kara、【句子2】」当中，【句子1】表示理由。【句子1】使用简体的话，听起来比较自然。简体就是不使用「～desu」、「～masu」的说法。
+41　如果你想做某件事，并且想确认它能否实现的话，可以用这个说法：「动词的辞书形＋koto ga dekimasu ka」。「dekimasu」是「dekiru」（能够）的マス形，「～koto ga dekimasu（dekiru）」表示可能。
+42  说明自己将要做或已经决定做的事，可以用这个说法：「动词的辞书形＋tsumori desu」。「watasu」（给）是辞书形。「Yuuki-san」后面的助词「ni」表示给的对象。
+43　根据事物的外观或你所看到的情况来表达感想时，可以用这个说法：「形容词＋soo desu」。如果是ナ形容词，就把词尾「na」去掉，加上「soo desu」；如果是イ形容词，就把词尾「i」去掉，加上「soo desu」。
+44  把你所听到的事情告诉别人时，可以用这个说法：「【句子】＋soo desu」。「soodesu」前面要用句子的简体，这个句子可以使用动词、形容词或名词。「konsaato ga aru」（举办音乐会）是「konsaato ga arimasu」的简体。
+45　较为郑重地提出请求时，可以用这个说法：「动词的テ形＋moraemasen ka」。这是询问对方能否为自己做某事的说法，和「～te kudasai」（请～）相比，这样说更郑重。「moraemasen ka」是“我可不可以得到？”的意思。
+46  连接对比关系的两个句子时，可以用这个说法：「【句子１】 kedo 【句子2】」。「kedo」是“不过”的意思。【句子1】可以是名词句、イ形容词句、ナ形容词句、动词句，用简体会显得更自然。
+47　第一次做某件事时，如果你想知道该怎么做，可以这样来询问：「Doo yatte ～ｎdesu ka」。「doo yatte」是“怎么”的意思。「～n desu ka」是在你不知道该怎么做，想请对方为你进行说明时使用的，接在动词辞书形的后面。
+48  叙述你以某个条件为前提，今后想做什么，可以用这个说法：「～tara、～taidesu」。「～tara」是在动词的タ形后面加上「ra」构成的，表示条件，意思是“在～实现的时候”。
+
+<template>
+  <p>
+    with extra class <b>is-loading</b>, your icon is able to rotate 360 deg in 2
+    seconds, you can also override this
+  </p>
+  <el-icon :size="200">
+    <Edit />
+  </el-icon>
+  <el-icon :size="200" color="#409efc" class="no-inherit">
+    <Share />
+  </el-icon>
+  <el-icon>
+    <Delete />
+  </el-icon>
+  <el-icon class="is-loading">
+    <Loading />
+  </el-icon>
+  <el-button type="primary">
+    <el-icon style="vertical-align: middle">
+      <Search />
+    </el-icon>
+    <span style="vertical-align: middle"> Search </span>
+  </el-button>
+
+  <div style="font-size: 20px">
+    <!-- 由于SVG图标默认不携带任何属性 -->
+    <!-- 你需要直接提供它们 -->
+    <Edit style="width: 5em; height: 10em; margin-right: 8px" />
+    <Share style="width: 1em; height: 1em; margin-right: 8px" />
+    <Delete style="width: 1em; height: 1em; margin-right: 8px" />
+    <Search style="width: 1em; height: 1em; margin-right: 8px" />
+  </div>
+
+</template>

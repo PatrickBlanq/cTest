@@ -1,17 +1,38 @@
 <template>
-  <div>
-    fsdafa范德萨发
-  </div>  <div>
-    fsdafa范德萨发
-  </div>  <div>
-    fsdafa范德萨发
-  </div><div>
-    fsdafa范德萨发股份公ss司
+  <p>
+    with extra class <b>is-loading</b>, your icon is able to rotate 360 deg in 2
+    seconds, you can also override this
+  </p>
+  <el-icon :size="200">
+    <Edit />
+  </el-icon>
+  <el-icon :size="200" color="#409efc" class="no-inherit">
+    <Share />
+  </el-icon>
+  <el-icon>
+    <Delete />
+  </el-icon>
+  <el-icon class="is-loading">
+    <Loading />
+  </el-icon>
+  <el-button type="primary">
+    <el-icon style="vertical-align: middle">
+      <Search />
+    </el-icon>
+    <span style="vertical-align: middle"> Search </span>
+  </el-button>
+
+  <div style="font-size: 20px">
+    <!-- 由于SVG图标默认不携带任何属性 -->
+    <!-- 你需要直接提供它们 -->
+    <Edit style="width: 5em; height: 10em; margin-right: 8px" />
+    <Share style="width: 1em; height: 1em; margin-right: 8px" />
+    <Delete style="width: 1em; height: 1em; margin-right: 8px" />
+    <Search style="width: 1em; height: 1em; margin-right: 8px" />
   </div>
+
 </template>
 
-<script setup>
-
+<script>
+ 
 </script>
-
-<style lang="scss" scoped></style>

@@ -52,6 +52,7 @@
               <div class="exportExcel imageStyle" title="导出Excel"></div>
               <div class="setting imageStyle" title="前往设置页面" @click="openSettingLink"></div>
               <!--                 <div class="handOver" :style="{ cursor: isDutyEditable ? 'pointer' : 'default' }"
+                               
                   @click="handOverClick()"></div> -->
 
 
